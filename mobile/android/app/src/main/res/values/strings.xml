@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">VietTraffic</string>
+    <string name="facebook_app_id">177938119578718</string>
+    <string name="fb_login_protocol_scheme">fb177938119578718</string>
+</resources>

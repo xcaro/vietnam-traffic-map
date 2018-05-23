@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "992957050068",
+    "firebase_url": "https://vietnam-traffic-map.firebaseio.com",
+    "project_id": "vietnam-traffic-map",
+    "storage_bucket": "vietnam-traffic-map.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992957050068:android:1fb0623114da33be",
+        "android_client_info": {
+          "package_name": "com.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992957050068-2mua8lr11oectsmenh6m883324d3ccvf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile",
+            "certificate_hash": "ade203dea052fb347a39c1d274945a524472235c"
+          }
+        },
+        {
+          "client_id": "992957050068-10abeseq92q2it7qkjis5usjdvb8gacq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile",
+            "certificate_hash": "30f5b21de20769ea58759ca37e52fb07357ddacb"
+          }
+        },
+        {
+          "client_id": "992957050068-s5lq8lbvd4vuc2rp1sab3tmbtqmbp7cr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD337xIH9PZX5pAtrw40Ag1-Pm7Qzs9xxM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992957050068-s5lq8lbvd4vuc2rp1sab3tmbtqmbp7cr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
