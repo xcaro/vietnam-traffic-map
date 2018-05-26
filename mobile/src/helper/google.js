@@ -1,38 +1,38 @@
-const APIkey = 'AIzaSyBLLdD4bE8wDXlNDUq7jOHAI1CCeJumY3c'
+const APIkey = 'AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ'
 import axios from 'axios'
 import arrayHelper from '../helper/array'
 
 export default {
-  autoCompletePlace(text) {
+  autoCompletePlace (text) {
     return axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
       params: {
-        input : text,
+        input: text,
         key: APIkey,
-        language: 'vi',
+        language: 'vi'
       }
     })
   },
 
-  formatAutoCompletePlaceResult(response, currentCoordinate) {
+  formatAutoCompletePlaceResult (response, currentCoordinate) {
     var formatedResponse = response.predictions.map(prediction => ({
       description: prediction.description,
-      key: prediction.place_id,
+      key: prediction.place_id
     }))
 
     return formatedResponse || []
   },
 
-  placeIdToDetail(place_id) {
+  placeIdToDetail (place_id) {
     return axios.get('https://maps.googleapis.com/maps/api/place/details/json', {
       params: {
         placeid: place_id,
         key: APIkey,
-        language: 'vi',
+        language: 'vi'
       }
     })
   },
 
-  placeIdToCoordinate(place_id) {
+  placeIdToCoordinate (place_id) {
     return new Promise((resolve) => {
       this.placeIdToDetail(place_id).then(response => {
         let location = response.data.result.geometry.location
@@ -41,13 +41,13 @@ export default {
           longitude: location.lng
         }
 
-        //Resolve
+        // Resolve
         resolve(coordinate)
       })
     })
   },
 
-  getNearestPlace(type, curLocation) {
+  getNearestPlace (type, curLocation) {
     return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
       params: {
         type,
@@ -59,12 +59,12 @@ export default {
     })
   },
 
-  debounceAutoComplete(time, callBack) {
+  debounceAutoComplete (time, callBack) {
     var debounce = require('debounce')
 
     return debounce((text) => {
       this.autoCompletePlace(text)
-      .then(callBack)
+        .then(callBack)
     }, time)
   }
 }

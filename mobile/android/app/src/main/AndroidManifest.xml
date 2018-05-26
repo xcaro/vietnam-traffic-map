@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
       android:name=".MainApplication"
@@ -26,8 +28,8 @@
       <!-- use com.google.android.maps.v2.API_KEY instead of com.google.android.geo.API_KEY
       for backward compatibility authentication to the Android Maps API v2 only -->
     <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQq"/>
+		android:name="com.google.android.geo.API_KEY"
+		android:value="AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ"/>
 
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 

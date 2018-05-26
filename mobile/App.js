@@ -11,6 +11,7 @@ import SearchLocationScreen from './src/screen/SearchLocationScreen'
 import SearchRouteConfigScreen from './src/screen/SearchRouteConfigScreen'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import ReportTrafficScreen from './src/screen/ReportTrafficScreen'
+import ReportTrafficConfigScreen from './src/screen/ReportTrafficConfigScreen'
 import ChoseNearbyLocationScreen from './src/screen/ChoseNearbyLocationScreen'
 import AuthenticationScreen from './src/screen/AuthenticationScreen'
 import store from './src/redux/store'
@@ -35,13 +36,17 @@ const RootStack = StackNavigator(
       screen: ReportTrafficScreen
     },
 
+    ReportTrafficConfig: {
+      screen: ReportTrafficConfigScreen
+    },
+
     Authentication: {
       screen: AuthenticationScreen
     }
   },
 
   {
-    initialRouteName: 'Authentication',
+    initialRouteName: 'ReportTraffic',
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#0288D1',

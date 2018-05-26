@@ -1,6 +1,6 @@
-import React ,{
+import React, {
   Component
-} from 'react';
+} from 'react'
 
 import {
   View,
@@ -19,65 +19,64 @@ import RoundButton from '../component/RoundButton'
 import primaryStyle from '../style/index'
 
 class ChoseNearbyLocationScreen extends Component {
-  afterGetNearestLocation(response) {
-    if(response.data.results.length > 0) { // Have data
+  afterGetNearestLocation (response) {
+    if (response.data.results.length > 0) { // Have data
       googleAPI.placeIdToDetail(response.data.results[0].place_id)
-      .then(({data}) => {
-
-        this.props.setSelectedSearchLocationItem({
-          place_id: response.data.results[0].place_id,
-          data
+        .then(({data}) => {
+          this.props.setSelectedSearchLocationItem({
+            place_id: response.data.results[0].place_id,
+            data
+          })
+          this.props.navigation.goBack()
         })
-        this.props.navigation.goBack()
-      })
     }
   }
 
-  render() {
+  render () {
     return (
-      <View style = {style.topContainer}>
-      <View style = {style.container}>
-        <ShadenTouchableHightLight
-        margin = {20}
-        flex = {1}
-        isContentCenter  = {true}
-        onPress = {() => {
-          appHelper.getCurrentLocation(this.props).then((curLocation) => {
-            googleAPI.getNearestPlace('gas_station', [
-              curLocation.coords.latitude,
-              curLocation.coords.longitude
-            ]).then((response) => {
-              this.afterGetNearestLocation(response)
-            })
-          })
-        }}>
-          <View style = {style.img}>
-            <Image  source = {require('../assets/location_nearby/gas-station.png')}></Image>
-          </View>
-          <Text style = {style.text}>Cây xăng</Text>
-        </ShadenTouchableHightLight>
+      <View style={style.topContainer}>
+        <View style={style.container}>
+          <ShadenTouchableHightLight
+            margin={20}
+            flex={1}
+            isContentCenter
+            onPress={() => {
+              appHelper.getCurrentLocation(this.props).then((curLocation) => {
+                googleAPI.getNearestPlace('gas_station', [
+                  curLocation.coords.latitude,
+                  curLocation.coords.longitude
+                ]).then((response) => {
+                  this.afterGetNearestLocation(response)
+                })
+              })
+            }}>
+            <View style={style.img}>
+              <Image source={require('../assets/location_nearby/gas-station.png')} />
+            </View>
+            <Text style={style.text}>Cây xăng</Text>
+          </ShadenTouchableHightLight>
 
-        <ShadenTouchableHightLight
-        margin = {20}
-        flex = {1}
-        isContentCenter  = {true}
-        onPress = {() => {
-          appHelper.getCurrentLocation(this.props).then((curLocation) => {
-            googleAPI.getNearestPlace('atm', [
-              curLocation.coords.latitude,
-              curLocation.coords.longitude
-            ]).then((response) => {
-              this.afterGetNearestLocation(response)
-            })
-          })
-        }}>
-          <View style = {style.img}>
-            <Image  source = {require('../assets/location_nearby/atm.png')}></Image>
-          </View>
-          <Text style = {style.text}>&nbsp;Trụ ATM</Text>
-        </ShadenTouchableHightLight>
+          <ShadenTouchableHightLight
+            margin={20}
+            flex={1}
+            isContentCenter
+            onPress={() => {
+              appHelper.getCurrentLocation(this.props).then((curLocation) => {
+                googleAPI.getNearestPlace('atm', [
+                  curLocation.coords.latitude,
+                  curLocation.coords.longitude
+                ]).then((response) => {
+                  this.afterGetNearestLocation(response)
+                })
+              })
+            }}>
+            <View style={style.img}>
+              <Image source={require('../assets/location_nearby/atm.png')} />
+            </View>
+            <Text style={style.text}>&nbsp;Trụ ATM</Text>
+          </ShadenTouchableHightLight>
+        </View>
       </View>
-    </View>
     )
   }
 }
@@ -86,12 +85,12 @@ const style = StyleSheet.create({
   img: {
     marginTop: 30,
     marginBottom: 15,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   container: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
 
   topContainer: {
@@ -103,18 +102,17 @@ const style = StyleSheet.create({
     paddingBottom: 30,
     fontSize: 22,
 
-    marginLeft:10,
+    marginLeft: 10
   }
 })
 
-export default connect (
+export default connect(
   /** State requirer to read by container component */
   ({
     curLocation, selectedSearchLocationItem
-  })=>(
+  }) => (
     {curLocation, selectedSearchLocationItem}
   ),
 
   action
 )(ChoseNearbyLocationScreen)
-

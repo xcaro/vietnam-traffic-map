@@ -134,6 +134,7 @@ class HomeScreen extends Component {
          >
           {this.props.selectedSearchLocationItem &&
             <Marker
+              image = {require('../assets/marker/location.png')}
               coordinate = {{
                 latitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lat,
                 longitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lng
@@ -141,6 +142,8 @@ class HomeScreen extends Component {
               title = {this.props.selectedSearchLocationItem.data.result.name}
               description = {this.props.selectedSearchLocationItem.data.result.formatted_address}>
             </Marker>
+
+            
           }
 
          {this.props.curLocation &&
@@ -173,10 +176,10 @@ class HomeScreen extends Component {
                 marginRight = {15}
                 padding = {10}
                 onPress = {() => {
-                  this.props.navigation.navigate('ReportTraffic')
+                  this.props.navigation.navigate('ReportTrafficConfig')
                 }}>
                 <MaterialIcon
-                  name = "message"
+                  name = "announcement"
                   size = {25}>
                 </MaterialIcon>
             </ShadenTouchableHightLight>
@@ -193,7 +196,6 @@ class HomeScreen extends Component {
               }
 
               appHelper.getCurrentLocation(this.props, false).then((curLocation) => {
-                debugger;
                 let origin_lat = curLocation.coords.latitude
                 let origin_lng = curLocation.coords.longitude
                 this.destination_lat = this.props.selectedSearchLocationItem.data.result.geometry.location.lat

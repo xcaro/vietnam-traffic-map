@@ -1,12 +1,17 @@
-import React ,{
+import React, {
   StyleSheet
-} from 'react-native';
+} from 'react-native'
 
 const PRIMARY_COLOR = '#383c45'
 const SECONDARY_COLOR = 'rgb(52, 73, 94)'
 const BORDER_COLOR = 'rgba(255,255,255,0.1)'
 
 const styles = StyleSheet.create({
+  Icon: {
+    paddingTop: 3,
+    marginRight: 5
+  },
+
   borderTop: {
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,.65)'
@@ -17,11 +22,11 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    flex: 1,
+    flex: 1
   },
 
   textWhite: {
-    color:'white'
+    color: 'white'
   },
 
   alignItemCenter: {

@@ -1,10 +1,10 @@
-//Action Type
+// Action Type
 export const SET_CURRENTLOCATION = 'SET_CURRENTLOCATION'
 export const REMOVE_CURRENTLOCATION = 'REMOVE_CURRENTLOCATION'
 
 export const SET_SELECTEDSEARCHLOCATIONITEM = 'SET_SELECTEDSEARCHLOCATIONITEM'
 export const REMOVE_SELECTEDSEARCHLOCATIONITEM = 'REMOVE_SELECTEDSEARCHLOCATIONITEM'
-//Action creator
+// Action creator
 export default {
   setCurLocation: (location) => {
     return {
@@ -20,7 +20,7 @@ export default {
   },
 
   setSelectedSearchLocationItem: (SearchLocationItem) => {
-    return{
+    return {
       type: SET_SELECTEDSEARCHLOCATIONITEM,
       SearchLocationItem
     }
@@ -30,5 +30,5 @@ export default {
     return {
       type: REMOVE_SELECTEDSEARCHLOCATIONITEM
     }
-  },
+  }
 }

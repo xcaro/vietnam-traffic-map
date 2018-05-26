@@ -1,32 +1,29 @@
-import React ,{
+import React, {
   Component
-} from 'react';
+} from 'react'
 
 import {
   AppRegistry,
   TextInput,
   View,
   StyleSheet
-} from 'react-native';
+} from 'react-native'
 
 import primaryStyle from '../style/index'
 
 const style = StyleSheet.create({
   menuContainer: {
-    height:'25%'
+    height: '25%'
   }
 })
 
 export default class Menu extends Component {
-  render() {
+  render () {
     return (
       <View style={[
         primaryStyle.bgRed,
         style.menuContainer
-      ]}>
-      </View>
+      ]} />
     )
   }
 }
-
-

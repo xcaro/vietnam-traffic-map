@@ -1,15 +1,15 @@
 export default {
-  CloneAndSetPropOfObject(object, prop) {
+  CloneAndSetPropOfObject (object, prop) {
     return Object.assign({}, object, prop)
   },
 
-  addPropIfDefined(object, prop, propName) {
-    if(prop) {
+  addPropIfDefined (object, prop, propName) {
+    if (prop) {
       object[propName] = prop
     }
   },
 
-  addPropsIfDefined(object, arrayOfPropsAndPropsName) {
+  addPropsIfDefined (object, arrayOfPropsAndPropsName) {
     arrayOfPropsAndPropsName.forEach(elem => {
       this.addPropIfDefined(object, elem.prop, elem.propName)
     })
