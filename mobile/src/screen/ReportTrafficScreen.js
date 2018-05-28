@@ -41,7 +41,7 @@ class ReportTrafficScreen extends Component {
       height: 0
     }
   }
-  
+
 
   render() {
     return (
@@ -126,26 +126,26 @@ class ReportTrafficScreen extends Component {
                * Remember to server
                */
               let pushMe = new FormData()
-              
+
               pushMe.append('location', {
                 lat: origin_lat,
                 lng: origin_lng
               })
               pushMe.append('reportTrafficType', reportTrafficType)
               pushMe.append('description', this.state.description)
-              
+
               let i = 0
               for (image of this.state.images) {
                 pushMe.append('images', {
-                  uri: image, 
-                  name: `selfie${i}.jpg`, 
+                  uri: image,
+                  name: `selfie${i}.jpg`,
                   type: 'image/jpg'
                 })
                 i++;
               }
 
               axious.post(
-                'http://192.168.1.4:3000/trafficReport', 
+                'http://192.168.1.4:3000/trafficReport',
                 pushMe
               )
                 .then((res) => {
