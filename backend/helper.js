@@ -1,8 +1,33 @@
 const r = require('rethinkdb')
+const servicesAccount = require('./firebase_adminsdk_key.json')
+const admin = require('firebase-admin')
+const request = require('supertest')
+
+admin.initializeApp({
+  credential: admin.credential.cert(servicesAccount),
+  databaseURL: 'https://vietnam-traffic-map.firebaseio.com'
+})
+
+const isOnTest = global.it
 
 module.exports = {
+  async intiDb (conn, dbName = 'app') {
+    const promises = [
+      this.createDatabase(conn, dbName),
+      this.createtableIfNotExist(conn, 'reportTrafficList'),
+      this.createtableIfNotExist(conn, 'reportTrafficLinks'),
+      this.createtableIfNotExist(conn, 'trafficAdministrators')
+    ]
+
+    await Promise.all(promises)
+  },
+
+  getFirebaseAdminSdk () {
+    return admin
+  },
+
   createDatabase (con, dbName) {
-    r.dbList().contains(dbName)
+    return r.dbList().contains(dbName)
       .do(function (databaseExists) {
         return r.branch(
           databaseExists,
@@ -13,13 +38,7 @@ module.exports = {
   },
 
   createtableIfNotExist (con, tableName) {
-    // r.tableList().contains(tableName)
-    //     .do(empty => r.branch(
-    //         empty, // equivalent of if(empty)
-    //         { tables_created: 0 },
-    //         r.tableCreate(tableName) // create table
-    //     )).run(connection)
-    r.tableList().contains(tableName)
+    return r.tableList().contains(tableName)
       .do(function (databaseExists) {
         return r.branch(
           databaseExists,
@@ -43,5 +62,107 @@ module.exports = {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     var d = R * c
     return d // returns the distance in meter
+  },
+
+  async createConnection (dbName = 'app') {
+    try {
+      let conn = await r.connect({ host: 'localhost', port: 28015 })
+      conn.use(dbName)
+      return conn
+    } catch (err) {
+      throw err
+    }
+  },
+
+  async createTrafficReportAndReturnId (app) {
+    try {
+      let reportTrafficRes = await request(app)
+        .post('/trafficReport')
+        .send({
+          location: {
+            lat: 100.846526,
+            lng: 100.846526
+          },
+          reportTrafficType: 'test'
+        })
+        .set('Authorization', 'abc123')
+
+      let reportTrafficId = reportTrafficRes.body.generated_keys[0]
+      return reportTrafficId
+    } catch (err) {
+      throw err
+    }
+  },
+
+  createCheckSchemeTrafficReportExist () {
+    return {
+      id: {
+        in: ['params'],
+        exists: {
+          errorMessage: 'id không tồn tại'
+        },
+
+        custom: {
+          options: async (id) => {
+            /**
+             * Validate using firebase if not is on test mode
+             * isOnTest false admin.verify
+             */
+            let connection = null
+            try {
+              connection = await this.createConnection()
+              let reportTraffic = await r.table('reportTrafficList').get(id).run(connection)
+              if (!reportTraffic) {
+                throw new Error('reportTraffic không tồn tại')
+              } else if (reportTraffic.status === 0) {
+                throw new Error('reportTraffic này đã bị xóa')
+              }
+
+              return
+            } catch (err) {
+              throw err
+            } finally {
+              if (connection) {
+                connection.close()
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  createCheckSchemeAuthentication () {
+    return {
+      authorization: {
+        in: ['headers'],
+        exists: {
+          errorMessage: 'idToken không tồn tại'
+        },
+
+        custom: {
+          options: (idToken) => {
+            /**
+             * Validate using firebase if not is on test mode
+             * isOnTest false admin.verify
+             */
+            if (!isOnTest) {
+              admin.auth().verifyIdToken(idToken)
+                .then(function (decodedToken) {
+                  idToken = decodedToken.uid
+                  return Promise.resolve()
+                }).catch(() => {
+                  throw Error('idToken không hợp lệ')
+                })
+            } else {
+              /**
+              * Lorem is special for testing purpose
+              */
+              return Promise.resolve()
+            }
+          }
+        }
+      }
+    }
   }
 }
