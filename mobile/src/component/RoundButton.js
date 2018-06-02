@@ -5,12 +5,12 @@ export default class RoundButtonWithIcon extends Component {
   render () {
     return (
       <ShadenTouchableHightLight
-        isContentCenter={this.props.isContentCenter}
+        isContentCenter={true}
         flex={this.props.flex}
         backgroundColor={this.props.backgroundColor}
         onPress={this.props.onPress}
         borderRadius={50}
-        isContentCenter
+        elavation={this.props.elavation}
         width={this.props.size}
         height={this.props.size}
         marginTop={this.props.marginTop}

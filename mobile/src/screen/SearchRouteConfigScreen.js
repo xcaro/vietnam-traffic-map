@@ -59,7 +59,7 @@ class SearchRouteConfigScreen extends Component {
     this.TextInputDestination = React.createRef()
   }
 
-  static navigationOptions = {
+  static navigationOptions  = {
     header: null
   }
 
@@ -306,8 +306,9 @@ class SearchRouteConfigScreen extends Component {
           primaryStyle.bgPrimary,
           primaryStyle.alignItemCenter]}>
           <RoundButton
+          elavation = {0}
           size = {48}
-          backgroundColor = "#383c45"
+          backgroundColor = "#3498db"
           onPress = {() => {
             this.props.navigation.goBack()
           }}>
@@ -394,8 +395,9 @@ class SearchRouteConfigScreen extends Component {
 
           </View>
           <RoundButton
+          elavation = {0}
           size = {48}
-          backgroundColor = "#383c45"
+          backgroundColor = "#3498db"
           onPress = {this.swapTextInput.bind(this)}>
             <MaterialIcon name="swap-vert" size={40} color="white" style = {style.iconRight} />
           </RoundButton>
@@ -403,7 +405,7 @@ class SearchRouteConfigScreen extends Component {
         <View>
         <ScrollView style = {primaryStyle.borderTop}>
           <ShadenTouchableHightLight
-          backgroundColor = "#383c45"
+          backgroundColor = "#3498db"
           padding = {15}
           marginTop = {0}
           flexDirection = "row"
@@ -421,7 +423,7 @@ class SearchRouteConfigScreen extends Component {
           </ShadenTouchableHightLight>
 
           <ShadenTouchableHightLight
-          backgroundColor = "#383c45"
+          backgroundColor = "#3498db"
           padding = {15}
           marginTop = {0}
           onPress = {this.setTextInputAsPickerPosition.bind(this)}>

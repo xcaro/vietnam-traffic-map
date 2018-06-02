@@ -113,7 +113,6 @@ export default class SearchLocationTextInput extends Component {
     return (
       <TouchableWithoutFeedback onPress={this.props.onPress}>
         <View
-
           style={[
             primaryStyle.bgPrimary,
             style.container

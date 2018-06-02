@@ -141,6 +141,7 @@ export default class TextInputWithClearButton extends Component {
               ]}>
 
               <TextInput
+                selectionColor = "white"
                 onChangeText={this.props.onChangeText}
                 ref={component => this.textInput = component}
                 editable={this.props.editable}
@@ -192,7 +193,8 @@ export default class TextInputWithClearButton extends Component {
 
 const style = StyleSheet.create({
   active: {
-    color: '#44d62c'
+    color: 'rgb(255,255,255)',
+    fontWeight: 'bold'
   },
 
   container: {
@@ -225,7 +227,7 @@ const style = StyleSheet.create({
 
   label: {
     fontSize: 18,
-    color: 'rgba(255,255,255,.7)',
+    color: 'rgb(255,255,255)',
     paddingRight: 10
   }
 })

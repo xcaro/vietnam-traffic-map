@@ -10,7 +10,6 @@ const DEFAULT_SIZE = 64
 export default class ShadenTouchableHightLight extends Component {
   constructor (props) {
     super(props)
-
     this.state = {
       underlayColor:
         colorHelper
@@ -22,7 +21,7 @@ export default class ShadenTouchableHightLight extends Component {
         justifyContent: this.props.isContentCenter ? 'center' : 'flex-start',
         alignItems: this.props.isContentCenter ? 'center' : 'flex-start',
         backgroundColor: this.props.backgroundColor || DEFAULT_BACKGROUNDCOLOR,
-        elevation: 2
+        elevation: this.props.elavation !== null ? this.props.elavation : 2
       },
 
       viewStyle: {}

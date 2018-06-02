@@ -43,14 +43,7 @@ class HomeScreen extends Component {
      * Start the tracking location
      */
 
-    currentWatchId = navigator.geolocation.watchPosition(
-      (position) => {
-        this.props.setCurLocation(position)
-      },
-      () => {
-        this.props.removeCurLocation(null)
-      }
-    )
+
 
     this.selectedSearchLocationItem = null
     this.unsubscribe = store.subscribe(() => {
@@ -199,7 +192,7 @@ class HomeScreen extends Component {
                 return
               }
 
-              appHelper.getCurrentLocation(this.props, false).then((curLocation) => {
+              appHelper.getCurrentLocation(this.props).then((curLocation) => {
                 let origin_lat = curLocation.coords.latitude
                 let origin_lng = curLocation.coords.longitude
                 this.destination_lat = this.props.selectedSearchLocationItem.data.result.geometry.location.lat
@@ -237,11 +230,8 @@ class HomeScreen extends Component {
               onPress = {() => {
                 // Prss this button too fast, watchLocation is not init in time have to check for it manually
                 if(!this.props.curLocation)
-                  navigator.geolocation.getCurrentPosition((position) => {
-                    this.props.setCurLocation(position) // Đã lấy được vị trí
-                    this.animateToCurrentLocation
-                  }, () => {
-                    errorHelper.showGpsError()
+                  appHelper.getCurrentLocation(this.props).then(() => {
+                    this.animateToCurrentLocation()
                   })
                 else {
                   this.animateToCurrentLocation()

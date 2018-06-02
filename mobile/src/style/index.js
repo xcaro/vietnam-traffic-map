@@ -2,7 +2,7 @@ import {
   StyleSheet
 } from 'react-native'
 
-const PRIMARY_COLOR = '#383c45'
+const PRIMARY_COLOR = '#3498db'
 const SECONDARY_COLOR = 'rgb(52, 73, 94)'
 // const BORDER_COLOR = 'rgba(255,255,255,0.1)'
 
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
   borderTop: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,.65)'
+    borderTopColor: 'rgba(52,152,219,.8)'
   },
 
   bgRed: {

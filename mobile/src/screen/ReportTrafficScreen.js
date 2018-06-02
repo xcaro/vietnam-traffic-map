@@ -114,7 +114,7 @@ class ReportTrafficScreen extends Component {
         <ShadenTouchableHightLight
           onPress = {() => {
 
-            appHelper.getCurrentLocation(this.props, false).then((curLocation) => {
+            appHelper.getCurrentLocation(this.props).then((curLocation) => {
             /**
              * Form require data
              */

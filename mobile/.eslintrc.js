@@ -1,3 +1,7 @@
 module.exports = {
-    "extends": "standard"
+    "extends": "standard",
+    "plugins": [
+        "react",
+        "react-native"
+    ]
 };
