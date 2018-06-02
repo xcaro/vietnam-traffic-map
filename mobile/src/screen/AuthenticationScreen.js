@@ -1,6 +1,6 @@
 import React ,{
   Component
-} from 'react';
+} from 'react'
 
 import {
   View,
@@ -12,19 +12,21 @@ import {
 
 import action from '../redux/action'
 import { connect } from 'react-redux'
-import FaIcon from 'react-native-vector-icons/FontAwesome';
+import FaIcon from 'react-native-vector-icons/FontAwesome'
 import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
 import primaryStyle from '../style/index'
-import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase'
+
+import { NavigationActions } from 'react-navigation';
 
 import {
   LoginManager,
   AccessToken
-} from 'react-native-fbsdk';
+} from 'react-native-fbsdk'
 
 import {
   GoogleSignin
-} from 'react-native-google-signin';
+} from 'react-native-google-signin'
 
 
 class AuthenticationScreen extends Component {
@@ -39,7 +41,7 @@ class AuthenticationScreen extends Component {
           return
         }
 
-        const data = await AccessToken.getCurrentAccessToken();
+        const data = await AccessToken.getCurrentAccessToken()
 
         if (!data) {
           alert('Đã xảy ra lỗi khi đăng nhập bằng Facebook:')
@@ -51,42 +53,55 @@ class AuthenticationScreen extends Component {
          */
         // create a new firebase credential with the token
         try {
-          const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+          const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
 
           // login with credential
-          const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+          const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
-          console.info(JSON.stringify(currentUser.user.toJSON()))
+          this.props.navigation.dispatch(NavigationActions.pop({
+            n: 1
+          }))
+
+          this.props.navigation.dispatch(NavigationActions.push({
+            routeName: this.props.navigation.getParam('routeToRedirect')
+          }))
         } catch (e) {
           alert('Đã xảy ra lỗi khi đăng nhập bằng Facebook: ' + e)
         }
       },
 
       function(error) {
-        alert('Đã xảy ra lỗi khi đăng nhập bằng Facebook: ' + error);
+        alert('Đã xảy ra lỗi khi đăng nhập bằng Facebook: ' + error)
       }
-    );
+    )
   }
 
   async authenticateGoogle () {
     try {
       // Add any configuration settings here:
-      await GoogleSignin.configure();
+      await GoogleSignin.configure()
         const data = await GoogleSignin.signIn()
 
        // create a new firebase credential with the token
         const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
         // login with credential
-        const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential)
 
-        console.info(JSON.stringify(currentUser.user.toJSON()));
+        this.props.navigation.dispatch(NavigationActions.pop({
+          n: 1
+        }))
+
+        this.props.navigation.dispatch(NavigationActions.push({
+          routeName: this.props.navigation.getParam('routeToRedirect')
+        }))
     } catch (e) {
         alert('Đã xảy ra lỗi khi đăng nhập bằng Google: ' + e)
     }
   }
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
+
     this.state = {
       loginProviders: [
         {

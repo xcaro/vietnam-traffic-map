@@ -4,8 +4,18 @@ export const REMOVE_CURRENTLOCATION = 'REMOVE_CURRENTLOCATION'
 
 export const SET_SELECTEDSEARCHLOCATIONITEM = 'SET_SELECTEDSEARCHLOCATIONITEM'
 export const REMOVE_SELECTEDSEARCHLOCATIONITEM = 'REMOVE_SELECTEDSEARCHLOCATIONITEM'
+
+export const SET_IDTOKEN = 'SET_IDTOKEN'
+
 // Action creator
 export default {
+  setIdToken: (idToken) => {
+    return {
+      type: SET_IDTOKEN,
+      idToken
+    }
+  },
+
   setCurLocation: (location) => {
     return {
       type: SET_CURRENTLOCATION,

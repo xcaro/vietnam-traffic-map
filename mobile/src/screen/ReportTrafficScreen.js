@@ -1,6 +1,6 @@
 import React ,{
   Component
-} from 'react';
+} from 'react'
 
 import {
   View,
@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 
 import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
-import FormData, {getHeaders} from 'form-data';
+import FormData, {getHeaders} from 'form-data'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import primaryStyles from '../style/index'
 import ImagePicker from 'react-native-image-picker'
@@ -27,11 +27,11 @@ import { connect } from 'react-redux'
 
 class ReportTrafficScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const {state} = navigation;
+    const {state} = navigation
     return {
-      //title: `Báo cáo ${state.params.reportTrafficType}`,
-    };
-  };
+      title: `Báo cáo ${state.params.reportTrafficType}`,
+    }
+  }
 
   constructor(props) {
     super()
@@ -65,11 +65,11 @@ class ReportTrafficScreen extends Component {
                       [
                         {text: 'OK'}
                       ])
-                    return;
+                    return
                   }
                   this.setState({images: [...this.state.images,response.uri ]})
                 }
-              });
+              })
             }}
 
             backgroundColor = "#03A9F4"
@@ -141,7 +141,7 @@ class ReportTrafficScreen extends Component {
                   name: `selfie${i}.jpg`,
                   type: 'image/jpg'
                 })
-                i++;
+                i++
               }
 
               axious.post(
@@ -190,7 +190,7 @@ const imagePickerOptions = {
     skipBackup: true,
     path: 'images'
   }
-};
+}
 
 const styles = StyleSheet.create({
   submitButton: {

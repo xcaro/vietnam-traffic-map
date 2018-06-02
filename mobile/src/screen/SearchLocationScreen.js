@@ -1,10 +1,10 @@
 import {
   StackNavigator
-} from 'react-navigation';
+} from 'react-navigation'
 
 import React, {
   Component
-} from 'react';
+} from 'react'
 
 import {
   AppRegistry,
@@ -13,7 +13,7 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback
-} from 'react-native';
+} from 'react-native'
 
 import { connect } from 'react-redux'
 import action from '../redux/action'
@@ -43,7 +43,7 @@ class SearchLocationScreen extends Component {
           SearchLocationResult: googleAPI.formatAutoCompletePlaceResult(data)
         }))
 
-       
+
         // ^ prevent dupplicate setstate, type first time it's already show, type 2nd time
         // shouldn't rerender to app
         if(this.state.isShowSearchLocationResult === false)
@@ -64,11 +64,11 @@ class SearchLocationScreen extends Component {
        * Use google api for search for location map
        * With debounce of course
        */
-      this.textInputOnChangeTextdebounced(text) 
+      this.textInputOnChangeTextdebounced(text)
     }
   }
 
-    
+
 
   static navigationOptions = {
     header: null
@@ -87,7 +87,7 @@ class SearchLocationScreen extends Component {
   }
 
   render() {
-    return ( 
+    return (
       <View style = {primaryStyle.container}>
         <SearchLocationTextInput
           onChangeText = {this.textInputOnChangeText.bind(this)}
@@ -98,7 +98,7 @@ class SearchLocationScreen extends Component {
         </SearchLocationTextInput>
 
         {this.state.isShowSearchLocationResult &&
-          <SearchLocationListView 
+          <SearchLocationListView
           title = "Kết quả tìm kiếm"
           data = {this.state.SearchLocationResult}
           onSelected = {this.SearchLocationItemOnSelected.bind(this)}>

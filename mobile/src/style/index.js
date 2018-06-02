@@ -1,10 +1,10 @@
-import React, {
+import {
   StyleSheet
 } from 'react-native'
 
 const PRIMARY_COLOR = '#383c45'
 const SECONDARY_COLOR = 'rgb(52, 73, 94)'
-const BORDER_COLOR = 'rgba(255,255,255,0.1)'
+// const BORDER_COLOR = 'rgba(255,255,255,0.1)'
 
 const styles = StyleSheet.create({
   Icon: {

@@ -1,10 +1,10 @@
 import {
   StackNavigator
-} from 'react-navigation';
+} from 'react-navigation'
 
 import React, {
   Component
-} from 'react';
+} from 'react'
 
 import {
   AppRegistry,
@@ -16,19 +16,19 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Linking
-} from 'react-native';
+} from 'react-native'
 
 import primaryStyle from '../style/index'
 
 import { connect } from 'react-redux'
 import action from '../redux/action'
 import TextInputWithClearButton from '../component/TextInputWithClearButton'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import RoundButton from '../component/RoundButton'
 import SearchLocationListView from '../component/SearchLocationListView'
 import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
-import RNGooglePlaces from 'react-native-google-places';
+import RNGooglePlaces from 'react-native-google-places'
 import googleAPI from '../helper/google'
 import objectHelper from '../helper/object'
 import errorHelper from '../helper/error'
@@ -78,7 +78,7 @@ class SearchRouteConfigScreen extends Component {
   }
 
   setLocationTextInputOrigin(description, place_coordinate) {
-    var isEqual = require('lodash.isequal');
+    var isEqual = require('lodash.isequal')
 
     // Check console.logfor dupplicate
     if(isEqual(place_coordinate,this.state.destinationCoordinate))
@@ -90,7 +90,7 @@ class SearchRouteConfigScreen extends Component {
           {'text':'OK'}
         ]
       )
-      return;
+      return
     }
 
     this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState,{
@@ -116,7 +116,7 @@ class SearchRouteConfigScreen extends Component {
   }
 
   setLocationTextInputDestination(description, place_coordinate) {
-    var isEqual = require('lodash.isequal');
+    var isEqual = require('lodash.isequal')
 
     // Check console.logfor dupplicate
     if(isEqual(place_coordinate,this.state.originCoordinate))
@@ -128,7 +128,7 @@ class SearchRouteConfigScreen extends Component {
           {'text':'OK'}
         ]
       )
-      return;
+      return
     }
 
 
@@ -295,7 +295,7 @@ class SearchRouteConfigScreen extends Component {
 
 
     })
-    .catch(error => console.log(error.message));  // error is a Javascript Error object
+    .catch(error => console.log(error.message))  // error is a Javascript Error object
   }
 
   render() {

@@ -11,6 +11,8 @@ admin.initializeApp({
 const isOnTest = global.it
 
 module.exports = {
+  admin,
+
   async intiDb (conn, dbName = 'app') {
     const promises = [
       this.createDatabase(conn, dbName),

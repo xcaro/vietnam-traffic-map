@@ -1,5 +1,4 @@
 import reducer from './reducer'
-import devToolEnhancer from 'remote-redux-devtools'
 
 import {
   createStore
@@ -10,7 +9,8 @@ const store = createStore(
   {
     curLocation: null,
     user: null,
-    selectedSearchLocationItem: null
+    selectedSearchLocationItem: null,
+    idToken: null
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 

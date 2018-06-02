@@ -10,6 +10,7 @@ const isOnTest = global.it // test by mocha or not
 const MAX_DOWNVOTE = isOnTest ? 1 : 3
 const mustAuth = helper.createCheckSchemeAuthentication(isOnTest)
 const mustValidateTrafficReport = helper.createCheckSchemeTrafficReportExist()
+const admin = helper.admin
 
 const {
   checkSchema,
@@ -30,6 +31,16 @@ const upload = multer({
     const err = 'Error: File upload only supports the following filetypes -  + filetypes'
     cb(err)
   }
+})
+
+router.get('/isauth', (req, res) => {
+  let idToken = req.headers.authorization
+  admin.auth().verifyIdToken(idToken)
+    .then(function (decodedToken) {
+      res.sendStatus(200)
+    }).catch(() => {
+      res.sendStatus(403)
+    })
 })
 
 router.route('/comment/:id')

@@ -1,10 +1,11 @@
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StackNavigator,
   TabNavigator,
   TabBarBottom
-} from 'react-navigation';
+} from 'react-navigation'
+import firebase from 'react-native-firebase'
 
 import HomeScreen from './src/screen/HomeScreen'
 import SearchLocationScreen from './src/screen/SearchLocationScreen'
@@ -15,13 +16,14 @@ import ReportTrafficConfigScreen from './src/screen/ReportTrafficConfigScreen'
 import ChoseNearbyLocationScreen from './src/screen/ChoseNearbyLocationScreen'
 import AuthenticationScreen from './src/screen/AuthenticationScreen'
 import store from './src/redux/store'
+import action from './src/redux/action'
 import { Provider } from 'react-redux'
-
+import superAgent from 'superagent'
 
 const RootStack = StackNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
 
     SearchLocation: {
@@ -46,41 +48,44 @@ const RootStack = StackNavigator(
   },
 
   {
-    initialRouteName: 'ReportTraffic',
+    initialRouteName: 'Home',
     navigationOptions: {
       headerStyle: {
-        backgroundColor: '#0288D1',
+        backgroundColor: '#0288D1'
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+        fontWeight: 'bold'
+      }
     }
   }
-);
+)
 RootStack.navigationOptions = {
-  label: 'Bản đồ',
+  label: 'Bản đồ'
 }
 const TabNav = TabNavigator({
-  'Bản đồ': { screen: RootStack , navigationOptions: {
-     tabBarLabel: 'Bản đồ'
+  'Bản đồ': {
+    screen: RootStack,
+    navigationOptions: {
+      tabBarLabel: 'Bản đồ'
     }
   },
 
   'Gần đây': {
-    screen: ChoseNearbyLocationScreen  },
+    screen: ChoseNearbyLocationScreen
+  }
 }, {
   initialRouteName: 'Bản đồ',
   navigationOptions: ({navigation}) => ({
     tabBarIcon: ({tintColor}) => {
-      const {routeName}  = navigation.state
-      switch(routeName){
+      const {routeName} = navigation.state
+      switch (routeName) {
         case 'Bản đồ':
-        return (<MaterialIcon color = {tintColor} name = "map" size = {22}>
-        </MaterialIcon>)
+          return (<MaterialIcon color = {tintColor} name = "map" size = {22}>
+          </MaterialIcon>)
         case 'Gần đây':
-        return (<MaterialIcon color = {tintColor} name = "location-on" size = {25}>
-        </MaterialIcon>)
+          return (<MaterialIcon color = {tintColor} name = "location-on" size = {25}>
+          </MaterialIcon>)
       }
     }
   }),
@@ -93,23 +98,39 @@ const TabNav = TabNavigator({
     labelStyle: {
       fontSize: 14
     }
-  },
-});
+  }
+})
 
 export default class App extends Component {
-  render() {
+  constructor () {
+    super()
+
+    firebase.auth().onAuthStateChanged((idToken) => {
+      if (idToken === null) {
+        store.dispatch(action.setIdToken(null))
+        return
+      }
+
+      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+        store.dispatch(action.setIdToken(idToken))
+        superAgent
+          .get('192.168.1.4:3000/trafficReport/isauth')
+          .then((res) => {
+            console.log(res)
+          }).catch((err) => {
+            console.log(err)
+          })
+      }).catch(function (error) {
+        throw error
+      })
+    })
+  }
+
+  render () {
     return (
       <Provider store = {store}>
         <TabNav/>
       </Provider>
-    );
+    )
   }
 }
-
-/**
- * Debug only
- */
-
-import {NativeModules} from 'react-native';
-NativeModules.ExceptionsManager = null;
-

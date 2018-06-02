@@ -2,7 +2,7 @@ import SplashScreen from 'react-native-splash-screen'
 import CurrentLocationMarker from '../component/CurrentLocationMarker'
 import React ,{
   Component
-} from 'react';
+} from 'react'
 import {
   AppRegistry,
   TextInput,
@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Keyboard,
   Linking
-} from 'react-native';
+} from 'react-native'
 import action from '../redux/action'
 import { connect } from 'react-redux'
 import primaryStyle from '../style/index'
@@ -29,7 +29,7 @@ import MapView, {
   Marker,
   ProviderPropType,
   Callout
-} from 'react-native-maps';
+} from 'react-native-maps'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -143,7 +143,7 @@ class HomeScreen extends Component {
               description = {this.props.selectedSearchLocationItem.data.result.formatted_address}>
             </Marker>
 
-            
+
           }
 
          {this.props.curLocation &&
@@ -176,7 +176,11 @@ class HomeScreen extends Component {
                 marginRight = {15}
                 padding = {10}
                 onPress = {() => {
-                  this.props.navigation.navigate('ReportTrafficConfig')
+                  appHelper.navigateCheckSignIn(
+                    this.props.navigation,
+                    this.props.idToken,
+                    'ReportTrafficConfig'
+                  )
                 }}>
                 <MaterialIcon
                   name = "announcement"
@@ -192,7 +196,7 @@ class HomeScreen extends Component {
             onPress = {() => {
               if(!this.props.selectedSearchLocationItem) {
                 this.props.navigation.navigate('SearchRouteConfig')
-                return;
+                return
               }
 
               appHelper.getCurrentLocation(this.props, false).then((curLocation) => {
@@ -280,9 +284,9 @@ class HomeScreen extends Component {
 export default connect(
   /** State requirer to read by container component */
   ({
-    curLocation, selectedSearchLocationItem
+    curLocation, selectedSearchLocationItem, idToken
   })=>(
-    {curLocation, selectedSearchLocationItem}
+    {curLocation, selectedSearchLocationItem, idToken}
   ),
 
   action

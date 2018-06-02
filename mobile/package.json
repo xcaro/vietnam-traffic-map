@@ -25,11 +25,12 @@
     "react-native-material-ripple": "^0.8.0",
     "react-native-splash-screen": "crazycodeboy/react-native-splash-screen#ddca267",
     "react-native-vector-icons": "^4.6.0",
-    "react-navigation": "^1.5.11",
+    "react-navigation": "^1.5.12",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "remote-redux-devtools": "^0.5.0",
-    "rethinkdb": "^2.3.3"
+    "rethinkdb": "^2.3.3",
+    "superagent": "^3.8.3"
   },
   "devDependencies": {
     "babel-jest": "22.4.3",

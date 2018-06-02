@@ -73,7 +73,7 @@ class ChoseNearbyLocationScreen extends Component {
             <View style={style.img}>
               <Image source={require('../assets/location_nearby/atm.png')} />
             </View>
-            <Text style={style.text}>&nbsp;Trụ ATM</Text>
+            <Text style={style.text}>&nbspTrụ ATM</Text>
           </ShadenTouchableHightLight>
         </View>
       </View>
