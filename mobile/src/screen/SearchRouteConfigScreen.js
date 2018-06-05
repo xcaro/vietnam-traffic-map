@@ -43,14 +43,14 @@ class SearchRouteConfigScreen extends Component {
 
     var debounce = require('debounce')
 
-    this.textInputOrignOnChangeTextdebounced = googleAPI.debounceAutoComplete(350, ({data}) => {
-      this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState,{
+    this.textInputOrignOnChangeTextdebounced = googleAPI.debounceAutoComplete(350, ({ data }) => {
+      this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
         SearchLocationOriginResult: googleAPI.formatAutoCompletePlaceResult(data)
       }))
     })
 
-    this.textInputDestinationOnChangeTextdebounced = googleAPI.debounceAutoComplete(350, ({data}) => {
-      this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState,{
+    this.textInputDestinationOnChangeTextdebounced = googleAPI.debounceAutoComplete(350, ({ data }) => {
+      this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
         SearchLocationDestinationResult: googleAPI.formatAutoCompletePlaceResult(data)
       }))
     })
@@ -59,7 +59,7 @@ class SearchRouteConfigScreen extends Component {
     this.TextInputDestination = React.createRef()
   }
 
-  static navigationOptions  = {
+  static navigationOptions = {
     header: null
   }
 
@@ -72,7 +72,7 @@ class SearchRouteConfigScreen extends Component {
       'Đã xảy ra lỗi trong quá trình tìm kiếm đường đi',
       'Điểm đi và điểm đến không được trùng vị trí với nhau',
       [
-        {text: 'OK'},
+        { text: 'OK' },
       ]
     )
   }
@@ -81,19 +81,18 @@ class SearchRouteConfigScreen extends Component {
     var isEqual = require('lodash.isequal')
 
     // Check console.logfor dupplicate
-    if(isEqual(place_coordinate,this.state.destinationCoordinate))
-    {
+    if (isEqual(place_coordinate, this.state.destinationCoordinate)) {
       Alert.alert(
         'Đã xảy ra lỗi trong quá trình chọn điểm đi',
         'Điểm đi không được trùng với điểm đến',
         [
-          {'text':'OK'}
+          { 'text': 'OK' }
         ]
       )
       return
     }
 
-    this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState,{
+    this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
       // Set active color
       isTextInptOriginActived: true,
 
@@ -108,8 +107,8 @@ class SearchRouteConfigScreen extends Component {
     // Set text
     this.TextInputOrigin.current.setText(description)
 
-        // If the opposite have value, redirect to ... ?
-    if(this.state.destinationCoordinate != null) {
+    // If the opposite have value, redirect to ... ?
+    if (this.state.destinationCoordinate != null) {
       // Navigate
       this.startMapIntent()
     }
@@ -119,20 +118,19 @@ class SearchRouteConfigScreen extends Component {
     var isEqual = require('lodash.isequal')
 
     // Check console.logfor dupplicate
-    if(isEqual(place_coordinate,this.state.originCoordinate))
-    {
+    if (isEqual(place_coordinate, this.state.originCoordinate)) {
       Alert.alert(
         'Đã xảy ra lỗi trong quá trình chọn điểm đến',
         'Điểm đến không được trùng với điểm đi',
         [
-          {'text':'OK'}
+          { 'text': 'OK' }
         ]
       )
       return
     }
 
 
-    this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState,{
+    this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
       // Set active color
       isTextInptDestinationActived: true,
 
@@ -147,61 +145,60 @@ class SearchRouteConfigScreen extends Component {
     this.TextInputDestination.current.setText(description)
 
     // If the opposite have value, redirect to ... ?
-    if(this.state.originCoordinate != null) {
+    if (this.state.originCoordinate != null) {
       // Navigate
       this.startMapIntent()
     }
   }
 
   startMapIntent() {
-    let origin_lat = this.state.originCoordinate.latitude
-    let origin_lng = this.state.originCoordinate.longitude
-    this.destination_lat = this.state.destinationCoordinate.latitude
-    this.destination_lng = this.state.destinationCoordinate.longitude
-
-    var url = `http://maps.google.com/maps?saddr=${origin_lat},${origin_lng}&daddr=${this.destination_lat},${this.destination_lng}`
-    Linking.openURL(url)
+    this.props.navigation.navigate('SearchRouteResult', {
+      origin: this.state.originCoordinate,
+      destination: this.state.destinationCoordinate,
+      originLocation: this.state.TextInputOriginText,
+      destinationLocation: this.state.TextInputDestinationText
+    })
   }
 
 
   ShowSearchLocationOriginResult() {
-    if(this.state.SearchLocationOriginResult)
-    return (
-      <SearchLocationListView
-            title = "Kết quả tìm kiếm"
-            data = {this.state.SearchLocationOriginResult}
-            onSelected = {(place_id, {description}) => {
-              //get coordinate
-              googleAPI.placeIdToCoordinate(place_id).then(coordinate => {
-                this.setLocationTextInputOrigin(description, coordinate)
-              })
-            }}>
-      </SearchLocationListView>
-    )
+    if (this.state.SearchLocationOriginResult)
+      return (
+        <SearchLocationListView
+          title="Kết quả tìm kiếm"
+          data={this.state.SearchLocationOriginResult}
+          onSelected={(place_id, { description }) => {
+            // get coordinate
+            googleAPI.placeIdToCoordinate(place_id).then(coordinate => {
+              this.setLocationTextInputOrigin(description, coordinate)
+            })
+          }}>
+        </SearchLocationListView>
+      )
     else
-    return (
-      <Text style = {style.emptyText}>Gõ để bắt đầu tìm kiếm điếm điểm đi</Text>
-    )
+      return (
+        <Text style={style.emptyText}>Gõ để bắt đầu tìm kiếm điếm điểm đi</Text>
+      )
   }
 
   ShowSearchLocationDestinationResult() {
-    if(this.state.SearchLocationDestinationResult)
-    return (
-      <SearchLocationListView
-            title = "Kết quả tìm kiếm"
-            data = {this.state.SearchLocationDestinationResult}
-            onSelected = {(place_id, {description}) => {
-              //get coordinate
-              googleAPI.placeIdToCoordinate(place_id).then(coordinate => {
-                this.setLocationTextInputDestination(description, coordinate)
-              })
-            }}>
-          </SearchLocationListView>
-    )
+    if (this.state.SearchLocationDestinationResult)
+      return (
+        <SearchLocationListView
+          title="Kết quả tìm kiếm"
+          data={this.state.SearchLocationDestinationResult}
+          onSelected={(place_id, { description }) => {
+            // get coordinate
+            googleAPI.placeIdToCoordinate(place_id).then(coordinate => {
+              this.setLocationTextInputDestination(description, coordinate)
+            })
+          }}>
+        </SearchLocationListView>
+      )
     else
-    return (
-      <Text style = {style.emptyText}>Gõ để bắt đầu tìm kiếm điếm đến</Text>
-    )
+      return (
+        <Text style={style.emptyText}>Gõ để bắt đầu tìm kiếm điếm đến</Text>
+      )
   }
 
   swapTextInput() {
@@ -235,32 +232,34 @@ class SearchRouteConfigScreen extends Component {
     console.log(coordinate)
     var coords = coordinate.coords
 
-    if(this.state.isShowSearchLocationOriginResult)
+    if (this.state.isShowSearchLocationOriginResult)
       //Set text input origin
       this.setLocationTextInputOrigin("Vị trí hiện tại", {
         latitude: coords.latitude,
         longitude: coords.longitude
       })
 
-      else
+    else
       //set text input destination
-      this.setLocationTextInputDestination("Vị trí hiện tại",  {
+      this.setLocationTextInputDestination("Vị trí hiện tại", {
         latitude: coords.latitude,
         longitude: coords.longitude
       })
-    }
+  }
 
   //Round button
   setTextInputAsCurrentPostion() {
     // if(!this.props.curLocation) {
-      if(true) {
+    if (true) {
       navigator.geolocation.getCurrentPosition((position) => {
-         // OK
+        // OK
 
-         this.setTextInputAsCurrentLocationOK({coords : {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-         }})
+        this.setTextInputAsCurrentLocationOK({
+          coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }
+        })
       }, () => {
         errorHelper.showGpsError()
       })
@@ -271,182 +270,182 @@ class SearchRouteConfigScreen extends Component {
 
   setTextInputAsPickerPosition() {
     RNGooglePlaces.openPlacePickerModal()
-    .then((place) => {
+      .then((place) => {
 
-      //Extract data using es6 destructor
-      let {
-        latitude,
-        longitude,
-      } = place
+        //Extract data using es6 destructor
+        let {
+          latitude,
+          longitude,
+        } = place
 
-      if(this.state.isShowSearchLocationOriginResult)
-      //Set text input origin
-      this.setLocationTextInputOrigin(place.address, {
-        latitude,
-        longitude,
+        if (this.state.isShowSearchLocationOriginResult)
+          //Set text input origin
+          this.setLocationTextInputOrigin(place.address, {
+            latitude,
+            longitude,
+          })
+
+        else
+          //set text input destination
+          this.setLocationTextInputDestination(place.address, {
+            latitude,
+            longitude,
+          })
+
+
       })
-
-      else
-      //set text input destination
-      this.setLocationTextInputDestination(place.address,  {
-        latitude,
-        longitude,
-      })
-
-
-    })
-    .catch(error => console.log(error.message))  // error is a Javascript Error object
+      .catch(error => console.log(error.message))  // error is a Javascript Error object
   }
 
   render() {
     return (
       <View>
-        <View style = {[
+        <View style={[
           primaryStyle.flexDirectionRow,
           primaryStyle.bgPrimary,
           primaryStyle.alignItemCenter]}>
           <RoundButton
-          elavation = {0}
-          size = {48}
-          backgroundColor = "#3498db"
-          onPress = {() => {
-            this.props.navigation.goBack()
-          }}>
-            <Icon name="chevron-left" size={20} color="white" style = {style.iconLeft} />
+            elavation={0}
+            size={48}
+            backgroundColor="#3498db"
+            onPress={() => {
+              this.props.navigation.goBack()
+            }}>
+            <Icon name="chevron-left" size={20} color="white" style={style.iconLeft} />
           </RoundButton>
 
-          <View style = {primaryStyle.container}>
+          <View style={primaryStyle.container}>
             <TextInputWithClearButton
-            label = "Từ"
-            isActive = {this.state.isTextInptOriginActived}
-            onChangeText = {(text) => {
-              if(this.state.SearchLocationOriginResult)
-                this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                  isTextInptOriginActived: false
-                }))
+              label="Từ"
+              isActive={this.state.isTextInptOriginActived}
+              onChangeText={(text) => {
+                if (this.state.SearchLocationOriginResult)
+                  this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                    isTextInptOriginActived: false
+                  }))
 
-                if(text !== '') {
+                if (text !== '') {
                   this.textInputOrignOnChangeTextdebounced(text)
                 }
-            }}
-            onFocus = {() => {
-              this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                isShowSearchLocationOriginResult: true
-              }))
-            }}
-            isFocusOnStart = {true}
-            ref = {this.TextInputOrigin}
-            onClear = {() => {
-              this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                originCoordinate: null,
-                TextInputOriginText: ''
-              }))
-            }}
-            onBlur = {() => {
-                  /**
-                 * If coordinate have been set
-                 * reset it text and active textinput when it going blue
-                 */
-                if(this.state.originCoordinate) {
+              }}
+              onFocus={() => {
+                this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                  isShowSearchLocationOriginResult: true
+                }))
+              }}
+              isFocusOnStart={true}
+              ref={this.TextInputOrigin}
+              onClear={() => {
+                this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                  originCoordinate: null,
+                  TextInputOriginText: ''
+                }))
+              }}
+              onBlur={() => {
+                /**
+               * If coordinate have been set
+               * reset it text and active textinput when it going blue
+               */
+                if (this.state.originCoordinate) {
                   this.TextInputOrigin.current.setText(this.state.TextInputOriginText)
                   this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState => {
                     isTextInptOriginActived: true
                   }))
                 }
-            }}>
+              }}>
             </TextInputWithClearButton>
 
-            <View style = {style.seperator}></View>
+            <View style={style.seperator}></View>
 
             <TextInputWithClearButton
-            label = "Tới"
-            isActive = {this.state.isTextInptDestinationActived}
-            onChangeText = {(text) => {
-              if(this.state.SearchLocationDestinationResult)
-              this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                isTextInptDestinationActived: false
-              }))
+              label="Tới"
+              isActive={this.state.isTextInptDestinationActived}
+              onChangeText={(text) => {
+                if (this.state.SearchLocationDestinationResult)
+                  this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                    isTextInptDestinationActived: false
+                  }))
 
-              if(text !== '') {
-                this.textInputDestinationOnChangeTextdebounced(text)
-              }
-            }}
-            onFocus = {() => {
-              this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                isShowSearchLocationOriginResult: false
-              }))
-            }}
-            ref = {this.TextInputDestination}
-            onClear = {() => {
-              this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                destinationCoordinate: null,
-                TextInputDestinationText: ''
-              }))
-            }}
-            onBlur = {() => {
-              if(this.state.destinationCoordinate) {
-                this.TextInputOrigin.current.setText(this.state.TextInputOriginText)
+                if (text !== '') {
+                  this.textInputDestinationOnChangeTextdebounced(text)
+                }
+              }}
+              onFocus={() => {
                 this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
-                  isTextInptDestinationActived: true
+                  isShowSearchLocationOriginResult: false
                 }))
-              }
-            }}>
+              }}
+              ref={this.TextInputDestination}
+              onClear={() => {
+                this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                  destinationCoordinate: null,
+                  TextInputDestinationText: ''
+                }))
+              }}
+              onBlur={() => {
+                if (this.state.destinationCoordinate) {
+                  this.TextInputOrigin.current.setText(this.state.TextInputOriginText)
+                  this.setState(previousState => objectHelper.CloneAndSetPropOfObject(previousState, {
+                    isTextInptDestinationActived: true
+                  }))
+                }
+              }}>
             </TextInputWithClearButton>
 
           </View>
           <RoundButton
-          elavation = {0}
-          size = {48}
-          backgroundColor = "#3498db"
-          onPress = {this.swapTextInput.bind(this)}>
-            <MaterialIcon name="swap-vert" size={40} color="white" style = {style.iconRight} />
+            elavation={0}
+            size={48}
+            backgroundColor="#3498db"
+            onPress={this.swapTextInput.bind(this)}>
+            <MaterialIcon name="swap-vert" size={40} color="white" style={style.iconRight} />
           </RoundButton>
         </View>
         <View>
-        <ScrollView style = {primaryStyle.borderTop}>
-          <ShadenTouchableHightLight
-          backgroundColor = "#3498db"
-          padding = {15}
-          marginTop = {0}
-          flexDirection = "row"
-          onPress = {this.setTextInputAsCurrentPostion.bind(this)}>
-            <View style = {primaryStyle.flexDirectionRow}>
-              <MaterialIcon
-                  name = "my-location"
-                  size = {25}
-                  style = {style.iconInsideBtn}
-                  color = "white">
+          <ScrollView style={primaryStyle.borderTop}>
+            <ShadenTouchableHightLight
+              backgroundColor="#3498db"
+              padding={15}
+              marginTop={0}
+              flexDirection="row"
+              onPress={this.setTextInputAsCurrentPostion.bind(this)}>
+              <View style={primaryStyle.flexDirectionRow}>
+                <MaterialIcon
+                  name="my-location"
+                  size={25}
+                  style={style.iconInsideBtn}
+                  color="white">
                 </MaterialIcon>
-              <Text style = {[style.btn, primaryStyle.textWhite]}>Sử dụng vị trí hiện tại của bạn</Text>
-            </View>
+                <Text style={[style.btn, primaryStyle.textWhite]}>Sử dụng vị trí hiện tại của bạn</Text>
+              </View>
 
-          </ShadenTouchableHightLight>
+            </ShadenTouchableHightLight>
 
-          <ShadenTouchableHightLight
-          backgroundColor = "#3498db"
-          padding = {15}
-          marginTop = {0}
-          onPress = {this.setTextInputAsPickerPosition.bind(this)}>
-          <View style = {primaryStyle.flexDirectionRow}>
-              <MaterialIcon
-                  name = "add-location"
-                  size = {25}
-                  style = {style.iconInsideBtn}
-                  color = "white">
+            <ShadenTouchableHightLight
+              backgroundColor="#3498db"
+              padding={15}
+              marginTop={0}
+              onPress={this.setTextInputAsPickerPosition.bind(this)}>
+              <View style={primaryStyle.flexDirectionRow}>
+                <MaterialIcon
+                  name="add-location"
+                  size={25}
+                  style={style.iconInsideBtn}
+                  color="white">
                 </MaterialIcon>
-              <Text style = {[style.btn, primaryStyle.textWhite]}>Chọn một điểm trên bản đồ</Text>
-            </View>
-          </ShadenTouchableHightLight>
+                <Text style={[style.btn, primaryStyle.textWhite]}>Chọn một điểm trên bản đồ</Text>
+              </View>
+            </ShadenTouchableHightLight>
 
-          {this.state.isShowSearchLocationOriginResult &&
-            this.ShowSearchLocationOriginResult()
-          }
+            {this.state.isShowSearchLocationOriginResult &&
+              this.ShowSearchLocationOriginResult()
+            }
 
-          {!this.state.isShowSearchLocationOriginResult &&
-            this.ShowSearchLocationDestinationResult()
-          }
+            {!this.state.isShowSearchLocationOriginResult &&
+              this.ShowSearchLocationDestinationResult()
+            }
 
-        </ScrollView>
+          </ScrollView>
         </View>
 
       </View>
@@ -514,9 +513,9 @@ export default connect(
   /** State requirer to read by container component */
   ({
     curLocation
-  })=>(
-    {curLocation}
-  ),
+  }) => (
+      { curLocation }
+    ),
   action
 )(SearchRouteConfigScreen)
 

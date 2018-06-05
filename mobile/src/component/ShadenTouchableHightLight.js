@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import colorHelper from '../helper/color'
-import primaryStyle from '../style/index'
 import objectHelper from '../helper/object'
 
 const DEFAULT_BACKGROUNDCOLOR = '#ffffff'
-const DEFAULT_SIZE = 64
 
 export default class ShadenTouchableHightLight extends Component {
   constructor (props) {
@@ -21,7 +19,7 @@ export default class ShadenTouchableHightLight extends Component {
         justifyContent: this.props.isContentCenter ? 'center' : 'flex-start',
         alignItems: this.props.isContentCenter ? 'center' : 'flex-start',
         backgroundColor: this.props.backgroundColor || DEFAULT_BACKGROUNDCOLOR,
-        elevation: this.props.elavation !== null ? this.props.elavation : 2
+        elevation: this.props.elavation != null ? this.props.elavation : 3
       },
 
       viewStyle: {}

@@ -13,6 +13,7 @@ import SearchRouteConfigScreen from './src/screen/SearchRouteConfigScreen'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import ReportTrafficScreen from './src/screen/ReportTrafficScreen'
 import ReportTrafficConfigScreen from './src/screen/ReportTrafficConfigScreen'
+import SearchRouteResultScreen from './src/screen/SearchRouteResultScreen'
 import ChoseNearbyLocationScreen from './src/screen/ChoseNearbyLocationScreen'
 import AuthenticationScreen from './src/screen/AuthenticationScreen'
 import store from './src/redux/store'
@@ -40,6 +41,10 @@ const RootStack = StackNavigator(
 
     ReportTrafficConfig: {
       screen: ReportTrafficConfigScreen
+    },
+
+    SearchRouteResult: {
+      screen: SearchRouteResultScreen
     },
 
     Authentication: {

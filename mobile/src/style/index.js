@@ -8,17 +8,13 @@ const SECONDARY_COLOR = 'rgb(52, 73, 94)'
 
 const styles = StyleSheet.create({
   Icon: {
-    paddingTop: 3,
+    paddingTop: 4,
     marginRight: 5
   },
 
   borderTop: {
     borderTopWidth: 1,
     borderTopColor: 'rgba(52,152,219,.8)'
-  },
-
-  bgRed: {
-    backgroundColor: 'red'
   },
 
   container: {

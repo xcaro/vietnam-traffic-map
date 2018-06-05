@@ -23,7 +23,7 @@ export default {
 
           navigator.geolocation.getCurrentPosition((position) => {
             props.setCurLocation(position)
-            resolve()
+            resolve(position)
 
             navigator.geolocation.watchPosition(
               (position) => {
@@ -34,7 +34,7 @@ export default {
               }
             )
           })
-        }
+        } else resolve (props.curLocation)
       } catch (err) {
         navigator.geolocation.stopObserving()
         reject(Error('gps not enabled'))

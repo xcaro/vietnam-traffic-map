@@ -115,70 +115,72 @@ class HomeScreen extends Component {
         ]}>
 
           <MapView
-          ref = {this.mapRef}
-          style={style.map}
+            toolbarEnabled = {false}
+            ref = {this.mapRef}
+            style={style.map}
 
-          initialRegion={{
-            latitude: 10.762622,
-            longitude: 106.806692,
-            latitudeDelta: 0.5,
-            longitudeDelta: 0.5,
-          }}
-         >
-          {this.props.selectedSearchLocationItem &&
-            <Marker
-              image = {require('../assets/marker/location.png')}
-              coordinate = {{
-                latitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lat,
-                longitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lng
-              }}
-              title = {this.props.selectedSearchLocationItem.data.result.name}
-              description = {this.props.selectedSearchLocationItem.data.result.formatted_address}>
-            </Marker>
-
-
-          }
-
-         {this.props.curLocation &&
-          <CurrentLocationMarker
-            coordinate = {{
-              latitude: this.props.curLocation.coords.latitude,
-              longitude: this.props.curLocation.coords.longitude,
+            initialRegion={{
+              latitude: 10.762622,
+              longitude: 106.806692,
+              latitudeDelta: 0.5,
+              longitudeDelta: 0.5,
             }}
+          >
+            {this.props.selectedSearchLocationItem &&
+              <Marker
+                image = {require('../assets/marker/location.png')}
+                coordinate = {{
+                  latitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lat,
+                  longitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lng
+                }}
+                title = {this.props.selectedSearchLocationItem.data.result.name}
+                description = {this.props.selectedSearchLocationItem.data.result.formatted_address}>
+              </Marker>
 
-            accuracy = {this.props.curLocation.coords.accuracy}>
-          </CurrentLocationMarker>
-         }
-        </MapView>
-          <View style  = {primaryStyle.container}>
+
+            }
+
+            {this.props.curLocation &&
+              <CurrentLocationMarker
+                coordinate = {{
+                  latitude: this.props.curLocation.coords.latitude,
+                  longitude: this.props.curLocation.coords.longitude,
+                }}
+
+                accuracy = {this.props.curLocation.coords.accuracy}>
+              </CurrentLocationMarker>
+            }
+          </MapView>
+
+          <View style = {primaryStyle.container}>
             <ShadenTouchableHightLight
-                marginTop = {20}
-                marginRight = {15}
-                padding = {10}
-                onPress = {() => {
+              marginTop = {20}
+              marginRight = {15}
+              padding = {10}
+              onPress = {() => {
 
-                }}>
-                <MaterialIcon
-                  name = "traffic"
-                  size = {25}>
-                </MaterialIcon>
+              }}>
+              <MaterialIcon
+                name = "traffic"
+                size = {25}>
+              </MaterialIcon>
             </ShadenTouchableHightLight>
             <View style = {style.separator}></View>
             <ShadenTouchableHightLight
-                marginBottom = {0}
-                marginRight = {15}
-                padding = {10}
-                onPress = {() => {
-                  appHelper.navigateCheckSignIn(
-                    this.props.navigation,
-                    this.props.idToken,
-                    'ReportTrafficConfig'
-                  )
-                }}>
-                <MaterialIcon
-                  name = "announcement"
-                  size = {25}>
-                </MaterialIcon>
+              marginBottom = {0}
+              marginRight = {15}
+              padding = {10}
+              onPress = {() => {
+                appHelper.navigateCheckSignIn(
+                  this.props.navigation,
+                  this.props.idToken,
+                  'ReportTrafficConfig'
+                )
+              }}>
+              <MaterialIcon
+                name = "announcement"
+                size = {25}>
+              </MaterialIcon>
             </ShadenTouchableHightLight>
           </View>
 
@@ -186,24 +188,28 @@ class HomeScreen extends Component {
             size = {60}
             backgroundColor = '#3498db'
             marginRight = {15}
-            onPress = {() => {
+            onPress = {(() => {
               if(!this.props.selectedSearchLocationItem) {
                 this.props.navigation.navigate('SearchRouteConfig')
                 return
               }
 
               appHelper.getCurrentLocation(this.props).then((curLocation) => {
-                let origin_lat = curLocation.coords.latitude
-                let origin_lng = curLocation.coords.longitude
-                this.destination_lat = this.props.selectedSearchLocationItem.data.result.geometry.location.lat
-                this.destination_lng = this.props.selectedSearchLocationItem.data.result.geometry.location.lng
+                let destination = {}
+                destination.latitude = this.props.selectedSearchLocationItem.data.result.geometry.location.lat
+                destination.longitude = this.props.selectedSearchLocationItem.data.result.geometry.location.lng
 
-                var url = `http://maps.google.com/maps?saddr=${origin_lat},${origin_lng}&daddr=${this.destination_lat},${this.destination_lng}`
-                Linking.openURL(url)
-              }).catch(() => {
+                this.props.navigation.navigate('SearchRouteResult', {
+                  origin: curLocation.coords,
+                  destination: destination,
+                  originLocation: 'Vị trí của bạn',
+                  destinationLocation: this.state.selectedSearchLocationItemFormatAddr
+                })
+              }).catch((err) => {
+                var a = err
                 this.props.navigation.navigate('SearchRouteConfig')
               })
-            }}>
+            }).bind(this)}>
             <MaterialIcon
               style = {
                 primaryStyle.textWhite
