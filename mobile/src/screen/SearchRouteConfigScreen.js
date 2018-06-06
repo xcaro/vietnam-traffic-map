@@ -32,6 +32,7 @@ import RNGooglePlaces from 'react-native-google-places'
 import googleAPI from '../helper/google'
 import objectHelper from '../helper/object'
 import errorHelper from '../helper/error'
+import appHelper from '../helper/app'
 
 class SearchRouteConfigScreen extends Component {
   constructor(props) {
@@ -249,23 +250,14 @@ class SearchRouteConfigScreen extends Component {
 
   //Round button
   setTextInputAsCurrentPostion() {
-    // if(!this.props.curLocation) {
-    if (true) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        // OK
-
-        this.setTextInputAsCurrentLocationOK({
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }
-        })
-      }, () => {
-        errorHelper.showGpsError()
+    appHelper.getCurrentLocation(this.props).then(() => {
+      this.setTextInputAsCurrentLocationOK({
+        coords: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }
       })
-    } else {
-      this.setTextInputAsCurrentLocationOK(this.props.curLocation)
-    }
+    })
   }
 
   setTextInputAsPickerPosition() {

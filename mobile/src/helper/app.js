@@ -15,9 +15,8 @@ export default {
               PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 
             if (!granted) {
-              errorHelper.showGpsError()
               navigator.geolocation.stopObserving()
-              reject(Error('gps not enabled'))
+              throw(Error('gps not enabled'))
             }
           }
 
@@ -38,6 +37,8 @@ export default {
       } catch (err) {
         navigator.geolocation.stopObserving()
         reject(Error('gps not enabled'))
+        errorHelper.showGpsError()
+
       }
     })
   },

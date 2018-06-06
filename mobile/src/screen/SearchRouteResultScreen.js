@@ -130,6 +130,13 @@ class SearchRouteConfigScreen extends Component {
       }, 100)
 
       setTimeout(() => {
+        /**
+         * Incase leave result screen and
+         * Timeout is still tick
+         */
+        if (!bearing) {
+          return
+        }
         this.mapRef.animateToBearing(bearing, 300)
       }, 6500)
     }).catch(err => {
@@ -263,7 +270,6 @@ class SearchRouteConfigScreen extends Component {
                     longitude: this.props.curLocation.coords.longitude,
                   }}
                     image={require('../assets/marker/curLocation.png')}
-                    flat
                     title='Vị trí hiện tại của bạn'/>
                   <Polyline
                     strokeColor = "#3498db"

@@ -9,6 +9,14 @@ export const SET_IDTOKEN = 'SET_IDTOKEN'
 
 // Action creator
 export default {
+  initReportTrafficData: (data) => {
+
+  },
+
+  updateReportTrafficData: (change) => {
+
+  },
+
   setIdToken: (idToken) => {
     return {
       type: SET_IDTOKEN,

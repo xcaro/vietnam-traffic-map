@@ -24,6 +24,7 @@ import SearchLocationTextInput from '../component/SearchLocationTextInput'
 import SearchLocationListView from '../component/SearchLocationListView'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import objectHelper from '../helper/object'
+import {getMarker} from '../helper/marker'
 import googleAPI from '../helper/google'
 
 class SearchLocationScreen extends Component {
@@ -79,7 +80,8 @@ class SearchLocationScreen extends Component {
     googleAPI.placeIdToDetail(place_id).then(({data}) => {
       this.props.setSelectedSearchLocationItem({
         place_id,
-        data
+        data,
+        markerImage: getMarker()
       })
     })
 

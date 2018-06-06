@@ -4,7 +4,7 @@ import React ,{
 
   import {
     View,
-    Image,
+    ImageBackground,
     Text,
     StyleSheet
   } from 'react-native'
@@ -21,48 +21,37 @@ import React ,{
 
     render() {
       return (
-      <View style = {style.topContainer}>
-        <View style = {style.container}>
+        <View style={style.topContainer}>
+        <View style={style.container}>
           <ShadenTouchableHightLight
-          flex = {1}
-          isContentCenter  = {true}
-          onPress = {() => {
-            this.props.navigation.navigate('ReportTraffic', {
-              reportTrafficType: reportTrafficType.TrafficJam
-            })
-          }}>
-            <View style = {style.img}>
-              <Image  source = {require('../assets/traffic_menu/trafficJam.png')}></Image>
+            padding={20}
+            backgroundColor = "#1abc9c"
+            flexDirection = "row"
+            alignItems = "center"
+            onPress={() => {
+              this.props.navigation.navigate('ReportTraffic', {
+                reportTrafficType: reportTrafficType.TrafficJam
+              })
+            }}>
+            <View style={style.img}>
+              <Image source={require('../assets/traffic_menu/jam.png')} />
             </View>
-            <Text style = {style.text}>Tắc đường</Text>
-          </ShadenTouchableHightLight>
-
-          <ShadenTouchableHightLight
-          flex = {1}
-          isContentCenter  = {true}
-          onPress = {() => {
-            this.props.navigation.navigate('ReportTraffic', {
-              reportTrafficType: reportTrafficType.TrafficJam
-            })
-          }}>
-            <View style = {style.img}>
-              <Image  source = {require('../assets/traffic_menu/trafficJam.png')}></Image>
-            </View>
-            <Text style = {style.text}>Tại nạn</Text>
+            <Text style={style.text}>Kẹt xe</Text>
           </ShadenTouchableHightLight>
         </View>
       </View>
-
       )
     }
   }
 
   const style = StyleSheet.create({
+    img: {
+      justifyContent: 'center'
+    },
 
     container: {
-      flexDirection: 'row',
-      backgroundColor: 'white',
-      marginTop: 40
+      flexWrap: 'wrap',
+      backgroundColor: 'white'
     },
 
     topContainer: {
@@ -71,9 +60,10 @@ import React ,{
     },
 
     text: {
-      fontSize: 20,
-      marginLeft:10,
-      marginTop: 10
+      fontSize: 22,
+      marginLeft: 10,
+      color: 'white',
+      fontWeight: 'bold'
     }
   })
 

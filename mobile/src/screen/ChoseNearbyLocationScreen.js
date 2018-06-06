@@ -17,17 +17,19 @@ import googleAPI from '../helper/google'
 import appHelper from '../helper/app'
 import RoundButton from '../component/RoundButton'
 import primaryStyle from '../style/index'
+import {markerTypeConst, getMarker} from '../helper/marker'
 
 class ChoseNearbyLocationScreen extends Component {
-  afterGetNearestLocation (response) {
+  afterGetNearestLocation (response, markerImage) {
     if (response.data.results.length > 0) { // Have data
       googleAPI.placeIdToDetail(response.data.results[0].place_id)
         .then(({data}) => {
           this.props.setSelectedSearchLocationItem({
             place_id: response.data.results[0].place_id,
-            data
+            data,
+            markerImage
           })
-          this.props.navigation.goBack()
+          this.props.navigation.navigate('Bản đồ')
         })
     }
   }
@@ -37,16 +39,17 @@ class ChoseNearbyLocationScreen extends Component {
       <View style={style.topContainer}>
         <View style={style.container}>
           <ShadenTouchableHightLight
-            margin={20}
-            flex={1}
-            isContentCenter
+            padding={20}
+            backgroundColor = "#1abc9c"
+            flexDirection = "row"
+            alignItems = "center"
             onPress={() => {
               appHelper.getCurrentLocation(this.props).then((curLocation) => {
                 googleAPI.getNearestPlace('gas_station', [
                   curLocation.coords.latitude,
                   curLocation.coords.longitude
                 ]).then((response) => {
-                  this.afterGetNearestLocation(response)
+                  this.afterGetNearestLocation(response, getMarker(markerTypeConst.FUEL))
                 })
               })
             }}>
@@ -57,23 +60,24 @@ class ChoseNearbyLocationScreen extends Component {
           </ShadenTouchableHightLight>
 
           <ShadenTouchableHightLight
-            margin={20}
-            flex={1}
-            isContentCenter
+            padding={20}
+            backgroundColor = "#2c3e50"
+            flexDirection = "row"
+            alignItems = "center"
             onPress={() => {
               appHelper.getCurrentLocation(this.props).then((curLocation) => {
                 googleAPI.getNearestPlace('atm', [
                   curLocation.coords.latitude,
                   curLocation.coords.longitude
                 ]).then((response) => {
-                  this.afterGetNearestLocation(response)
+                  this.afterGetNearestLocation(response, getMarker(markerTypeConst.ATM))
                 })
               })
             }}>
             <View style={style.img}>
               <Image source={require('../assets/location_nearby/atm.png')} />
             </View>
-            <Text style={style.text}>&nbspTrụ ATM</Text>
+            <Text style={style.text}>Trụ ATM</Text>
           </ShadenTouchableHightLight>
         </View>
       </View>
@@ -83,13 +87,11 @@ class ChoseNearbyLocationScreen extends Component {
 
 const style = StyleSheet.create({
   img: {
-    marginTop: 30,
-    marginBottom: 15,
     justifyContent: 'center'
   },
 
   container: {
-    flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: 'white'
   },
 
@@ -99,10 +101,10 @@ const style = StyleSheet.create({
   },
 
   text: {
-    paddingBottom: 30,
     fontSize: 22,
-
-    marginLeft: 10
+    marginLeft: 10,
+    color: 'white',
+    fontWeight: 'bold'
   }
 })
 

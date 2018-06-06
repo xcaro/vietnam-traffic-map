@@ -36,15 +36,18 @@ class HomeScreen extends Component {
     super(props)
 
     this.state = {
-      selectedSearchLocationItemFormatAddr: ''
+      selectedSearchLocationItemFormatAddr: '',
+      isShowReportTraffic: true
     }
+
+
+    this.ws = new WebSocket('ws://localhost:8080')
+
+    appHelper.getCurrentLocation(this.props, false)
 
     /**
      * Start the tracking location
      */
-
-
-
     this.selectedSearchLocationItem = null
     this.unsubscribe = store.subscribe(() => {
 
@@ -66,10 +69,12 @@ class HomeScreen extends Component {
          * Animated to search location
          */
         if(newselectedSearchLocationItem !== null)
-        this.mapRef.current.animateToCoordinate({
+        this.mapRef.current.animateToRegion({
           latitude: newselectedSearchLocationItem.data.result.geometry.location.lat,
-          longitude: newselectedSearchLocationItem.data.result.geometry.location.lng
-        }, 700)
+          longitude: newselectedSearchLocationItem.data.result.geometry.location.lng,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }, 300)
 
         /**
          * Save the new data
@@ -115,6 +120,46 @@ class HomeScreen extends Component {
         ]}>
 
           <MapView
+            onRegionChangeComplete = {(region) => {
+              /**
+               * Validate if zoom level is too small
+               */
+              let zoom = Math.round(Math.log(360 / region.longitudeDelta) / Math.LN2)
+              if (zoom < 8) {
+                this.setState({
+                  isShowReportTraffic: false
+                })
+                return
+              } else if (!this.state.isShowReportTraffic) {
+                this.setState({
+                  isShowReportTraffic: true
+                })
+              }
+
+              /**
+               * Send current region to web socket
+               * Subscribe to update
+               */
+              this.ws.onopen = () => {
+                // connection opened
+                this.ws.send('something'); // send a message
+              };
+
+              this.ws.onmessage = (e) => {
+                // a message was received
+                console.log(e.data);
+              };
+
+              this.ws.onerror = (e) => {
+                // an error occurred
+                console.log(e.message);
+              };
+
+              this.ws.onclose = (e) => {
+                // connection closed
+                console.log(e.code, e.reason);
+              };
+            }}
             toolbarEnabled = {false}
             ref = {this.mapRef}
             style={style.map}
@@ -128,7 +173,7 @@ class HomeScreen extends Component {
           >
             {this.props.selectedSearchLocationItem &&
               <Marker
-                image = {require('../assets/marker/location.png')}
+                image = {this.props.selectedSearchLocationItem.markerImage}
                 coordinate = {{
                   latitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lat,
                   longitude: this.props.selectedSearchLocationItem.data.result.geometry.location.lng
@@ -242,8 +287,6 @@ class HomeScreen extends Component {
                 else {
                   this.animateToCurrentLocation()
                 }
-
-
               }}>
               <MaterialIcon
                 name = "my-location"

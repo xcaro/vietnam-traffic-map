@@ -13,7 +13,7 @@ export default class ShadenTouchableHightLight extends Component {
         colorHelper
           .shadeColor(
             this.props.backgroundColor || DEFAULT_BACKGROUNDCOLOR,
-            this.props.shadenLevel || 0.4
+            this.props.shadenLevel || -0.1
           ),
       style: {
         justifyContent: this.props.isContentCenter ? 'center' : 'flex-start',
@@ -22,7 +22,9 @@ export default class ShadenTouchableHightLight extends Component {
         elevation: this.props.elavation != null ? this.props.elavation : 3
       },
 
-      viewStyle: {}
+      viewStyle: {
+
+      }
     }
 
     this.state.style = objectHelper
@@ -40,7 +42,8 @@ export default class ShadenTouchableHightLight extends Component {
 
     this.state.viewStyle = objectHelper
       .addPropsIfDefined(this.state.viewStyle, [
-        {prop: this.props.flexDirection, propName: 'flexDirection'}
+        {prop: this.props.flexDirection, propName: 'flexDirection'},
+        {prop: this.props.alignItems, propName: 'alignItems'},
       ])
   }
 

@@ -53,7 +53,7 @@ const RootStack = StackNavigator(
   },
 
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'ReportTrafficConfig',
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#0288D1'
@@ -110,25 +110,26 @@ export default class App extends Component {
   constructor () {
     super()
 
-    firebase.auth().onAuthStateChanged((idToken) => {
-      if (idToken === null) {
-        store.dispatch(action.setIdToken(null))
-        return
-      }
 
-      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-        store.dispatch(action.setIdToken(idToken))
-        superAgent
-          .get('192.168.1.4:3000/trafficReport/isauth')
-          .then((res) => {
-            console.log(res)
-          }).catch((err) => {
-            console.log(err)
-          })
-      }).catch(function (error) {
-        throw error
-      })
-    })
+    // firebase.auth().onAuthStateChanged((idToken) => {
+    //   if (idToken === null) {
+    //     store.dispatch(action.setIdToken(null))
+    //     return
+    //   }
+
+    //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+    //     store.dispatch(action.setIdToken(idToken))
+    //     superAgent
+    //       .get('192.168.1.4:3000/trafficReport/isauth')
+    //       .then((res) => {
+    //         console.log(res)
+    //       }).catch((err) => {
+    //         console.log(err)
+    //       })
+    //   }).catch(function (error) {
+    //     throw error
+    //   })
+    // })
   }
 
   render () {
