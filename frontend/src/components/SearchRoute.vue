@@ -1,10 +1,10 @@
 <template>
   <div id = "SearchRoute" class="m-3 p-3 ">
     <div class="d-flex">
-      <button class="btn btn-light" type="button" @click = 'onToggle'>
+      <button class="btn btn-light" type="button" @click = 'onToggling'>
         <span class="icon-menu"></span>
       </button>
-      <button class="btn ml-auto" type="button" @click = 'onToggle'>
+      <button class="btn ml-auto" type="button" @click = 'onToggling'>
         <span class="icon-close"></span>
       </button>
     </div>
@@ -73,34 +73,57 @@ export default {
   },
 
   methods: {
-    onSearchOrigin (data) {
-      if (deepEqual(data, this.DestinationLocation)) {
-        this.$refs.error.open()
-        return
-      }
+    onToggling () {
+      this.onToggled()
+      this.onCleared()
+    },
 
-      this.isOriginNotEmpty = true
-      this.OriginLocation = data
+    onSearchOrigin (data) {
+      if (!this.DestinationLocation) {
+        this.isOriginNotEmpty = true
+        this.OriginLocation = data
+      } else {
+        if (deepEqual(data, this.DestinationLocation)) {
+          this.$refs.error.open()
+          return
+        }
+
+        this.isOriginNotEmpty = true
+        this.OriginLocation = data
+
+        /** Fulfilled */
+        this.onFulfilled(this.OriginLocation, this.DestinationLocation)
+      }
     },
 
     onSearchDestination (data) {
-      if (deepEqual(data, this.OriginLocation)) {
-        this.$refs.error.open()
-        return
-      }
+      if (!this.OriginLocation) {
+        this.isOriginNotEmpty = true
+        this.OriginLocation = data
+      } else {
+        if (deepEqual(data, this.OriginLocation)) {
+          this.$refs.error.open()
+          return
+        }
 
-      this.isDestinationNotEmpty = true
-      this.DestinationLocation = data
+        this.isDestinationNotEmpty = true
+        this.DestinationLocation = data
+
+        /** Fulfilled */
+        this.onFulfilled(this.OriginLocation, this.DestinationLocation)
+      }
     },
 
     onClearOrigin () {
       this.isOriginNotEmpty = false
       this.$refs.origin.clear()
+      this.onCleared()
     },
 
     onClearDestination () {
       this.isDestinationNotEmpty = false
       this.$refs.destination.clear()
+      this.onCleared()
     }
   },
 
@@ -109,7 +132,7 @@ export default {
     SweetModal
   },
 
-  props: ['onToggle', 'onCancel', 'onFulfill']
+  props: ['onToggled', 'onCleared', 'onFulfilled']
 }
 </script>
 

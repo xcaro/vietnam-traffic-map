@@ -2,9 +2,9 @@
   <div>
     <Map ref = 'map' />
     <search-route
-      :onCancel = 'toggleSearchLocationAndSearchRoute'
-      :onFulfill = 'onSearchLocationFulfilled'
-      :onToggle = 'toggleSearchLocationAndSearchRoute'
+      :onCleared = 'onSearchRouteCleared'
+      :onFulfilled = 'onSearchRouteFulfilled'
+      :onToggled = 'toggleSearchLocationAndSearchRoute'
       v-if = 'isShowSearchRoute' />
     <search-location
       :onCleared = 'onSearchLocationCleared'
@@ -30,6 +30,12 @@ export default {
     },
     onSearchLocationCleared () {
       this.$refs.map.onSearchLocationCleared()
+    },
+    onSearchRouteFulfilled (originLocation, destinationLocation) {
+      this.$refs.map.onSearchRouteFulfilled(originLocation, destinationLocation)
+    },
+    onSearchRouteCleared () {
+      this.$refs.map.onSearchRouteCleared()
     }
   },
 
