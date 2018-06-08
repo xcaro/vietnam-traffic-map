@@ -6,7 +6,8 @@ import {
   View,
   Image,
   Text,
-  StyleSheet
+  StyleSheet,
+  Picker
 } from 'react-native'
 
 import action from '../redux/action'
@@ -20,6 +21,43 @@ import primaryStyle from '../style/index'
 import {markerTypeConst, getMarker} from '../helper/marker'
 
 class ChoseNearbyLocationScreen extends Component {
+  constructor () {
+    super()
+    this.state = {
+      bankList: [
+        {
+          label: 'ACB',
+          value: 'ATM ACB'
+        },
+        {
+          label: 'Vietcombank',
+          value: 'ATM Vietcombank'
+        },
+        {
+          label: 'Agribank',
+          value: 'Agribank'
+        },
+        {
+          label: 'BIDV',
+          value: 'BIDV'
+        },
+        {
+          label: 'Vietinbank',
+          value: 'Vietinbank'
+        },
+        {
+          label: 'Vietcombank',
+          value: 'Vietcombank'
+        },
+        {
+          label: 'Sacombank',
+          value: 'Sacombank'
+        }
+      ],
+      selectedBankKeyWord: 'ACB'
+    }
+  }
+
   afterGetNearestLocation (response, markerImage) {
     if (response.data.results.length > 0) { // Have data
       googleAPI.placeIdToDetail(response.data.results[0].place_id)
@@ -40,7 +78,7 @@ class ChoseNearbyLocationScreen extends Component {
         <View style={style.container}>
           <ShadenTouchableHightLight
             padding={20}
-            backgroundColor = "#1abc9c"
+            backgroundColor = "#29c183"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {
@@ -61,24 +99,39 @@ class ChoseNearbyLocationScreen extends Component {
 
           <ShadenTouchableHightLight
             padding={20}
-            backgroundColor = "#2c3e50"
+            backgroundColor = "#5778aa"
             flexDirection = "row"
             alignItems = "center"
-            onPress={() => {
+            onPress={(() => {
               appHelper.getCurrentLocation(this.props).then((curLocation) => {
                 googleAPI.getNearestPlace('atm', [
                   curLocation.coords.latitude,
                   curLocation.coords.longitude
-                ]).then((response) => {
+                ], this.state.selectedBankKeyWord).then((response) => {
                   this.afterGetNearestLocation(response, getMarker(markerTypeConst.ATM))
                 })
               })
-            }}>
+            }).bind(this)}>
             <View style={style.img}>
               <Image source={require('../assets/location_nearby/atm.png')} />
             </View>
             <Text style={style.text}>Trụ ATM</Text>
           </ShadenTouchableHightLight>
+          <Picker
+            selectedValue = {this.state.selectedBankKeyWord}
+            onValueChange = {(itemValue) => {
+              this.setState({
+                selectedBankKeyWord: itemValue
+              })
+            }}>
+            {
+              this.state.bankList.map((bank, index) => {
+                return (
+                  <Picker.Item key = {index} label = {bank.label} value = {bank.value} />
+                )
+              })
+            }
+          </Picker>
         </View>
       </View>
     )

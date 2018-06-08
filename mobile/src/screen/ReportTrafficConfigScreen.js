@@ -4,7 +4,7 @@ import React ,{
 
   import {
     View,
-    ImageBackground,
+    Image,
     Text,
     StyleSheet
   } from 'react-native'
@@ -25,7 +25,7 @@ import React ,{
         <View style={style.container}>
           <ShadenTouchableHightLight
             padding={20}
-            backgroundColor = "#1abc9c"
+            backgroundColor = "#4f6676"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {

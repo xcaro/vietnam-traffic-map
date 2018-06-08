@@ -53,7 +53,7 @@ const RootStack = StackNavigator(
   },
 
   {
-    initialRouteName: 'ReportTrafficConfig',
+    initialRouteName: 'Home',
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#0288D1'
