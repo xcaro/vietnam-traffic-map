@@ -8,6 +8,10 @@
 </template>
 
 <script>
+import {
+  getTrafficMarkerIconPath
+} from '../helper/marker.js'
+
 let map = null
 let locationSearchMarker = null
 let trafficReports = []
@@ -83,12 +87,14 @@ export default {
     },
 
     addTrafficReport (trafficReport) {
+      const iconPath = getTrafficMarkerIconPath(trafficReport.type)
       trafficReport.marker = new window.google.maps.Marker({
         position: {
           lat: trafficReport.location.lat,
           lng: trafficReport.location.lng
         },
-        map: map
+        map: map,
+        icon: iconPath
       })
 
       trafficReports.push(trafficReport)
@@ -117,7 +123,6 @@ export default {
     },
 
     editTrafficReport (trafficReport) {
-      debugger
       let index = this.findIndexTrafficReport(trafficReport)
       if (index === -1) {
         /**

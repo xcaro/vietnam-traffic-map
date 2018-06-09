@@ -1,19 +1,25 @@
 const WebSocket = require('ws')
 const r = require('rethinkdb')
 
+
+
 async function start () {
   try {
-    /**
-     * Connect database
-     */
-    const conn = await r.connect()
-    conn.use('app')
+
 
     /**
      * Create socket server
      */
+
+
     const wss = new WebSocket.Server({ port: 8082 })
-    wss.on('connection', (client) => {
+    wss.on('connection', async (client) => {
+      /**
+       * Connect database
+       */
+      const conn = await r.connect()
+      conn.use('app')
+
       /**
        * Client setting subscribe rethinkdb data
        * WARNING : doesn't validate payload
@@ -29,6 +35,7 @@ async function start () {
          * Subscribe rethink data base on message request
          * Send all data base on update
          */
+
         r.table('activeTrafficReports')
           .changes({
             'includeTypes': true,
@@ -45,7 +52,15 @@ async function start () {
                 throw err
               }
 
-              client.send(JSON.stringify(row))
+              if (client.readyState === client.OPEN) {
+                client.send(JSON.stringify(row))
+              } else {
+                client.terminate()
+                cursor.close()
+                conn.close()
+                return false // This will stop cursor from run
+                // If it still run, it will yield error cursor has been closed
+              }
             })
 
             /**
@@ -53,10 +68,6 @@ async function start () {
              * Client disconnect
              * Client send new message
              */
-            wss.on('close', () => {
-              cursor.close()
-            })
-
             client.on('message', () => {
               cursor.close()
             })
