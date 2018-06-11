@@ -18,7 +18,7 @@ import googleAPI from '../helper/google'
 import appHelper from '../helper/app'
 import RoundButton from '../component/RoundButton'
 import primaryStyle from '../style/index'
-import {markerTypeConst, getMarker} from '../helper/marker'
+import {markerTypeCONST, getMarker} from '../helper/marker'
 
 class ChoseNearbyLocationScreen extends Component {
   constructor () {
@@ -87,7 +87,7 @@ class ChoseNearbyLocationScreen extends Component {
                   curLocation.coords.latitude,
                   curLocation.coords.longitude
                 ]).then((response) => {
-                  this.afterGetNearestLocation(response, getMarker(markerTypeConst.FUEL))
+                  this.afterGetNearestLocation(response, getMarker(markerTypeCONST.FUEL))
                 })
               })
             }}>
@@ -108,7 +108,7 @@ class ChoseNearbyLocationScreen extends Component {
                   curLocation.coords.latitude,
                   curLocation.coords.longitude
                 ], this.state.selectedBankKeyWord).then((response) => {
-                  this.afterGetNearestLocation(response, getMarker(markerTypeConst.ATM))
+                  this.afterGetNearestLocation(response, getMarker(markerTypeCONST.ATM))
                 })
               })
             }).bind(this)}>

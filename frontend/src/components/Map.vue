@@ -21,7 +21,7 @@ let directionsDisplay = new window.google.maps.DirectionsRenderer()
 export default {
   data () {
     return {
-      locationSearchMarker: null
+
     }
   },
 
@@ -161,6 +161,13 @@ export default {
         const bounds = map.getBounds()
         const data = this.parseBoundsIntoLocation(bounds)
         this.websocket.send(JSON.stringify(data))
+
+        /**
+         * Reset all traffic report
+         * Load new traffic marker
+         * Doesn't need anymore : just load all traffic marker
+         * Improve later
+         */
       })
 
       this.websocket.onmessage = ({data}) => {

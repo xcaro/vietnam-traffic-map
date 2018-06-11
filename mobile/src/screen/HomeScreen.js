@@ -30,6 +30,7 @@ import MapView, {
   ProviderPropType,
   Callout
 } from 'react-native-maps'
+import { trafficMakerIcons } from '../helper/marker';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class HomeScreen extends Component {
 
     this.state = {
       selectedSearchLocationItemFormatAddr: '',
+      trafficMarkers: [],
       isShowReportTraffic: true
     }
 
@@ -87,8 +89,67 @@ class HomeScreen extends Component {
     this.mapRef = React.createRef()
   }
 
+  componentWillMount () {
+    /**
+     * Init web socket
+     * Start fetch data from realtime
+     */
+    this.websocket = new WebSocket('ws://192.168.1.2')
+    this.websocket.onopen = () => {
+      // map.addListener('idle', () => {
+      //   const bounds = map.getBounds()
+      //   const data = this.parseBoundsIntoLocation(bounds)
+      //   this.websocket.send(JSON.stringify(data))
+      // })
+
+      let self = this
+      this.websocket.onmessage = ({data}) => {
+        let parseData = JSON.parse(data)
+        switch (parseData.type) {
+          case 'add':
+          case 'initial':
+            self.setState(state => {
+              return {...state,
+                trafficMarkers: [...state.trafficMarkers, parseData.new_val]
+              }
+
+            })
+            break
+          case 'remove':
+            self.setState(state => {
+              return {...state,
+                trafficMarkers: state.filter(trafficMaker => {
+                  trafficMaker.id !== parseData.old_val.id
+                })
+              }
+            })
+            self.deleteTrafficReport(parseData.old_val)
+            break
+          case 'change':
+            let array = [...self.state.trafficMarkers];
+            let index = array.findIndex((e) => e.id === parseData.new_val.id)
+            if (index === -1) {
+              /**
+               * Never happend
+               */
+              return
+            }
+
+            array[index] = parseData.new_val
+            self.setState(state => {
+              return {...state,
+                trafficMaker: array
+              }
+            })
+            break
+        }
+      }
+    }
+  }
+
   componentWillUnmount() {
     this.unsubscribe()
+    // this.websocket.close()
   }
 
   static navigationOptions = {
@@ -135,30 +196,6 @@ class HomeScreen extends Component {
                   isShowReportTraffic: true
                 })
               }
-
-              /**
-               * Send current region to web socket
-               * Subscribe to update
-               */
-              this.ws.onopen = () => {
-                // connection opened
-                this.ws.send('something'); // send a message
-              };
-
-              this.ws.onmessage = (e) => {
-                // a message was received
-                console.log(e.data);
-              };
-
-              this.ws.onerror = (e) => {
-                // an error occurred
-                console.log(e.message);
-              };
-
-              this.ws.onclose = (e) => {
-                // connection closed
-                console.log(e.code, e.reason);
-              };
             }}
             toolbarEnabled = {false}
             ref = {this.mapRef}
@@ -171,6 +208,19 @@ class HomeScreen extends Component {
               longitudeDelta: 0.5,
             }}
           >
+            {this.state.trafficMarkers.map(trafficMaker => {
+
+              return (
+                <Marker
+                  image = {trafficMakerIcons[trafficMaker.type]}
+                  key = {trafficMaker.id}
+                  coordinate = {{
+                    latitude: trafficMaker.location.lat,
+                    longitude: trafficMaker.location.lng
+                  }} />
+              )
+            })}
+
             {this.props.selectedSearchLocationItem &&
               <Marker
                 image = {this.props.selectedSearchLocationItem.markerImage}
@@ -181,8 +231,6 @@ class HomeScreen extends Component {
                 title = {this.props.selectedSearchLocationItem.data.result.name}
                 description = {this.props.selectedSearchLocationItem.data.result.formatted_address}>
               </Marker>
-
-
             }
 
             {this.props.curLocation &&
