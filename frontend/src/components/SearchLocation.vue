@@ -1,7 +1,7 @@
 <template>
   <div id = "SearchLocation" class="input-group m-3 p-3">
     <div class="input-group-prepend">
-      <button class="btn" type="button">
+      <button class="btn" type="button"  @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-menu">
         </span>
       </button>

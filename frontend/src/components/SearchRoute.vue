@@ -1,7 +1,7 @@
 <template>
   <div id = "SearchRoute" class="m-3 p-3 ">
     <div class="d-flex">
-      <button class="btn btn-light" type="button" @click = 'onToggling'>
+      <button class="btn btn-light" type="button" @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-menu"></span>
       </button>
       <button class="btn ml-auto" type="button" @click = 'onToggling'>

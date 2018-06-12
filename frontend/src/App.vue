@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Sidebar />
     <router-view/>
   </div>
 </template>
@@ -11,8 +12,18 @@ import './assets/css/bootstrap.min.css'
 /** Icon */
 import './assets/css/icon.css'
 
+/** Sidebar */
+import Sidebar from './components/Sidebar'
+
+/** Store */
+import store from './store/index.js'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Sidebar
+  },
+  store
 }
 </script>
 
