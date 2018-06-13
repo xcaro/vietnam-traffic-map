@@ -9,7 +9,7 @@ async function start () {
     /**
      * Create socket server
      */
-    const wss = new WebSocket.Server({ port: 80 })
+    const wss = new WebSocket.Server({ port: 8000 })
     wss.on('connection', async (client) => {
       /**
        * Connect database

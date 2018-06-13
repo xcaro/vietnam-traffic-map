@@ -38,6 +38,38 @@ import React ,{
             </View>
             <Text style={style.text}>Kẹt xe</Text>
           </ShadenTouchableHightLight>
+
+          <ShadenTouchableHightLight
+            padding={20}
+            backgroundColor = "#4f6676"
+            flexDirection = "row"
+            alignItems = "center"
+            onPress={() => {
+              this.props.navigation.navigate('ReportTraffic', {
+                reportTrafficType: reportTrafficType.TrafficJam
+              })
+            }}>
+            <View style={style.img}>
+              <Image source={require('../assets/traffic_menu/jam.png')} />
+            </View>
+            <Text style={style.text}>Tai nạn</Text>
+          </ShadenTouchableHightLight>
+
+          <ShadenTouchableHightLight
+            padding={20}
+            backgroundColor = "#4f6676"
+            flexDirection = "row"
+            alignItems = "center"
+            onPress={() => {
+              this.props.navigation.navigate('ReportTraffic', {
+                reportTrafficType: reportTrafficType.TrafficJam
+              })
+            }}>
+            <View style={style.img}>
+              <Image source={require('../assets/traffic_menu/jam.png')} />
+            </View>
+            <Text style={style.text}>Lũ lụt</Text>
+          </ShadenTouchableHightLight>
         </View>
       </View>
       )

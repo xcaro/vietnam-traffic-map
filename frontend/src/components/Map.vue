@@ -15,8 +15,8 @@ import {
 let map = null
 let locationSearchMarker = null
 let trafficReports = []
-let directionsService = new window.google.maps.DirectionsService()
-let directionsDisplay = new window.google.maps.DirectionsRenderer()
+const directionsService = new window.google.maps.DirectionsService()
+const directionsDisplay = new window.google.maps.DirectionsRenderer()
 
 export default {
   data () {
@@ -97,6 +97,24 @@ export default {
         icon: iconPath
       })
 
+      trafficReport.infoWindow = new window.google.maps.InfoWindow({
+        content: 
+`<div class = "infowindow">
+  <div>Mô tả: ` + (trafficReport.comment || 'Không có') +`</div>
+  <div>Thời gian: ` + trafficReport.time + `</div>
+  <div>Trạng thái :` + (trafficReport.confirm ? 'Đã duyệt' : 'Chưa duyệt') + `</div>`
+  + (trafficReport.image ? '<image class = "m-2 mt-3 mr-0" src = "' + trafficReport.image + '">' : '')
+  + `<div class = "m-1 mt-2">
+      <button class = "btn btn-primary">Xác nhận</button>
+      <button class = "btn btn-primary ml-1">Đã kết thúc </button>
+    </div>` +
+`</div>`
+      })
+
+      trafficReport.marker.addListener('click', function() {
+        trafficReport.infoWindow.open(map, trafficReport.marker);
+      })
+
       trafficReports.push(trafficReport)
     },
 
@@ -141,7 +159,7 @@ export default {
   mounted () {
     map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: -34.397, lng: 150.644},
-      zoom: 12,
+      zoom: 12  ,
       mapTypeControl: true,
       mapTypeControlOptions: {
         position: window.google.maps.ControlPosition.TOP_RIGHT
@@ -155,7 +173,7 @@ export default {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://localhost:8082')
+    this.websocket = new WebSocket('ws://localhost:8081')
     this.websocket.onopen = () => {
       map.addListener('idle', () => {
         const bounds = map.getBounds()
@@ -195,6 +213,16 @@ export default {
 </script>
 
 <style>
+.infowindow {
+  font-size: 18px;
+  letter-spacing: 1px
+}
+
+.infowindow img {
+  width: 300px;
+  border-radius: 2px
+}
+
 #map {
   position: absolute;
   top: 0;

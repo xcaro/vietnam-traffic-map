@@ -1,34 +1,49 @@
 <template>
 <transition name = 'slide-fade'>
-  <div id = "sidebar" class="bg-primary-new" v-show = 'isShowSideBar'>
+  <div id = "sidebar" class="bg-primary-new" v-show = '$store.state.isShowSideBar'>
     <div class="d-flex p-3">
       <button class="btn btn-primary ml-auto" type="button" @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-close"></span>
       </button>
     </div>
     <div class="list-group">
-      <a href="#" class="list-group-item list-group-item-action active">
-        <span class="icon-map">
-          Bản đồ
+      <router-link to = '/' class="list-group-item list-group-item-action" exact-active-class="active">
+        <span class="icon-map d-inline pl-2">
         </span>
-
-      </a>
-      <a href="#" class="list-group-item list-group-item-action">
-        <span class="icon-clinic">
+        Bản đồ
+      </router-link>
+      <drop-down>
+        <div slot="header" class="p-3 py-4">
+          <span class="icon-clinic d-inline pl-2">
+          </span>
           Phòng khám
-        </span>
-      </a>
+        </div>
+        <div slot="body">
+          <router-link to = '/clinic/create' class="list-group-item list-group-item-action" exact-active-class="active">
+            Khởi tạo
+          </router-link>
+          <router-link to = '/clinic/find' class="list-group-item list-group-item-action" exact-active-class="active">
+            Tìm kiếm
+          </router-link>
+        </div>
+      </drop-down>
     </div>
   </div>
 </transition>
 </template>
 
 <script>
+import DropDown from '../components/DropDown'
+
 export default {
   computed: {
     isShowSideBar () {
       return this.$store.state.isShowSideBar
     }
+  },
+
+  components: {
+    DropDown
   }
 }
 </script>
@@ -51,7 +66,7 @@ export default {
   transition: all .3s ease;
 }
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all .3s ease;
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {

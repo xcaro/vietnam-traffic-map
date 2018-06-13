@@ -37,7 +37,7 @@ class ReportTrafficScreen extends Component {
     super()
     this.state = {
       description: '',
-      images: [],
+      image: null,
       height: 0
     }
   }
@@ -58,16 +58,7 @@ class ReportTrafficScreen extends Component {
             onPress={() => {
               ImagePicker.showImagePicker(imagePickerOptions, (response) => {
                 if (response.data) {
-                  if (this.state.images.includes(response.uri)) {
-                    Alert.alert(
-                      'Đã xảy ra lỗi',
-                      'Hình ảnh này đã tồn tại rồi, Vui lòng chọn hình ảnh khác !',
-                      [
-                        {text: 'OK'}
-                      ])
-                    return
-                  }
-                  this.setState({images: [...this.state.images,response.uri ]})
+                  this.setState({image: response.uri})
                 }
               })
             }}
@@ -76,18 +67,14 @@ class ReportTrafficScreen extends Component {
             padding = {13}
             marginTop = {15}>
               <Icon style = {primaryStyles.Icon} name="plus-circle" size={20} color = "white" />
-              <Text style = {styles.buttonText}>Thêm hình ảnh</Text>
+              <Text style = {styles.buttonText}>Thay đổi hình ảnh</Text>
           </ShadenTouchableHightLight>
       <View style = {styles.imgContainer}>
-          {this.state.images.map(image => {
-              return (
-                <Image
-                  key = {image}
-                  source={{uri: image}}
-                  style={{width: 125, height: 125}}
-                />
-              )
-            })
+          { this.state.image && 
+            <Image
+              source={{uri: this.state.image}}
+              style={{width: 300, height: 300}}
+            />
           }
       </View>
 
@@ -127,38 +114,31 @@ class ReportTrafficScreen extends Component {
                */
               let pushMe = new FormData()
 
-              pushMe.append('location', {
-                lat: origin_lat,
-                lng: origin_lng
-              })
-              pushMe.append('reportTrafficType', reportTrafficType)
-              pushMe.append('description', this.state.description)
+              pushMe.append('latitude', origin_lat)
+              pushMe.append('longitude', origin_lng)
+              pushMe.append('type', reportTrafficType)
+              pushMe.append('comment', this.state.description)
 
-              let i = 0
-              for (image of this.state.images) {
-                pushMe.append('images', {
-                  uri: image,
-                  name: `selfie${i}.jpg`,
-                  type: 'image/jpg'
-                })
-                i++
-              }
+              // Gửi hình sau
+              // let i = 0
+              // for (image of this.state.images) {
+              //   pushMe.append('files', {
+              //     uri: image,
+              //     name: `selfie${i}.jpg`,
+              //     type: 'image/jpg'
+              //   })
+              //   i++
+              // }
 
               axious.post(
-                'http://192.168.1.4:3000/trafficReport',
+                'deltavn.net/api/reports',
                 pushMe
               )
                 .then((res) => {
                   Alert.alert('Thông báo' ,`Báo cáo ${reportTrafficType} thành công`)
               }).catch((err) => {
-                /**
-                 * should be https url otherwise it keep throw : network err
-                 */
-                if(err.request._response !== "Unrecognized FormData part.") {
-                  Alert.alert('Đã xảy ra lỗi','Không thể kết nối tới server')
-                } else {
-                  Alert.alert('Thông báo' ,`Báo cáo ${reportTrafficType} thành công`)
-                }
+                let e = err
+                debugger
               })
             })
           }}
@@ -204,8 +184,13 @@ const styles = StyleSheet.create({
 
   imgContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10,
     marginBottom: 20,
-    marginTop: 15
+    marginTop: 15,
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: 'rgba(0, 0, 0, .25)',
   },
 
   textInput: {

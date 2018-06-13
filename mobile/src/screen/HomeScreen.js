@@ -246,8 +246,21 @@ class HomeScreen extends Component {
           </MapView>
 
           <View style = {primaryStyle.container}>
+          <View style = {style.separator}></View>
             <ShadenTouchableHightLight
-              marginTop = {20}
+              marginTop = {30}
+              marginRight = {15}
+              padding = {10}
+              onPress = {() => {
+                this.props.navigation.navigate('ChoseNearbyLocation')
+              }}>
+              <MaterialIcon
+                name = "location-on"
+                size = {25}>
+              </MaterialIcon>
+            </ShadenTouchableHightLight>
+            <View style = {style.separator}></View>
+            <ShadenTouchableHightLight
               marginRight = {15}
               padding = {10}
               onPress = {() => {
