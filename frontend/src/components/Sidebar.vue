@@ -26,7 +26,7 @@
 <script>
 export default {
   computed: {
-    isShowSideBar() {
+    isShowSideBar () {
       return this.$store.state.isShowSideBar
     }
   }
