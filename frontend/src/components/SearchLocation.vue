@@ -1,5 +1,6 @@
 <template>
-  <div id = "SearchLocation" class="input-group m-3 p-3">
+<transition name = 'slide-fade'>
+  <div id = "SearchLocation" class="input-group m-3 p-3" v-show = '!$store.state.isShowSideBar'>
     <div class="input-group-prepend">
       <button class="btn" type="button"  @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-menu">
@@ -25,6 +26,7 @@
       </button>
     </div>
   </div>
+</transition>
 </template>
 
 <script>

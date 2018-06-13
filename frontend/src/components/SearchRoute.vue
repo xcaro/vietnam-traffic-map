@@ -1,5 +1,6 @@
 <template>
-  <div id = "SearchRoute" class="m-3 p-3 ">
+<transition name = 'slide-fade'>
+  <div id = "SearchRoute" class="m-3 p-3 " v-show = '!$store.state.isShowSideBar'>
     <div class="d-flex">
       <button class="btn btn-light" type="button" @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-menu"></span>
@@ -53,6 +54,7 @@
       Điểm đi và điểm đến không được trùng nhau
     </sweet-modal>
   </div>
+</transition>
 </template>
 
 <script>

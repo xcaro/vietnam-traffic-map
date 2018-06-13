@@ -86,7 +86,7 @@ class SearchRouteConfigScreen extends Component {
       // destinationLocation: 'ispum',
       isLoading: true,
       direction: null,
-      decodeRouteCoordinate: null
+      decodePolylines: []
     }
 
     googleHelper.getDirection(
@@ -100,14 +100,23 @@ class SearchRouteConfigScreen extends Component {
       }
 
       const route = data.routes[0]
-      let decodeRouteCoordinate = polyline.decode(route.overview_polyline.points).map(points => ({
-        latitude: points[0],
-        longitude: points[1]
-      }))
+      let decodePolylines = []
+
+      /**
+       * Form decode router coordinate
+       */
+      for (let step of route.steps) {
+        let decodePolyline = polyline.decode(step.polyline.points).map(points => ({
+          latitude: points[0],
+          longitude: points[1]
+        }))
+
+        decodePolylines.push(decodePolyline)
+      }
 
       this.setState(state => objectHelper.CloneAndSetPropOfObject(state, {
         direction: data,
-        decodeRouteCoordinate,
+        decodePolylines,
         steps: route.legs[0].steps,
         html_instructions: route.legs[0].steps[0].html_instructions,
         isShowSelectStepModal: false
@@ -138,7 +147,7 @@ class SearchRouteConfigScreen extends Component {
           return
         }
         this.mapRef.animateToBearing(bearing, 300)
-      }, 6500)
+      }, 5500)
     }).catch(err => {
       Alert('Đã xảy ra lỗi : ' + JSON.stringify(err.response.data))
       this.props.navigation.goBack()
@@ -271,10 +280,17 @@ class SearchRouteConfigScreen extends Component {
                   }}
                     image={require('../assets/marker/curLocation.png')}
                     title='Vị trí hiện tại của bạn'/>
-                  <Polyline
-                    strokeColor = "#3498db"
-                    strokeWidth = {5}
-                    coordinates = {this.state.decodeRouteCoordinate}/>
+                  
+
+                  {
+                    this.state.decodePolylines.map(decodePolyline => {
+                      <Polyline
+                        strokeColor = "#3498db"
+                        strokeWidth = {5}
+                        coordinates = {this.state.decodeRouteCoordinate}/>
+                    })
+                  }
+
                   {
                     this.state.steps.map((step, index) => {
                       const image = index + 1 > 9

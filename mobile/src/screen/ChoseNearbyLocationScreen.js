@@ -21,6 +21,13 @@ import primaryStyle from '../style/index'
 import {markerTypeCONST, getMarker} from '../helper/marker'
 
 class ChoseNearbyLocationScreen extends Component {
+  static navigationOptions = ({ navigation }) => {
+    const {state} = navigation
+    return {
+      title: `Tìm kiếm địa điểm gần nhất`,
+    }
+  }
+
   constructor () {
     super()
     this.state = {
@@ -67,7 +74,7 @@ class ChoseNearbyLocationScreen extends Component {
             data,
             markerImage
           })
-          this.props.navigation.navigate('Bản đồ')
+          this.props.navigation.goBack()
         })
     }
   }

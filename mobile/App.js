@@ -2,8 +2,7 @@
 import React, { Component } from 'react'
 import {
   StackNavigator,
-  TabNavigator,
-  TabBarBottom
+  DrawerNavigator
 } from 'react-navigation'
 import firebase from 'react-native-firebase'
 
@@ -16,6 +15,8 @@ import ReportTrafficConfigScreen from './src/screen/ReportTrafficConfigScreen'
 import SearchRouteResultScreen from './src/screen/SearchRouteResultScreen'
 import ChoseNearbyLocationScreen from './src/screen/ChoseNearbyLocationScreen'
 import AuthenticationScreen from './src/screen/AuthenticationScreen'
+import CreateClinicScreen from './src/screen/Clinic/Create'
+import FindClinicScreen from './src/screen/Clinic/Find'
 import store from './src/redux/store'
 import action from './src/redux/action'
 import { Provider } from 'react-redux'
@@ -49,6 +50,10 @@ const RootStack = StackNavigator(
 
     Authentication: {
       screen: AuthenticationScreen
+    },
+
+    ChoseNearbyLocation: {
+      screen: ChoseNearbyLocationScreen
     }
   },
 
@@ -68,43 +73,25 @@ const RootStack = StackNavigator(
 RootStack.navigationOptions = {
   label: 'Bản đồ'
 }
-const TabNav = TabNavigator({
-  'Bản đồ': {
-    screen: RootStack,
-    navigationOptions: {
-      tabBarLabel: 'Bản đồ'
+
+const Drawer = DrawerNavigator(
+  {
+    Map: {
+      screen: RootStack
+    },
+
+    CreateClinic: {
+      screen: CreateClinicScreen
+    },
+
+    FindClinic: {
+      screen: FindClinicScreen
     }
   },
-
-  'Gần đây': {
-    screen: ChoseNearbyLocationScreen
+  {
+    initialRouteName: 'Map'
   }
-}, {
-  initialRouteName: 'Bản đồ',
-  navigationOptions: ({navigation}) => ({
-    tabBarIcon: ({tintColor}) => {
-      const {routeName} = navigation.state
-      switch (routeName) {
-        case 'Bản đồ':
-          return (<MaterialIcon color = {tintColor} name = "map" size = {22}>
-          </MaterialIcon>)
-        case 'Gần đây':
-          return (<MaterialIcon color = {tintColor} name = "location-on" size = {25}>
-          </MaterialIcon>)
-      }
-    }
-  }),
-
-  tabBarComponent: TabBarBottom,
-  tabBarPosition: 'bottom',
-  tabBarOptions: {
-    inactiveTintColor: 'gray',
-    activeTintColor: '#3498db',
-    labelStyle: {
-      fontSize: 14
-    }
-  }
-})
+)
 
 export default class App extends Component {
   constructor () {
@@ -135,7 +122,7 @@ export default class App extends Component {
   render () {
     return (
       <Provider store = {store}>
-        <TabNav/>
+        <RootStack/>
       </Provider>
     )
   }
