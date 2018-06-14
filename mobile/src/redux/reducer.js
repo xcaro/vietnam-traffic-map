@@ -3,7 +3,8 @@ import {
   REMOVE_CURRENTLOCATION,
   SET_SELECTEDSEARCHLOCATIONITEM,
   REMOVE_SELECTEDSEARCHLOCATIONITEM,
-  SET_IDTOKEN
+  SET_IDTOKEN,
+  SET_USER
 } from './action'
 import objectHelper from '../helper/object'
 
@@ -12,6 +13,11 @@ export default function (state, action) {
     case SET_IDTOKEN :
       return objectHelper.CloneAndSetPropOfObject(state, {
         idToken: action.idToken
+      })
+
+    case SET_USER :
+      return objectHelper.CloneAndSetPropOfObject(state, {
+        user: action.user
       })
 
     case SET_CURRENTLOCATION :

@@ -2,6 +2,14 @@ import errorHelper from '../helper/error'
 import { PermissionsAndroid } from 'react-native'
 
 export default {
+  trafficTypeToString (trafficType) {
+    switch (trafficType) {
+      case 0: return 'Kẹt xe'
+      case 1: return 'Tai nạn'
+      case 2: return 'Lũ lụt'
+    }
+  },
+
   async getCurrentLocation (props, isShowGpsError = true) {
     return new Promise(async (resolve, reject) => {
       try {

@@ -13,15 +13,15 @@ import {
   ScrollView
 } from 'react-native'
 
-import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
+import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import FormData, {getHeaders} from 'form-data'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import primaryStyles from '../style/index'
+import primaryStyles from '../../style/index'
 import ImagePicker from 'react-native-image-picker'
-import reportTrafficType from '../helper/enum'
-import RoundButton from '../component/RoundButton'
-import action from '../redux/action'
-import appHelper from '../helper/app'
+import reportTrafficType from '../../helper/enum'
+import RoundButton from '../../component/RoundButton'
+import action from '../../redux/action'
+import appHelper from '../../helper/app'
 import axious from 'axios'
 import { connect } from 'react-redux'
 
@@ -70,7 +70,7 @@ class ReportTrafficScreen extends Component {
               <Text style = {styles.buttonText}>Thay đổi hình ảnh</Text>
           </ShadenTouchableHightLight>
       <View style = {styles.imgContainer}>
-          { this.state.image && 
+          { this.state.image &&
             <Image
               source={{uri: this.state.image}}
               style={{width: 300, height: 300}}

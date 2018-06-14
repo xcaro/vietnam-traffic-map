@@ -10,28 +10,44 @@ import React, {
   Component
 } from 'react'
 
-export default class CreateClinic extends Component {
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+
+import { connect } from 'react-redux'
+import SearchLocationTextInput from '../../component/SearchLocationTextInput'
+
+class CreateClinic extends Component {
+  static navigationOptions = {
+    drawerLabel: 'Tạo phòng khám',
+    drawerIcon: ({ tintColor }) => (
+      <FAIcon
+        name = "plus-circle"
+        size = {25}
+        color = {tintColor}
+      />
+    ),
+  }
+
   render () {
     return (
       <View>
-        <View>
-          <Text>Tên phòng khám</Text>
-          <TextInput/>  
-        </View>
-        <View>
-          <Text>Địa điểm phòng khám</Text>
-          <TextInput/>
-        </View>
-        <View>
-          <Text>Loại Phòng khám</Text>
-          <Picker>
-            <Picker.Item label = "Phòng khám nha khoa" value = "id của phòng khám" />
-          </Picker>
-        </View>
-        <View>
-          <Button/>
-        </View>
+       <SearchLocationTextInput
+          navigation = {this.props.navigation}
+          isShowMenuButton = {true}
+          editable = {false}
+          text = 'Tạo phòng khám'>
+        </SearchLocationTextInput>
       </View>
     )
   }
 }
+
+export default connect(
+  /** State requirer to read by container component */
+  ({
+    user
+  })=>(
+    {user}
+  ),
+
+  null
+)(CreateClinic)

@@ -2,26 +2,46 @@
 import React, { Component } from 'react'
 import {
   StackNavigator,
-  DrawerNavigator
+  DrawerNavigator,
+  DrawerItems
 } from 'react-navigation'
+
+import {
+  Text,
+  ScrollView
+} from 'react-native'
 import firebase from 'react-native-firebase'
 
-import HomeScreen from './src/screen/HomeScreen'
-import SearchLocationScreen from './src/screen/SearchLocationScreen'
-import SearchRouteConfigScreen from './src/screen/SearchRouteConfigScreen'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import ReportTrafficScreen from './src/screen/ReportTrafficScreen'
-import ReportTrafficConfigScreen from './src/screen/ReportTrafficConfigScreen'
-import SearchRouteResultScreen from './src/screen/SearchRouteResultScreen'
-import ChoseNearbyLocationScreen from './src/screen/ChoseNearbyLocationScreen'
+
+import HomeScreen from './src/screen/Home/HomeScreen'
+import SearchLocationScreen from './src/screen/Home/SearchLocationScreen'
+import ChoseNearbyLocationScreen from './src/screen/Home/ChoseNearbyLocationScreen'
+import ReportTrafficInfoScreen from './src/screen/Home/ReportTrafficInfo'
+
+import ReportTrafficScreen from './src/screen/Report/ReportTrafficScreen'
+import ReportTrafficConfigScreen from './src/screen/Report/ReportTrafficConfigScreen'
+
+import SearchRouteConfigScreen from './src/screen/SearchRoute/SearchRouteConfigScreen'
+import SearchRouteResultScreen from './src/screen/SearchRoute/SearchRouteResultScreen'
+
+
 import AuthenticationScreen from './src/screen/AuthenticationScreen'
+
 import CreateClinicScreen from './src/screen/Clinic/Create'
 import FindClinicScreen from './src/screen/Clinic/Find'
+
+import SignOutScreen from './src/screen/Auth/SignOut'
+import SignInScreen from './src/screen/Auth/SignIn'
+import SignUpScreen from './src/screen/Auth/SignUp'
+
+import CustomContentComponent from './src/component/CustomContentComponent'
 import store from './src/redux/store'
 import action from './src/redux/action'
 import { Provider } from 'react-redux'
 import superAgent from 'superagent'
 
+let userName = 'khách'
 const RootStack = StackNavigator(
   {
     Home: {
@@ -54,12 +74,24 @@ const RootStack = StackNavigator(
 
     ChoseNearbyLocation: {
       screen: ChoseNearbyLocationScreen
+    },
+
+    ReportTrafficInfo: {
+      screen: ReportTrafficInfoScreen
     }
   },
 
   {
     initialRouteName: 'Home',
     navigationOptions: {
+      drawerLabel: 'Bản đồ',
+      drawerIcon: ({ tintColor }) => (
+        <MaterialIcon
+          name = "map"
+          size = {25}
+          color = {tintColor}
+        />
+      ),
       headerStyle: {
         backgroundColor: '#0288D1'
       },
@@ -77,7 +109,7 @@ RootStack.navigationOptions = {
 const Drawer = DrawerNavigator(
   {
     Map: {
-      screen: RootStack
+      screen: RootStack,
     },
 
     CreateClinic: {
@@ -86,10 +118,24 @@ const Drawer = DrawerNavigator(
 
     FindClinic: {
       screen: FindClinicScreen
+    },
+
+    SignIn: {
+      screen: SignInScreen
+    },
+
+    SignUp: {
+      screen: SignUpScreen
+    },
+
+    SignOut: {
+      screen: SignOutScreen
     }
   },
   {
-    initialRouteName: 'Map'
+    initialRouteName: 'Map',
+    backBehavior: 'none',
+    contentComponent: CustomContentComponent
   }
 )
 
@@ -98,31 +144,30 @@ export default class App extends Component {
     super()
 
 
-    // firebase.auth().onAuthStateChanged((idToken) => {
-    //   if (idToken === null) {
-    //     store.dispatch(action.setIdToken(null))
-    //     return
-    //   }
+    this.drawer = React.createRef()
+    firebase.auth().onAuthStateChanged((state) => {
+      if (state === null) {
+        store.dispatch(action.setIdToken(null))
+        store.dispatch(action.setUser(null))
+        return
+      }
 
-    //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-    //     store.dispatch(action.setIdToken(idToken))
-    //     superAgent
-    //       .get('192.168.1.4:3000/trafficReport/isauth')
-    //       .then((res) => {
-    //         console.log(res)
-    //       }).catch((err) => {
-    //         console.log(err)
-    //       })
-    //   }).catch(function (error) {
-    //     throw error
-    //   })
-    // })
+      store.dispatch(action.setUser(state))
+      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+        store.dispatch(action.setIdToken(idToken))
+        /**
+         *
+         */
+      }).catch(function (error) {
+        throw error
+      })
+    })
   }
 
   render () {
     return (
       <Provider store = {store}>
-        <RootStack/>
+        <Drawer ref = {this.drawer} />
       </Provider>
     )
   }

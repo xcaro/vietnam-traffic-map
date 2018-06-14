@@ -18,21 +18,21 @@ import {
   Linking
 } from 'react-native'
 
-import primaryStyle from '../style/index'
+import primaryStyle from '../../style/index'
 
 import { connect } from 'react-redux'
-import action from '../redux/action'
-import TextInputWithClearButton from '../component/TextInputWithClearButton'
+import action from '../../redux/action'
+import TextInputWithClearButton from '../../component/TextInputWithClearButton'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import RoundButton from '../component/RoundButton'
-import SearchLocationListView from '../component/SearchLocationListView'
-import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
+import RoundButton from '../../component/RoundButton'
+import SearchLocationListView from '../../component/SearchLocationListView'
+import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import RNGooglePlaces from 'react-native-google-places'
-import googleAPI from '../helper/google'
-import objectHelper from '../helper/object'
-import errorHelper from '../helper/error'
-import appHelper from '../helper/app'
+import googleAPI from '../../helper/google'
+import objectHelper from '../../helper/object'
+import errorHelper from '../../helper/error'
+import appHelper from '../../helper/app'
 
 class SearchRouteConfigScreen extends Component {
   constructor(props) {

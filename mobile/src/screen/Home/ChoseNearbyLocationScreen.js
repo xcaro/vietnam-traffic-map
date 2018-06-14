@@ -10,15 +10,15 @@ import {
   Picker
 } from 'react-native'
 
-import action from '../redux/action'
+import action from '../../redux/action'
 import { connect } from 'react-redux'
 
-import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
-import googleAPI from '../helper/google'
-import appHelper from '../helper/app'
-import RoundButton from '../component/RoundButton'
-import primaryStyle from '../style/index'
-import {markerTypeCONST, getMarker} from '../helper/marker'
+import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
+import googleAPI from '../../helper/google'
+import appHelper from '../../helper/app'
+import RoundButton from '../../component/RoundButton'
+import primaryStyle from '../../style/index'
+import {markerTypeCONST, getMarker} from '../../helper/marker'
 
 class ChoseNearbyLocationScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -99,7 +99,7 @@ class ChoseNearbyLocationScreen extends Component {
               })
             }}>
             <View style={style.img}>
-              <Image source={require('../assets/location_nearby/gas-station.png')} />
+              <Image source={require('../../assets/location_nearby/gas-station.png')} />
             </View>
             <Text style={style.text}>Cây xăng</Text>
           </ShadenTouchableHightLight>
@@ -120,7 +120,7 @@ class ChoseNearbyLocationScreen extends Component {
               })
             }).bind(this)}>
             <View style={style.img}>
-              <Image source={require('../assets/location_nearby/atm.png')} />
+              <Image source={require('../../assets/location_nearby/atm.png')} />
             </View>
             <Text style={style.text}>Trụ ATM</Text>
           </ShadenTouchableHightLight>

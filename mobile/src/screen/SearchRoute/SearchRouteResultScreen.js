@@ -2,13 +2,13 @@ import React, {
   Component
 } from 'react'
 
-import action from '../redux/action'
+import action from '../../redux/action'
 import { connect } from 'react-redux'
-import googleHelper from '../helper/google'
-import objectHelper from '../helper/object'
+import googleHelper from '../../helper/google'
+import objectHelper from '../../helper/object'
 import Spinner from 'react-native-loading-spinner-overlay'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import primaryStyle from '../style/index'
+import primaryStyle from '../../style/index'
 import MapView, {
   Marker, Callout, Polyline
 } from 'react-native-maps'
@@ -27,23 +27,23 @@ import {
   Modal
 } from 'react-native'
 
-import TextInputWithClearButton from '../component/TextInputWithClearButton'
-import ErrorHelper from '../helper/error'
+import TextInputWithClearButton from '../../component/TextInputWithClearButton'
+import ErrorHelper from '../../helper/error'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import RoundButton from '../component/RoundButton'
+import RoundButton from '../../component/RoundButton'
 
 import polyline from '@mapbox/polyline'
 const checkpoints = [
-  require('../assets/marker/1.png'),
-  require('../assets/marker/2.png'),
-  require('../assets/marker/3.png'),
-  require('../assets/marker/4.png'),
-  require('../assets/marker/5.png'),
-  require('../assets/marker/6.png'),
-  require('../assets/marker/7.png'),
-  require('../assets/marker/8.png'),
-  require('../assets/marker/9.png'),
-  require('../assets/marker/9+.png')
+  require('../../assets/marker/1.png'),
+  require('../../assets/marker/2.png'),
+  require('../../assets/marker/3.png'),
+  require('../../assets/marker/4.png'),
+  require('../../assets/marker/5.png'),
+  require('../../assets/marker/6.png'),
+  require('../../assets/marker/7.png'),
+  require('../../assets/marker/8.png'),
+  require('../../assets/marker/9.png'),
+  require('../../assets/marker/9+.png')
 ]
 
 class SearchRouteConfigScreen extends Component {
@@ -105,7 +105,7 @@ class SearchRouteConfigScreen extends Component {
       /**
        * Form decode router coordinate
        */
-      for (let step of route.steps) {
+      for (let step of route.legs[0] ? route.legs[0].steps : []) {
         let decodePolyline = polyline.decode(step.polyline.points).map(points => ({
           latitude: points[0],
           longitude: points[1]
@@ -271,23 +271,26 @@ class SearchRouteConfigScreen extends Component {
                   }}>
                   <Marker
                     title = {this.state.destinationLocation}
-                    image = {require('../assets/marker/destination.png')}
+                    image = {require('../../assets/marker/destination.png')}
                     coordinate = {this.state.destination}/>
 
                   <Marker coordinate={{
                     latitude: this.props.curLocation.coords.latitude,
                     longitude: this.props.curLocation.coords.longitude,
                   }}
-                    image={require('../assets/marker/curLocation.png')}
+                    image={require('../../assets/marker/curLocation.png')}
                     title='Vị trí hiện tại của bạn'/>
-                  
+
 
                   {
-                    this.state.decodePolylines.map(decodePolyline => {
-                      <Polyline
-                        strokeColor = "#3498db"
-                        strokeWidth = {5}
-                        coordinates = {this.state.decodeRouteCoordinate}/>
+                    this.state.decodePolylines.map((decodePolyline,index) => {
+                      return (
+                        <Polyline
+                          key = {index}
+                          strokeColor = "#3498db"
+                          strokeWidth = {5}
+                          coordinates = {decodePolyline}/>
+                      )
                     })
                   }
 
@@ -311,11 +314,11 @@ class SearchRouteConfigScreen extends Component {
                             this.mapRef.animateToCoordinate({
                               latitude: step.start_location.lat,
                               longitude: step.start_location.lng
-                            }, 100)
+                            }, 50)
 
                             setTimeout(() => {
-                              this.mapRef.animateToBearing(bearing, 300)
-                            }, 6700)
+                              this.mapRef.animateToBearing(bearing, 50)
+                            }, 5500)
 
                             this.setState(state => objectHelper.CloneAndSetPropOfObject(state, {
                               html_instructions: step.html_instructions

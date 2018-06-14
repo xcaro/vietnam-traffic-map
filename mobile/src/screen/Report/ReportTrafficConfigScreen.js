@@ -6,13 +6,14 @@ import React ,{
     View,
     Image,
     Text,
-    StyleSheet
+    StyleSheet,
+    TouchableWithoutFeedback
   } from 'react-native'
 
-  import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
-  import {reportTrafficType} from '../helper/enum'
-  import RoundButton from '../component/RoundButton'
-  import primaryStyle from '../style/index'
+  import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
+  import {reportTrafficType} from '../../helper/enum'
+  import RoundButton from '../../component/RoundButton'
+  import primaryStyle from '../../style/index'
 
   export default class ReportTrafficConfigScreen extends Component {
     static navigationOptions = {
@@ -24,8 +25,10 @@ import React ,{
         <View style={style.topContainer}>
         <View style={style.container}>
           <ShadenTouchableHightLight
+            margin = {10}
+            marginTop = {20}
             padding={20}
-            backgroundColor = "#4f6676"
+            backgroundColor = "#3c94d3"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {
@@ -34,39 +37,41 @@ import React ,{
               })
             }}>
             <View style={style.img}>
-              <Image source={require('../assets/traffic_menu/jam.png')} />
+              <Image source={require('../../assets/traffic_menu/jam.png')} />
             </View>
             <Text style={style.text}>Kẹt xe</Text>
           </ShadenTouchableHightLight>
 
           <ShadenTouchableHightLight
+            margin = {10}
             padding={20}
-            backgroundColor = "#4f6676"
+            backgroundColor = "#3a98d8"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {
               this.props.navigation.navigate('ReportTraffic', {
-                reportTrafficType: reportTrafficType.TrafficJam
+                reportTrafficType: reportTrafficType.CarAccident
               })
             }}>
             <View style={style.img}>
-              <Image source={require('../assets/traffic_menu/jam.png')} />
+              <Image source={require('../../assets/traffic_menu/accident.png')} />
             </View>
             <Text style={style.text}>Tai nạn</Text>
           </ShadenTouchableHightLight>
 
           <ShadenTouchableHightLight
+            margin = {10}
             padding={20}
-            backgroundColor = "#4f6676"
+            backgroundColor = "#3c94d3"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {
               this.props.navigation.navigate('ReportTraffic', {
-                reportTrafficType: reportTrafficType.TrafficJam
+                reportTrafficType: reportTrafficType.Flood
               })
             }}>
             <View style={style.img}>
-              <Image source={require('../assets/traffic_menu/jam.png')} />
+              <Image source={require('../../assets/traffic_menu/flood.png')} />
             </View>
             <Text style={style.text}>Lũ lụt</Text>
           </ShadenTouchableHightLight>

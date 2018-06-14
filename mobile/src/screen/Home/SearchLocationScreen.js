@@ -16,16 +16,16 @@ import {
 } from 'react-native'
 
 import { connect } from 'react-redux'
-import action from '../redux/action'
+import action from '../../redux/action'
 
 
-import primaryStyle from '../style/index'
-import SearchLocationTextInput from '../component/SearchLocationTextInput'
-import SearchLocationListView from '../component/SearchLocationListView'
+import primaryStyle from '../../style/index'
+import SearchLocationTextInput from '../../component/SearchLocationTextInput'
+import SearchLocationListView from '../../component/SearchLocationListView'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import objectHelper from '../helper/object'
-import {getMarker} from '../helper/marker'
-import googleAPI from '../helper/google'
+import objectHelper from '../../helper/object'
+import {getMarker} from '../../helper/marker'
+import googleAPI from '../../helper/google'
 
 class SearchLocationScreen extends Component {
   constructor(props) {

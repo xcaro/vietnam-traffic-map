@@ -126,7 +126,6 @@ export default class SearchLocationTextInput extends Component {
                 name='chevron-left'
                 size={20}
                 style={[
-
                   primaryStyle.textWhite,
                   style.padding,
                   style.iconLeft,
@@ -135,17 +134,24 @@ export default class SearchLocationTextInput extends Component {
             </TouchableWithoutFeedback>
           }
 
-          {!this.props.isShowBackButton &&
-            <Icon
-              name='search'
-              size={20}
-              style={[
-                primaryStyle.textWhite,
-                style.padding,
-                style.iconLeft,
-                style.icon
-              ]} />
-          }
+           {
+             this.props.isShowMenuButton &&
+             <TouchableWithoutFeedback onPress={() => {
+              this.props.navigation.navigate('DrawerToggle')
+            }}>
+              <Icon
+                name='bars'
+                size={20}
+                style={[
+
+                  primaryStyle.textWhite,
+                  style.padding,
+                  style.iconLeft,
+                  style.icon
+                ]} />
+            </TouchableWithoutFeedback>
+           }
+
           <TextInput
             onChangeText={this.props.onChangeText}
             ref={this.textInput}

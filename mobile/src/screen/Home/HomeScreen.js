@@ -1,5 +1,5 @@
 import SplashScreen from 'react-native-splash-screen'
-import CurrentLocationMarker from '../component/CurrentLocationMarker'
+import CurrentLocationMarker from '../../component/CurrentLocationMarker'
 import React ,{
   Component
 } from 'react'
@@ -10,27 +10,31 @@ import {
   Text,
   StyleSheet,
   Keyboard,
-  Linking
+  Linking,
+  Button
 } from 'react-native'
-import action from '../redux/action'
+import action from '../../redux/action'
 import { connect } from 'react-redux'
-import primaryStyle from '../style/index'
-import Menu from '../component/Menu'
-import SearchLocationTextInput from '../component/SearchLocationTextInput'
-import RoundButton from '../component/RoundButton'
-import objectHelper from '../helper/object'
-import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
+import primaryStyle, {
+  PRIMARY_COLOR
+} from '../../style/index'
+import Menu from '../../component/Menu'
+import SearchLocationTextInput from '../../component/SearchLocationTextInput'
+import RoundButton from '../../component/RoundButton'
+import objectHelper from '../../helper/object'
+import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import errorHelper from '../helper/error'
-import appHelper from '../helper/app'
-import store from '../redux/store'
+import errorHelper from '../../helper/error'
+import appHelper from '../../helper/app'
+import store from '../../redux/store'
 
 import MapView, {
   Marker,
   ProviderPropType,
   Callout
 } from 'react-native-maps'
-import { trafficMakerIcons } from '../helper/marker';
+import { trafficMakerIcons } from '../../helper/marker';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -41,9 +45,6 @@ class HomeScreen extends Component {
       trafficMarkers: [],
       isShowReportTraffic: true
     }
-
-
-    this.ws = new WebSocket('ws://localhost:8080')
 
     appHelper.getCurrentLocation(this.props, false)
 
@@ -94,7 +95,7 @@ class HomeScreen extends Component {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://192.168.1.2')
+    this.websocket = new WebSocket('ws://192.168.1.4:8000')
     this.websocket.onopen = () => {
       // map.addListener('idle', () => {
       //   const bounds = map.getBounds()
@@ -162,6 +163,8 @@ class HomeScreen extends Component {
         primaryStyle.container
       }>
         <SearchLocationTextInput
+          navigation = {this.props.navigation}
+          isShowMenuButton = {true}
           editable = {false}
           onPress={() => {
             // Navigatate
@@ -209,10 +212,19 @@ class HomeScreen extends Component {
             }}
           >
             {this.state.trafficMarkers.map(trafficMaker => {
+              let iconIndex = 2 * trafficMaker.type
+              if (trafficMaker.confirmed) {
+                iconIndex += 1
+              }
 
               return (
                 <Marker
-                  image = {trafficMakerIcons[trafficMaker.type]}
+                  onPress = {() => {
+                    this.props.navigation.navigate('ReportTrafficInfo', {
+                      trafficReport: trafficMaker
+                    })
+                  }}
+                  image = {trafficMakerIcons[iconIndex]}
                   key = {trafficMaker.id}
                   coordinate = {{
                     latitude: trafficMaker.location.lat,

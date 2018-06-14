@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight, TouchableNativeFeedback } from 'react-native'
 import colorHelper from '../helper/color'
 import objectHelper from '../helper/object'
 
@@ -31,6 +31,7 @@ export default class ShadenTouchableHightLight extends Component {
       .addPropsIfDefined(this.state.style, [
         {prop: this.props.width, propName: 'width'},
         {prop: this.props.height, propName: 'height'},
+        {prop: this.props.margin, propName: 'margin'},
         {prop: this.props.marginRight, propName: 'marginRight'},
         {prop: this.props.marginLeft, propName: 'marginLeft'},
         {prop: this.props.marginBottom, propName: 'marginBottom'},

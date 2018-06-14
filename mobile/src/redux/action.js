@@ -6,6 +6,7 @@ export const SET_SELECTEDSEARCHLOCATIONITEM = 'SET_SELECTEDSEARCHLOCATIONITEM'
 export const REMOVE_SELECTEDSEARCHLOCATIONITEM = 'REMOVE_SELECTEDSEARCHLOCATIONITEM'
 
 export const SET_IDTOKEN = 'SET_IDTOKEN'
+export const SET_USER = 'SET_USER'
 
 // Action creator
 export default {
@@ -15,6 +16,13 @@ export default {
 
   updateReportTrafficData: (change) => {
 
+  },
+
+  setUser: (user) => {
+    return {
+      type: SET_USER,
+      user
+    }
   },
 
   setIdToken: (idToken) => {

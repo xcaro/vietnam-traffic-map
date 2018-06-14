@@ -2,13 +2,13 @@ import {
   StyleSheet
 } from 'react-native'
 
-const PRIMARY_COLOR = '#3498db'
-const SECONDARY_COLOR = 'rgb(52, 73, 94)'
+export const PRIMARY_COLOR = '#3498db'
+export const SECONDARY_COLOR = 'rgb(52, 73, 94)'
 // const BORDER_COLOR = 'rgba(255,255,255,0.1)'
 
 const styles = StyleSheet.create({
   Icon: {
-    paddingTop: 4,
+    paddingTop: 2,
     marginRight: 5
   },
 
