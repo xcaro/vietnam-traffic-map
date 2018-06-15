@@ -106,7 +106,7 @@ export default {
 `<div class = "infowindow">
   <div>Mô tả: ` + (trafficReport.comment || 'Không có') + `</div>
   <div>Thời gian: ` + trafficReport.time + `</div>
-  <div>Trạng thái :` + (trafficReport.confirm ? 'Đã duyệt' : 'Chưa duyệt') + `</div>` +
+  <div>Trạng thái :` + (trafficReport.confirmed ? 'Đã duyệt' : 'Chưa duyệt') + `</div>` +
     (trafficReport.image ? '<image class = "m-2 mt-3 mr-0" src = "' + trafficReport.image + '">' : '') +
     `<div class = "m-1 mt-2 d-flex justify-content-center">
       ` +
@@ -117,7 +117,7 @@ export default {
           </span>
           Hủy xác nhận
         </button>`
-          : `<button class = "btn btn-primary">
+          : `<button class = "btn btn-primary mr-2">
           <span class="icon-thumbs-up">
           </span>
           Xác nhận
@@ -194,7 +194,7 @@ export default {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://localhost:8000')
+    this.websocket = new WebSocket('ws://172.20.10.5:8000')
     this.websocket.onopen = () => {
       map.addListener('idle', () => {
         const bounds = map.getBounds()

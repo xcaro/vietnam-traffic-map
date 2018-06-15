@@ -1,5 +1,5 @@
 <template>
-  <div class="inlineMenu">
+  <div>
      <div class="form-group">
       <label for="exampleInputEmail1">Tên phòng khám</label>
       <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Tên">
@@ -23,7 +23,10 @@
         <option>y khoa</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Khởi tạo phòng khám</button>
+    <button type="submit" class="btn btn-primary mt-2">
+      <span class="icon-add d-inline mr-2"></span>
+      Khởi tạo phòng khám
+    </button>
   </div>
 </template>
 
@@ -50,8 +53,4 @@ export default {
 </script>
 
 <style>
-.inlineMenu {
-  padding-top: 50px
-}
-
 </style>

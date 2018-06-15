@@ -2,7 +2,9 @@
   <div id="app">
     <Sidebar />
     <transition name = 'slide-fade'>
-      <router-view class="enable-side-bar" />
+      <router-view
+        id = "content"
+        :class="isSidebarEnable ? 'enable-side-bar' : 'disable-side-bar'" />
     </transition>
   </div>
 </template>
@@ -25,14 +27,29 @@ export default {
   components: {
     Sidebar
   },
-  store
+  store,
+  computed: {
+    isSidebarEnable () {
+      return store.state.isShowSideBar
+    }
+  }
 }
 </script>
 
 <style>
 .enable-side-bar {
   margin-left: 350px;
-  margin-right: 40px;
+  
+}
+
+.disable-side-bar {
+  margin-left: 100px
+}
+
+#content {
+  margin-right: 100px;
+  margin-top: 50px;
+  transition: all 0.1s ease-in-out;
 }
 
 body {

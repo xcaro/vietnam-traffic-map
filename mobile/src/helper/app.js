@@ -56,9 +56,27 @@ export default {
     if (idToken) {
       navigation.navigate(route)
     } else {
-      navigation.navigate('Authentication', {
-        routeToRedirect: route
+      navigation.navigate('SignInStackNavigation', {
+        routeToRedirect: route,
+        isHideTileBar: true
       })
     }
   }
+
+  // computeError (assert, errorText, _this, errorProperty) {
+  //   let obj = {}
+  //   if (!assert) {
+  //     obj[errorProperty] = errorText
+  //     _this.setState({
+  //       obj
+  //     })
+  //     return false
+  //   } else if (_this.state[errorProperty] !== '') {
+  //     obj[errorProperty] = errorText
+  //     _this.setState({
+  //       obj
+  //     })
+  //     return true
+  //   }
+  // }
 }

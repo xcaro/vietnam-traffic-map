@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import home from '../router/home'
 import createClinic from '../router/create_clinic.vue'
 import editClinic from '../router/edit_clinic.vue'
+import login from '../router/login.vue'
+import register from '../router/register.vue'
 
 Vue.use(Router)
 
@@ -23,6 +25,14 @@ export default new Router({
     {
       path: '/clinic/find',
       component: editClinic
+    },
+    {
+      path: '/login',
+      component: login
+    },
+    {
+      path: '/register',
+      component: register
     }
   ]
 })

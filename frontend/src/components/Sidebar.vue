@@ -27,7 +27,11 @@
           Đăng nhập
         </router-link>
         <router-link to = '/register' class="list-group-item list-group-item-action" exact-active-class="active">
-          <span class="icon-exit d-inline pr-3"></span>
+          <span class="icon-sign-up d-inline pr-3"></span>
+          Đăng ký
+        </router-link>
+        <router-link to = '/logoff' class="list-group-item list-group-item-action" exact-active-class="active">
+          <span class="icon-sign-out d-inline pr-3"></span>
           Đăng xuất
         </router-link>
     </div>
@@ -62,7 +66,7 @@ export default {
 #sidebar-toggle {
   border-radius: 0;
   position: absolute;
-  top: 7%;
+  top: 35px;
 }
 
 #sidebar {
@@ -71,6 +75,7 @@ export default {
   z-index: 999;
   color: white;
   position: absolute;
+  top: 0;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 

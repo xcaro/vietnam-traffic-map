@@ -8,7 +8,8 @@ import {
 
 import {
   Text,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native'
 import firebase from 'react-native-firebase'
 
@@ -24,9 +25,6 @@ import ReportTrafficConfigScreen from './src/screen/Report/ReportTrafficConfigSc
 
 import SearchRouteConfigScreen from './src/screen/SearchRoute/SearchRouteConfigScreen'
 import SearchRouteResultScreen from './src/screen/SearchRoute/SearchRouteResultScreen'
-
-
-import AuthenticationScreen from './src/screen/AuthenticationScreen'
 
 import CreateClinicScreen from './src/screen/Clinic/Create'
 import FindClinicScreen from './src/screen/Clinic/Find'
@@ -68,8 +66,8 @@ const RootStack = StackNavigator(
       screen: SearchRouteResultScreen
     },
 
-    Authentication: {
-      screen: AuthenticationScreen
+    SignInStackNavigation: {
+      screen: SignInScreen
     },
 
     ChoseNearbyLocation: {
@@ -133,7 +131,8 @@ const Drawer = DrawerNavigator(
     }
   },
   {
-    initialRouteName: 'SignUp',
+    initialRouteName: 'Map',
+    
     backBehavior: 'none',
     contentComponent: CustomContentComponent
   }
@@ -142,26 +141,14 @@ const Drawer = DrawerNavigator(
 export default class App extends Component {
   constructor () {
     super()
-
-
     this.drawer = React.createRef()
-    // firebase.auth().onAuthStateChanged((state) => {
-    //   if (state === null) {
-    //     store.dispatch(action.setIdToken(null))
-    //     store.dispatch(action.setUser(null))
-    //     return
-    //   }
+  }
 
-    //   store.dispatch(action.setUser(state))
-    //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-    //     store.dispatch(action.setIdToken(idToken))
-    //     /**
-    //      *
-    //      */
-    //   }).catch(function (error) {
-    //     throw error
-    //   })
-    // })
+  async componentDidMount () {
+    let idToken = await sAsyncStorage.getItem('idToken')
+    if (idToken) {
+      store.dispatch(action.setIdToken(idToken))
+    }
   }
 
   render () {

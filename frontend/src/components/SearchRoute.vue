@@ -2,9 +2,6 @@
 <transition name = 'slide-fade'>
   <div id = "SearchRoute" class="m-3 p-3 " v-show = '!$store.state.isShowSideBar'>
     <div class="d-flex">
-      <button class="btn btn-light" type="button" @click = "$store.dispatch('toggleSideBar')">
-        <span class="icon-menu"></span>
-      </button>
       <button class="btn ml-auto" type="button" @click = 'onToggling'>
         <span class="icon-close"></span>
       </button>

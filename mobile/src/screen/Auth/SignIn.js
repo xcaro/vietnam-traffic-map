@@ -2,12 +2,16 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Text
+  Text,
+  Alert,
+  AsyncStorage
 } from 'react-native'
 
 import React, {
   Component
 } from 'react'
+
+import superagent from 'superagent'
 
 import {
   PRIMARY_COLOR
@@ -21,7 +25,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import action from '../../redux/action'
 
 
-export default class SignIn extends Component {
+class SignIn extends Component {
   static navigationOptions = {
     title: 'Đăng nhập',
     drawerIcon: ({ tintColor }) => (
@@ -39,21 +43,27 @@ export default class SignIn extends Component {
 
     this.state = {
       userName: '',
-      passWord: ''
+      passWord: '',
+      userNameError: '',
+      passWordError: ''
     }
   }
 
   render () {
+    let isHideTileBar = this.props.navigation.getParam('isHideTileBar')
     return (
       <View>
-        <SearchLocationTextInput
-          navigation = {this.props.navigation}
-          isShowMenuButton = {true}
-          editable = {false}
-          text = 'Đăng nhập'>
-        </SearchLocationTextInput>
+        {isHideTileBar ? null :
+          <SearchLocationTextInput
+            navigation = {this.props.navigation}
+            isShowMenuButton = {true}
+            editable = {false}
+            text = 'Đăng nhập'>
+          </SearchLocationTextInput>
+        }
         <View style = {styles.contentContainer}>
           <TextField
+            error = {this.state.userNameError}
             label='Tên đăng nhập'
             title = 'Không được bỏ trống'
             value={this.state.userName}
@@ -61,6 +71,7 @@ export default class SignIn extends Component {
           />
 
           <TextField
+            error = {this.state.passWordError}
             label='Mật khẩu'
             title = 'Không được bỏ trống'
             secureTextEntry = {true}
@@ -70,6 +81,66 @@ export default class SignIn extends Component {
 
 
           <ShadenTouchableHightLight
+            onPress = {(() => {
+              /**Kiểm tra tên đăng nhập */
+              if (this.state.userName === "")
+              {
+                this.setState({
+                  userNameError: 'Tên đăng nhập không được bỏ trống'
+                })
+
+                return
+              }
+              else if (this.state.userNameError !== "") {
+                this.setState({
+                  userNameError: ''
+                })
+              }
+
+              /**Kiểm tra mật khẩu */
+              if (this.state.passWord === "")
+              {
+                this.setState({
+                  userNameError: 'mật khẩu không được bỏ trống'
+                })
+
+                return
+              }
+              else if (this.state.userNameError !== "") {
+                this.setState({
+                  userNameError: ''
+                })
+              }
+
+              /**Kiểm tra trên server */
+              superagent
+                .post('http://deltavn.net/api/login')
+                .send({
+                  username: this.state.userName,
+                  password: this.state.passWord
+                })
+                .then(async res => {
+                  this.props.setIdToken(res.body.access_token)
+
+                  /**
+                   * Save idtoken
+                   */
+                  await AsyncStorage.setItem('idToken', res.body.access_token)
+
+                  /**
+                   * Đăng nhập thành công
+                   */
+                  let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
+                  if (routeToRedirect) {
+                    this.props.navigation.navigate(routeToRedirect)
+                  } else {
+                    this.props.navigation.navigate('Map')
+                  }
+                })
+                .catch(err => {
+                  Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
+                })
+            })}
             marginTop = {15}
             padding = {15}
             backgroundColor = {PRIMARY_COLOR}
@@ -112,3 +183,14 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
 })
+
+export default connect(
+  /** State requirer to read by container component */
+  ({
+    curLocation, selectedSearchLocationItem, idToken
+  })=>(
+    {curLocation, selectedSearchLocationItem, idToken}
+  ),
+
+  action
+)(SignIn)

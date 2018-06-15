@@ -9,14 +9,17 @@ import {
 
 import React, { Component } from 'react'
 
+import {
+  PRIMARY_COLOR
+} from '../style/index'
+
 export default class CurrentLocationMarker extends Component {
   render () {
     return (
       <View>
         <Marker
           coordinate={this.props.coordinate}
-          image={require('../assets/marker/curLocation.png')}
-          flat
+          pinColor = {PRIMARY_COLOR}
           title='Vị trí hiện tại của bạn'
         />
         {/* <Circle

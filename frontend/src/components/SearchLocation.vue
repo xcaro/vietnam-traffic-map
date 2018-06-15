@@ -1,12 +1,6 @@
 <template>
 <transition name = 'slide-fade'>
   <div id = "SearchLocation" class="input-group m-3 p-3" v-show = '!$store.state.isShowSideBar'>
-    <div class="input-group-prepend">
-      <button class="btn" type="button"  @click = "$store.dispatch('toggleSideBar')">
-        <span class="icon-menu">
-        </span>
-      </button>
-    </div>
     <vue-google-autocomplete
       ref="textinput"
       id="textinput"
