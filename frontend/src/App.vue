@@ -2,7 +2,7 @@
   <div id="app">
     <Sidebar />
     <transition name = 'slide-fade'>
-      <router-view/>
+      <router-view class="enable-side-bar" />
     </transition>
   </div>
 </template>
@@ -30,6 +30,11 @@ export default {
 </script>
 
 <style>
+.enable-side-bar {
+  margin-left: 350px;
+  margin-right: 40px;
+}
+
 body {
   font-family: sans-serif;
   font-size: 1em;

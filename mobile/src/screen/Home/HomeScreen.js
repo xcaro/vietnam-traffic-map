@@ -34,7 +34,7 @@ import MapView, {
   ProviderPropType,
   Callout
 } from 'react-native-maps'
-import { trafficMakerIcons } from '../../helper/marker';
+import { trafficMakerIcons } from '../../helper/marker'
 
 class HomeScreen extends Component {
   constructor(props) {

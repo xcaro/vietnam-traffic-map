@@ -17,7 +17,7 @@ import ShadenTouchableHightLight from '../component/ShadenTouchableHightLight'
 import primaryStyle from '../style/index'
 import firebase from 'react-native-firebase'
 
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation'
 
 import {
   LoginManager,

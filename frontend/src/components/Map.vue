@@ -9,7 +9,7 @@
 
 <script>
 import {
-  getTrafficMarkerIconPath
+  trafficMakerIcons
 } from '../helper/marker.js'
 
 let map = null
@@ -87,7 +87,11 @@ export default {
     },
 
     addTrafficReport (trafficReport) {
-      const iconPath = getTrafficMarkerIconPath(trafficReport.type)
+      let iconIndex = 2 * trafficReport.type
+      if (trafficReport.confirmed) {
+        iconIndex += 1
+      }
+      const iconPath = trafficMakerIcons[iconIndex]
       trafficReport.marker = new window.google.maps.Marker({
         position: {
           lat: trafficReport.location.lat,
@@ -98,21 +102,38 @@ export default {
       })
 
       trafficReport.infoWindow = new window.google.maps.InfoWindow({
-        content: 
+        content:
 `<div class = "infowindow">
-  <div>Mô tả: ` + (trafficReport.comment || 'Không có') +`</div>
+  <div>Mô tả: ` + (trafficReport.comment || 'Không có') + `</div>
   <div>Thời gian: ` + trafficReport.time + `</div>
-  <div>Trạng thái :` + (trafficReport.confirm ? 'Đã duyệt' : 'Chưa duyệt') + `</div>`
-  + (trafficReport.image ? '<image class = "m-2 mt-3 mr-0" src = "' + trafficReport.image + '">' : '')
-  + `<div class = "m-1 mt-2">
-      <button class = "btn btn-primary">Xác nhận</button>
-      <button class = "btn btn-primary ml-1">Đã kết thúc </button>
+  <div>Trạng thái :` + (trafficReport.confirm ? 'Đã duyệt' : 'Chưa duyệt') + `</div>` +
+    (trafficReport.image ? '<image class = "m-2 mt-3 mr-0" src = "' + trafficReport.image + '">' : '') +
+    `<div class = "m-1 mt-2 d-flex justify-content-center">
+      ` +
+      (
+        trafficReport.confirmed
+          ? `<button class = "btn btn-primary mr-2">
+          <span class="icon-thumb-down">
+          </span>
+          Hủy xác nhận
+        </button>`
+          : `<button class = "btn btn-primary">
+          <span class="icon-thumbs-up">
+          </span>
+          Xác nhận
+      </button>`
+      ) +
+      `<button class = "btn btn-danger ml-1">
+        <span class="icon-trash">
+        </span>
+        Đã kết thúc
+      </button>
     </div>` +
 `</div>`
       })
 
-      trafficReport.marker.addListener('click', function() {
-        trafficReport.infoWindow.open(map, trafficReport.marker);
+      trafficReport.marker.addListener('click', () => {
+        trafficReport.infoWindow.open(map, trafficReport.marker)
       })
 
       trafficReports.push(trafficReport)
@@ -158,8 +179,8 @@ export default {
 
   mounted () {
     map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 12  ,
+      center: {lat: 10.762622, lng: 106.806692},
+      zoom: 12,
       mapTypeControl: true,
       mapTypeControlOptions: {
         position: window.google.maps.ControlPosition.TOP_RIGHT
@@ -173,7 +194,7 @@ export default {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://localhost:8081')
+    this.websocket = new WebSocket('ws://localhost:8000')
     this.websocket.onopen = () => {
       map.addListener('idle', () => {
         const bounds = map.getBounds()

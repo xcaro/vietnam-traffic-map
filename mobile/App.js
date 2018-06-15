@@ -133,7 +133,7 @@ const Drawer = DrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Map',
+    initialRouteName: 'SignUp',
     backBehavior: 'none',
     contentComponent: CustomContentComponent
   }
@@ -145,23 +145,23 @@ export default class App extends Component {
 
 
     this.drawer = React.createRef()
-    firebase.auth().onAuthStateChanged((state) => {
-      if (state === null) {
-        store.dispatch(action.setIdToken(null))
-        store.dispatch(action.setUser(null))
-        return
-      }
+    // firebase.auth().onAuthStateChanged((state) => {
+    //   if (state === null) {
+    //     store.dispatch(action.setIdToken(null))
+    //     store.dispatch(action.setUser(null))
+    //     return
+    //   }
 
-      store.dispatch(action.setUser(state))
-      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-        store.dispatch(action.setIdToken(idToken))
-        /**
-         *
-         */
-      }).catch(function (error) {
-        throw error
-      })
-    })
+    //   store.dispatch(action.setUser(state))
+    //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+    //     store.dispatch(action.setIdToken(idToken))
+    //     /**
+    //      *
+    //      */
+    //   }).catch(function (error) {
+    //     throw error
+    //   })
+    // })
   }
 
   render () {

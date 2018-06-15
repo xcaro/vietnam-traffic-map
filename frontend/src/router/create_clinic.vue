@@ -31,28 +31,26 @@
 import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
 export default {
-methods: {
-  onFulFilling (place) {
-    this.place = place
-  }
-},
-
-data () {
-  return {
-    place: null
-  }
-},
-
-components: {
-    VueGoogleAutocomplete
+  methods: {
+    onFulFilling (place) {
+      this.place = place
+    }
   },
+
+  data () {
+    return {
+      place: null
+    }
+  },
+
+  components: {
+    VueGoogleAutocomplete
+  }
 }
 </script>
 
 <style>
 .inlineMenu {
-  margin-left: 350px;
-  margin-right: 40px;
   padding-top: 50px
 }
 

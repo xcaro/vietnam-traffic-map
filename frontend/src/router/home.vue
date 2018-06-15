@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id = "home">
     <Map ref = 'map' />
     <search-route
       :onCleared = 'onSearchRouteCleared'

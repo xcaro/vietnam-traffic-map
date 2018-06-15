@@ -1,16 +1,17 @@
-const trafficTypeCONST = {
-  'JAM': 0,
-  'FLOOD': 1,
-  'ACCIDENT': 2
-}
+const jamMarker = require('../../static/marker/jam.jpg')
+const jamMarkerConfirmed = require('../../static/marker/jam_confirmed.jpg')
 
-export let getTrafficMarkerIconPath = (trafficType) => {
-  switch (trafficType) {
-    case trafficTypeCONST.JAM:
-      return '/static/marker/jam.png'
-    case trafficTypeCONST.FLOOD:
-      return '/static/marker/flood.png'
-    case trafficTypeCONST.ACCIDENT:
-      return '/static/marker/accident.png'
-  }
-}
+const floodMarker = require('../../static/marker/flood.jpg')
+const floodMarkerrConfirmed = require('../../static/marker/flood_confirmed.jpg')
+
+const accidentMarker = require('../../static/marker/accident.jpg')
+const accidentMarkerConfirmed = require('../../static/marker/accident_confirmed.jpg')
+
+export const trafficMakerIcons = [
+  jamMarker,
+  jamMarkerConfirmed,
+  floodMarker,
+  floodMarkerrConfirmed,
+  accidentMarker,
+  accidentMarkerConfirmed
+]

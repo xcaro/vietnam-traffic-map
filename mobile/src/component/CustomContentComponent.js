@@ -128,7 +128,7 @@ class CustomContentComponent extends Component {
           <FAIcon style = {primaryStyles.Icon} name = "user" size = {17} color = "white" />
           <Text style = {styles.profileText}>{this.props.user ? this.props.user.displayName.length <= 20 ? this.props.user.displayName :this.props.user.displayName.substring(0,20)+"..." : 'Khách'}</Text>
         </View>
-        <DrawerItems {...this.props} />
+        <DrawerItems {...this.state} />
       </View>
     )
   }

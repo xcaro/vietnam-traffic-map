@@ -1,6 +1,7 @@
 <template>
-<transition name = 'slide-fade'>
-  <div id = "sidebar" class="bg-primary-new" v-show = '$store.state.isShowSideBar'>
+<div>
+<transition name = 'slide-fade' v-if = '$store.state.isShowSideBar'>
+  <div id = "sidebar" class="bg-primary-new" >
     <div class="d-flex p-3">
       <button class="btn btn-primary ml-auto" type="button" @click = "$store.dispatch('toggleSideBar')">
         <span class="icon-close"></span>
@@ -8,28 +9,37 @@
     </div>
     <div class="list-group">
       <router-link to = '/' class="list-group-item list-group-item-action" exact-active-class="active">
-        <span class="icon-map d-inline pl-2">
+        <span class="icon-map d-inline pr-3">
         </span>
         Bản đồ
       </router-link>
-      <drop-down>
-        <div slot="header" class="p-3 py-4">
-          <span class="icon-clinic d-inline pl-2">
-          </span>
-          Phòng khám
-        </div>
-        <div slot="body">
-          <router-link to = '/clinic/create' class="list-group-item list-group-item-action" exact-active-class="active">
-            Khởi tạo
-          </router-link>
-          <router-link to = '/clinic/find' class="list-group-item list-group-item-action" exact-active-class="active">
-            Tìm kiếm
-          </router-link>
-        </div>
-      </drop-down>
+
+        <router-link to = '/clinic/create' class="list-group-item list-group-item-action" exact-active-class="active">
+          <span class="icon-add d-inline pr-3"></span>
+          Khởi tạo phòng khám
+        </router-link>
+        <router-link to = '/clinic/find' class="list-group-item list-group-item-action" exact-active-class="active">
+          <span class="icon-search d-inline pr-3"></span>
+          Tìm kiếm phòng khám
+        </router-link>
+        <router-link to = '/login' class="list-group-item list-group-item-action" exact-active-class="active">
+          <span class="icon-sign-in d-inline pr-3"></span>
+          Đăng nhập
+        </router-link>
+        <router-link to = '/register' class="list-group-item list-group-item-action" exact-active-class="active">
+          <span class="icon-exit d-inline pr-3"></span>
+          Đăng xuất
+        </router-link>
     </div>
   </div>
-</transition>
+  </transition>
+  <transition name = 'slide-fade' v-else>
+      <button class="btn btn-primary" id = "sidebar-toggle" @click = "$store.dispatch('toggleSideBar')">
+        <span class="icon-right-arrow">
+        </span>
+      </button>
+  </transition>
+</div>
 </template>
 
 <script>
@@ -49,6 +59,12 @@ export default {
 </script>
 
 <style>
+#sidebar-toggle {
+  border-radius: 0;
+  position: absolute;
+  top: 7%;
+}
+
 #sidebar {
   height: 100vh;
   width: 300px;
@@ -72,5 +88,24 @@ export default {
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0;
+}
+
+.list-group-item {
+  background: #5892f2;
+  color: #ffffffd6;
+  border-radius: 0;
+  padding: 20px;
+}
+
+.list-group-item:hover {
+  background: #478bfb;
+  color: white
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #2b6ee0;
+    border-color: #2b6ee0;
 }
 </style>

@@ -1,10 +1,10 @@
 import {
-  TextInput,
-  Picker,
+  StyleSheet,
   View,
   Text,
-  Button,
-  Image
+  TouchableNativeFeedback,
+  Image,
+
 } from 'react-native'
 
 import React, {
@@ -18,6 +18,7 @@ import appHelper from '../../helper/app'
 import primaryStyles from '../../style/index'
 
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
+import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 
 class ReportTrafficInfo extends Component {
   static navigationOptions = {
@@ -27,37 +28,81 @@ class ReportTrafficInfo extends Component {
   render () {
     const trafficReport = this.props.navigation.getParam('trafficReport')
     return (
-      <View style = {[primaryStyles.container, {
-        justifyContent: 'center',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginTop = 20
-      }]}>
+      <View style = {[styles.topContainer, styles.mt]}>
       <View>
         <Text>Loại: {appHelper.trafficTypeToString(trafficReport.type)}</Text>
         <Text>Thời gian: {trafficReport.time}</Text>
         <Text>Mô tả: {trafficReport.comment}</Text>
         <Text>Trạng thái: {trafficReport.confirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</Text>
-        <View style={{
-          marginTop: 200,
-        }}>
-      </View>
+
         <Image
           borderRadius = {3}
-          marginTop = {10}
-          style={{width: 300, height: 300}}
+          style={[styles.img, styles.mt]}
           source={{uri: trafficReport.image}}
         />
+
+        <View style = {[styles.btnContainer, styles.mt]}>
+          {!trafficReport.confirmed && <ShadenTouchableHightLight
+            onPress = {() => {
+              alert('test')
+            }}
+            padding = {15}
+            marginRight = {10}
+            backgroundColor = "#3498db"
+            flexDirection = "row">
+            <FAIcon name = "thumbs-up" size = {20} color = "white" style = {primaryStyles.Icon} />
+            <Text style = {primaryStyles.textWhite}>Xác nhận</Text>
+          </ShadenTouchableHightLight>}
+
+          {trafficReport.confirmed && <ShadenTouchableHightLight
+            onPress = {() => {
+              alert('test')
+            }}
+            padding = {15}
+            marginRight = {10}
+            backgroundColor = "#3498db"
+            flexDirection = "row">
+            <FAIcon name = "thumbs-down" size = {20} color = "white" style = {primaryStyles.Icon} />
+            <Text style = {primaryStyles.textWhite}>Hủy xác nhận</Text>
+          </ShadenTouchableHightLight>}
+
+          <ShadenTouchableHightLight
+            onPress = {() => {
+              alert('test')
+            }}
+            padding = {15}
+            backgroundColor = "#3498db"
+            flexDirection = "row">
+            <FAIcon name = "trash" size = {20} color = "white" style = {primaryStyles.Icon} />
+            <Text style = {primaryStyles.textWhite}>Đã kết thúc</Text>
+          </ShadenTouchableHightLight>
         </View>
-        {!trafficReport.image &&
-        <View style = {[primaryStyles.container]}>
-          <Image width = {300} height = {300} source = {{uri: trafficReport.image}} />
         </View>
-        }
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  topContainer : {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+
+  mt: {
+    marginTop: 20
+  },
+
+  img : {width: 300, height: 300},
+
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+  }
+})
 
 export default connect(
   /** State requirer to read by container component */
