@@ -1,19 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '../router/home'
 import createClinic from '../router/create_clinic.vue'
 import editClinic from '../router/edit_clinic.vue'
 import login from '../router/login.vue'
 import register from '../router/register.vue'
+import logOut from '../router/log_out.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      component: home
-    },
     {
       path: '/clinic/',
       redirect: '/clinic/create'
@@ -33,6 +29,10 @@ export default new Router({
     {
       path: '/register',
       component: register
+    },
+    {
+      path: '/logout',
+      component: logOut
     }
   ]
 })

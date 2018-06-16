@@ -1,12 +1,12 @@
 <template>
   <div>
      <div class="form-group">
-      <label for="exampleInputEmail1">Tên phòng khám</label>
-      <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Tên">
+      <label for="">Tên phòng khám</label>
+      <input type="text" class="form-control" id="" aria-describedby="emailHelp" placeholder="Tên">
       <small id="emailHelp" class="form-text text-muted">Không được bỏ trống</small>
     </div>
     <div class="form-group">
-      <label for="exampleInputEmail1">Chọn vị trí phòng khám</label>
+      <label for="">Chọn vị trí phòng khám</label>
       <vue-google-autocomplete
         ref="textinput"
         id="textinput"

@@ -52,7 +52,6 @@ export default {
   },
 
   navigateCheckSignIn (navigation, idToken, route) {
-    console.log(idToken)
     if (idToken) {
       navigation.navigate(route)
     } else {

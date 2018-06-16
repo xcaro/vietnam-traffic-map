@@ -11,6 +11,10 @@ import React, {
   Component
 } from 'react'
 
+import {
+  NavigationActions
+} from 'react-navigation'
+
 import superagent from 'superagent'
 
 import {
@@ -122,22 +126,30 @@ class SignIn extends Component {
                 .then(async res => {
                   this.props.setIdToken(res.body.access_token)
 
-                  /**
-                   * Save idtoken
-                   */
-                  await AsyncStorage.setItem('idToken', res.body.access_token)
+
 
                   /**
                    * Đăng nhập thành công
                    */
                   let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
-                  if (routeToRedirect) {
-                    this.props.navigation.navigate(routeToRedirect)
-                  } else {
-                    this.props.navigation.navigate('Map')
-                  }
+
+                  this.props.navigation.dispatch(NavigationActions.pop({
+                    n:1
+                  }))
+
+                  let routeName = routeToRedirect || 'Map'
+                  this.props.navigation.dispatch(NavigationActions.push({
+                    routeName
+                  }))
+
+                  /**
+                   * Save idtoken
+                   */
+                  AsyncStorage.setItem('idToken', res.body.access_token)
                 })
                 .catch(err => {
+                  debugger
+                  let er = err
                   Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
                 })
             })}

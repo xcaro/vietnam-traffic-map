@@ -42,9 +42,9 @@ class CustomContentComponent extends Component {
      */
 
     this.originalItems = this.state.items
-    this.currentUser = null
+    this.currentidToken = store.getState().idToken
 
-    if (this.currentUser === null) {
+    if (this.currentidToken === null) {
       /**
        * Hide drawer item that should be hide if user is guest
        */
@@ -76,7 +76,7 @@ class CustomContentComponent extends Component {
 
   componentDidMount () {
     this.unsubscribe = store.subscribe(() => {
-      let user = store.getState().user
+      let idToken = store.getState().idToken
 
       /**
        * If user has been changed
@@ -84,11 +84,11 @@ class CustomContentComponent extends Component {
        * null : guest
        * object : signed user
        */
-      if (user === this.currentUser) {
+      if (idToken === this.currentidToken) {
         return
       }
 
-      if (user === null) {
+      if (idToken === null) {
         /**
          * Hide drawer item that should be hide if user is guest
          */
@@ -117,7 +117,7 @@ class CustomContentComponent extends Component {
        * Finally assign user to currentUser variable
        * To keep track of what has been changed
        */
-      this.currentUser = user
+      this.currentidToken = idToken
     })
   }
 
@@ -154,9 +154,9 @@ const styles = StyleSheet.create({
 export default connect(
   /** State requirer to read by container component */
   ({
-    user
+    idToken
   })=>(
-    {user}
+    {idToken}
   ),
 
   null

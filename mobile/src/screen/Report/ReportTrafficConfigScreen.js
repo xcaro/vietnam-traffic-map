@@ -11,7 +11,7 @@ import React ,{
   } from 'react-native'
 
   import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
-  import {reportTrafficType} from '../../helper/enum'
+  import {reportTrafficTypes} from '../../helper/enum'
   import RoundButton from '../../component/RoundButton'
   import primaryStyle from '../../style/index'
 
@@ -24,57 +24,30 @@ import React ,{
       return (
         <View style={style.topContainer}>
         <View style={style.container}>
-          <ShadenTouchableHightLight
-            margin = {10}
-            marginTop = {20}
-            padding={20}
-            backgroundColor = "#3c94d3"
-            flexDirection = "row"
-            alignItems = "center"
-            onPress={() => {
-              this.props.navigation.navigate('ReportTraffic', {
-                reportTrafficType: reportTrafficType.TrafficJam
-              })
-            }}>
-            <View style={style.img}>
-              <Image source={require('../../assets/traffic_menu/jam.png')} />
-            </View>
-            <Text style={style.text}>Kẹt xe</Text>
-          </ShadenTouchableHightLight>
-
-          <ShadenTouchableHightLight
-            margin = {10}
-            padding={20}
-            backgroundColor = "#3a98d8"
-            flexDirection = "row"
-            alignItems = "center"
-            onPress={() => {
-              this.props.navigation.navigate('ReportTraffic', {
-                reportTrafficType: reportTrafficType.CarAccident
-              })
-            }}>
-            <View style={style.img}>
-              <Image source={require('../../assets/traffic_menu/accident.png')} />
-            </View>
-            <Text style={style.text}>Tai nạn</Text>
-          </ShadenTouchableHightLight>
-
-          <ShadenTouchableHightLight
-            margin = {10}
-            padding={20}
-            backgroundColor = "#3c94d3"
-            flexDirection = "row"
-            alignItems = "center"
-            onPress={() => {
-              this.props.navigation.navigate('ReportTraffic', {
-                reportTrafficType: reportTrafficType.Flood
-              })
-            }}>
-            <View style={style.img}>
-              <Image source={require('../../assets/traffic_menu/flood.png')} />
-            </View>
-            <Text style={style.text}>Lũ lụt</Text>
-          </ShadenTouchableHightLight>
+          {
+            reportTrafficTypes.map((reportTrafficType) => {
+              return (
+                <ShadenTouchableHightLight
+                  key = {reportTrafficType.name}
+                  margin = {10}
+                  marginTop = {20}
+                  padding={20}
+                  backgroundColor = "#3c94d3"
+                  flexDirection = "row"
+                  alignItems = "center"
+                  onPress={() => {
+                    this.props.navigation.navigate('ReportTraffic', {
+                      reportTrafficType
+                    })
+                  }}>
+                  <View style={style.img}>
+                    <Image source={reportTrafficType.img} />
+                  </View>
+                  <Text style={style.name}>{reportTrafficType.name}</Text>
+                </ShadenTouchableHightLight>
+              )
+            })
+          }
         </View>
       </View>
       )
@@ -96,7 +69,7 @@ import React ,{
       backgroundColor: 'white'
     },
 
-    text: {
+    name: {
       fontSize: 22,
       marginLeft: 10,
       color: 'white',

@@ -20,7 +20,7 @@
         <label for="exampleInputPassword1">Email</label>
         <input type="password" class="form-control" id="exampleInputPassword1">
       </div>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary mt-2">
         <span class="icon-sign-up d-inline mr-2"></span>
         Đăng ký
       </button>

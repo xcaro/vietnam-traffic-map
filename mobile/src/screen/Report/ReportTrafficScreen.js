@@ -13,6 +13,10 @@ import {
   ScrollView
 } from 'react-native'
 
+import {
+  NavigationActions
+} from 'react-navigation'
+
 import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import FormData, {getHeaders} from 'form-data'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -29,14 +33,14 @@ class ReportTrafficScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const {state} = navigation
     return {
-      title: `Báo cáo ${state.params.reportTrafficType}`,
+      title: `Báo cáo ${state.params.reportTrafficType.name}`,
     }
   }
 
   constructor(props) {
     super()
     this.state = {
-      description: '',
+      comment: '',
       image: null,
       height: 0
     }
@@ -88,8 +92,8 @@ class ReportTrafficScreen extends Component {
         style = {styles.textInput}
         returnKeyLabel = "next"
         multiline={true}
-        onChangeText={(description) => {
-            this.setState({ description })
+        onChangeText={(comment) => {
+            this.setState({ comment })
         }}
         onContentSizeChange={(event) => {
             this.setState({ height: event.nativeEvent.contentSize.height })
@@ -100,14 +104,15 @@ class ReportTrafficScreen extends Component {
 
         <ShadenTouchableHightLight
           onPress = {() => {
-
+            debugger
             appHelper.getCurrentLocation(this.props).then((curLocation) => {
             /**
              * Form require data
              */
+            debugger
               let origin_lat = curLocation.coords.latitude
               let origin_lng = curLocation.coords.longitude
-              let reportTrafficType = this.props.navigation.getParam(reportTrafficType, 'test')
+              let reportTrafficType = this.props.navigation.getParam('reportTrafficType')
               /**
                * Push this to server
                * Remember to server
@@ -116,8 +121,8 @@ class ReportTrafficScreen extends Component {
 
               pushMe.append('latitude', origin_lat)
               pushMe.append('longitude', origin_lng)
-              pushMe.append('type', reportTrafficType)
-              pushMe.append('comment', this.state.description)
+              pushMe.append('type', reportTrafficType.id)
+              pushMe.append('comment', this.state.comment)
 
               // Gửi hình sau
               // let i = 0
@@ -130,16 +135,19 @@ class ReportTrafficScreen extends Component {
               //   i++
               // }
 
+
               axious.post(
-                'deltavn.net/api/reports',
+                'http://deltavn.net/api/reports',
                 pushMe
               )
                 .then((res) => {
-                  Alert.alert('Thông báo' ,`Báo cáo ${reportTrafficType} thành công`)
-              }).catch((err) => {
-                let e = err
-                debugger
-              })
+                  debugger
+                  Alert.alert('Thông báo' ,`Báo cáo ${reportTrafficType.name} thành công`)
+                  this.props.navigation.dispatch(NavigationActions.pop({
+                    n: 2
+                  }))
+                  this.props.navigation.navigate('Home')
+                })
             })
           }}
           flexDirection = "row"

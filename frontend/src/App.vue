@@ -1,11 +1,18 @@
 <template>
   <div id="app">
-    <Sidebar />
-    <transition name = 'slide-fade'>
-      <router-view
-        id = "content"
-        :class="isSidebarEnable ? 'enable-side-bar' : 'disable-side-bar'" />
+    <transition name = 'fade'>
+      <div id = "modalTopContainer" class="d-flex align-items-center justify-content-center" v-if="isShowModal">
+          <div id = "modalContainer" :class="isShowSideBar ? 'enable-side-bar' : 'disable-side-bar'">
+            <button class="btn" @click="$store.dispatch('toggle', 'isShowModal')">
+              <span class="icon-close"></span>
+            </button>
+            <router-view
+              id = "content" />
+          </div>
+      </div>
     </transition>
+    <Sidebar />
+    <home></home>
   </div>
 </template>
 
@@ -20,36 +27,65 @@ import './assets/css/icon.css'
 import Sidebar from './components/Sidebar'
 
 /** Store */
+import { mapState } from 'vuex'
 import store from './store/index.js'
+import Home from './components/Home'
 
 export default {
   name: 'App',
+  computed: mapState([
+    'isShowSideBar',
+    'isShowModal'
+  ]),
   components: {
-    Sidebar
+    Sidebar,
+    Home
   },
-  store,
-  computed: {
-    isSidebarEnable () {
-      return store.state.isShowSideBar
-    }
-  }
+  store
 }
 </script>
 
 <style>
 .enable-side-bar {
-  margin-left: 350px;
-  
+  margin-left: 300px
 }
 
-.disable-side-bar {
-  margin-left: 100px
+.fade-enter-active, .fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .15s;
+}
+
+.fade-enter-active {
+  transition-delay: .15s;
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
+#modalTopContainer {
+  background-color: #00000042;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#modalContainer {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  width: 65%;
+}
+
+#modalContainer > button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }
 
 #content {
-  margin-right: 100px;
-  margin-top: 50px;
-  transition: all 0.1s ease-in-out;
+  padding: 50px;
+  background: white;
+  box-shadow: 1px 1px 10px 2px #00000042;
 }
 
 body {

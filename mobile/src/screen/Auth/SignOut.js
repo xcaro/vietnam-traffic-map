@@ -1,7 +1,9 @@
 import {
   TextInput,
   Picker,
-  View
+  View,
+  Alert,
+  AsyncStorage
 } from 'react-native'
 
 import React, {
@@ -29,17 +31,18 @@ class SignOut extends Component {
     super(props)
 
     /**
-     * Clear user
-     * Clear token
-     */
-    this.props.setIdToken(null)
-    this.props.setUser(null)
+           * Clear user
+           * Clear token
+           */
+          this.props.setIdToken(null)
+          this.props.setUser(null)
 
-    /**
-     * navigate home route
-     * Clear all history
-     */
-    this.props.navigation.navigate('Map')
+          /**
+           * navigate home route
+           * Clear all history
+           */
+          this.props.navigation.navigate('Map')
+          AsyncStorage.removeItem('idToken')
   }
 
   render () {

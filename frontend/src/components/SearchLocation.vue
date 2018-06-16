@@ -1,6 +1,6 @@
 <template>
 <transition name = 'slide-fade'>
-  <div id = "SearchLocation" class="input-group m-3 p-3" v-show = '!$store.state.isShowSideBar'>
+  <div id = "SearchLocation" class="input-group m-3 p-2" v-show = '!$store.state.isShowSideBar'>
     <vue-google-autocomplete
       ref="textinput"
       id="textinput"
@@ -61,6 +61,7 @@ export default {
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
     position: absolute;
     top: 0;
-    left: 70px;
+    left: 60px;
+    z-index: -1
   }
 </style>

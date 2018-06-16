@@ -132,8 +132,6 @@ const Drawer = DrawerNavigator(
   },
   {
     initialRouteName: 'Map',
-    
-    backBehavior: 'none',
     contentComponent: CustomContentComponent
   }
 )
@@ -144,11 +142,8 @@ export default class App extends Component {
     this.drawer = React.createRef()
   }
 
-  async componentDidMount () {
-    let idToken = await sAsyncStorage.getItem('idToken')
-    if (idToken) {
-      store.dispatch(action.setIdToken(idToken))
-    }
+  componentDidMount () {
+    AsyncStorage.getItem('idToken').then(idToken => store.dispatch(action.setIdToken(idToken)))
   }
 
   render () {

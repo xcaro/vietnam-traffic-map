@@ -1,5 +1,9 @@
 export default {
-  TOGGLE_SIDE_BAR (state) {
-    state.isShowSideBar = !state.isShowSideBar
+  TOGGLE (state, propertyName) {
+    state[propertyName] = !state[propertyName]
+  },
+
+  SET (state, data) {
+    state[data.propertyName] = data.payload
   }
 }

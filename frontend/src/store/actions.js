@@ -1,5 +1,9 @@
 export default {
-  toggleSideBar ({commit}) {
-    commit('TOGGLE_SIDE_BAR')
+  toggle ({commit}, data) {
+    commit('TOGGLE', data)
+  },
+
+  set ({commit}, data) {
+    commit('SET', data)
   }
 }
