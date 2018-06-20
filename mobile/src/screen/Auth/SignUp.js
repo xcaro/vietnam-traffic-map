@@ -2,7 +2,9 @@ import {
   TextInput,
   StyleSheet,
   View,
-  Text
+  Text,
+  ScrollView,
+  WebView
 } from 'react-native'
 
 import React, {
@@ -13,6 +15,9 @@ import {
   PRIMARY_COLOR
 } from '../../style/index'
 import primaryStyles from '../../style/index'
+import {
+  validateObject
+} from '../../helper/validate'
 import { connect } from 'react-redux'
 import { TextField } from 'react-native-material-textfield'
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
@@ -38,9 +43,12 @@ export default class SignUp extends Component {
     super(props)
 
     this.state = {
-      userName: '',
-      passWord: '',
-      retypePassword: '',
+      name: new validateObject('Tên'),
+      userName: new validateObject('Tên đăng nhập'),
+      passWord: new validateObject('Mật khẩu'),
+      email: new validateObject('Email'),
+      address: new validateObject('địa chỉ'),
+      phone: new validateObject('Số điện thoại'),
     }
   }
 
@@ -53,30 +61,49 @@ export default class SignUp extends Component {
           editable = {false}
           text = 'Đăng ký'>
         </SearchLocationTextInput>
-        <View style = {styles.contentContainer}>
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle = {styles.contentContainer}>
           <TextField
-            label='Email'
+            label='Họ tên'
             title = 'Không được bỏ trống'
-            value={this.state.userName}
-            onChangeText={ (userName) => this.setState({ userName }) }
+            value={this.state.name.val}
+            onChangeText={ (name) => this.setState({ name: new validateObject('Tên',name) }) }
+          />
+
+          <TextField
+            label='Tên đăng nhập'
+            title = 'Không được bỏ trống'
+            value={this.state.userName.val}
+            onChangeText={ (userName) => this.setState({ userName: new validateObject('Tên đăng nhập',userName) }) }
           />
 
           <TextField
             label='Mật khẩu'
             title = 'Không được bỏ trống'
             secureTextEntry = {true}
-            value={this.state.passWord}
-            onChangeText={ (passWord) => this.setState({ passWord }) }
+            value={this.state.passWord.val}
+            onChangeText={ (passWord) => this.setState({ passWord: new validateObject('Mật khẩu',passWord) }) }
           />
 
           <TextField
-            label='Nhập lại mật khẩu'
+            label='Email'
             title = 'Không được bỏ trống'
-            secureTextEntry = {true}
-            value={this.state.retypePassword}
-            onChangeText={ (retypePassword) => this.setState({ retypePassword }) }
+            value={this.state.email.val}
+            onChangeText={ (email) => this.setState({ email: new validateObject('Email',email) }) }
           />
 
+          <TextField
+            label='Địa chỉ'
+            title = 'Không được bỏ trống'
+            value={this.state.address.val}
+            onChangeText={ (address) => this.setState({ address: new validateObject('Địa chỉ',address) }) }
+          />
+
+          <TextField
+            label='Số điện thoại'
+            title = 'Không được bỏ trống'
+            value={this.state.phone.val}
+            onChangeText={ (phone) => this.setState({ phone: new validateObject('Số điện thoại',phone) }) }
+          />
 
           <ShadenTouchableHightLight
             marginTop = {15}
@@ -105,7 +132,21 @@ export default class SignUp extends Component {
               />
               <Text style = {primaryStyles.textWhite}>Đăng ký bằng google</Text>
           </ShadenTouchableHightLight>
-        </View>
+
+          <ShadenTouchableHightLight
+            marginTop = {20}
+            padding = {15}
+            backgroundColor = '#d62d20'
+            flexDirection = 'row'>
+              <FAIcon
+                name = "google"
+                size = {15}
+                color = 'white'
+                style = {primaryStyles.Icon}
+              />
+              <Text style = {primaryStyles.textWhite}>Đăng ký bằng google</Text>
+          </ShadenTouchableHightLight>
+        </ScrollView>
       </View>
     )
   }

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?lfl2cx');
-  src:  url('fonts/icomoon.eot?lfl2cx#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?lfl2cx') format('truetype'),
-    url('fonts/icomoon.woff?lfl2cx') format('woff'),
-    url('fonts/icomoon.svg?lfl2cx#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?rfkl9m');
+  src:  url('fonts/icomoon.eot?rfkl9m#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?rfkl9m') format('truetype'),
+    url('fonts/icomoon.woff?rfkl9m') format('woff'),
+    url('fonts/icomoon.svg?rfkl9m#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,50 +24,44 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-sign-up:before {
-  content: "\e973";
-}
-.icon-sign-in:before {
-  content: "\ea13";
-}
-.icon-sign-out:before {
-  content: "\ea14";
-}
-.icon-right-arrow:before {
+.icon-warning:before {
   content: "\e900";
 }
-.icon-adjust:before {
+.icon-right-arrow:before {
   content: "\e901";
 }
-.icon-clinic:before {
+.icon-adjust:before {
   content: "\e902";
 }
-.icon-close:before {
+.icon-clinic:before {
   content: "\e903";
 }
-.icon-direction:before {
+.icon-close:before {
   content: "\e904";
 }
-.icon-location:before {
+.icon-direction:before {
   content: "\e905";
 }
-.icon-menu:before {
+.icon-location:before {
   content: "\e906";
 }
-.icon-swap:before {
+.icon-menu:before {
   content: "\e907";
 }
-.icon-thumb-down:before {
+.icon-swap:before {
   content: "\e908";
 }
-.icon-thumbs-up:before {
+.icon-thumb-down:before {
   content: "\e909";
 }
-.icon-trash:before {
+.icon-thumbs-up:before {
   content: "\e90a";
 }
-.icon-register:before {
+.icon-trash:before {
   content: "\e90b";
+}
+.icon-register:before {
+  content: "\e90c";
 }
 .icon-edit:before {
   content: "\e90e";
@@ -78,6 +72,15 @@
 .icon-map:before {
   content: "\e94b";
 }
+.icon-sign-up:before {
+  content: "\e973";
+}
 .icon-search:before {
   content: "\e987";
+}
+.icon-sign-in:before {
+  content: "\ea13";
+}
+.icon-sign-out:before {
+  content: "\ea14";
 }

@@ -86,14 +86,15 @@ class SignIn extends Component {
 
           <ShadenTouchableHightLight
             onPress = {(() => {
+
+              let isError = false
               /**Kiểm tra tên đăng nhập */
               if (this.state.userName === "")
               {
                 this.setState({
                   userNameError: 'Tên đăng nhập không được bỏ trống'
                 })
-
-                return
+                isError = true
               }
               else if (this.state.userNameError !== "") {
                 this.setState({
@@ -105,53 +106,53 @@ class SignIn extends Component {
               if (this.state.passWord === "")
               {
                 this.setState({
-                  userNameError: 'mật khẩu không được bỏ trống'
+                  passWordError: 'mật khẩu không được bỏ trống'
                 })
-
-                return
+                isError = true
               }
-              else if (this.state.userNameError !== "") {
+              else if (this.state.passWordError !== "") {
                 this.setState({
-                  userNameError: ''
+                  passWordError: ''
                 })
               }
 
               /**Kiểm tra trên server */
-              superagent
-                .post('http://deltavn.net/api/login')
-                .send({
-                  username: this.state.userName,
-                  password: this.state.passWord
-                })
-                .then(async res => {
-                  this.props.setIdToken(res.body.access_token)
+              if (!isError) {
+                superagent
+                  .post('http://deltavn.net/api/login')
+                  .send({
+                    username: this.state.userName,
+                    password: this.state.passWord
+                  })
+                  .then(async res => {
+                    this.props.setIdToken(res.body.access_token)
 
 
 
-                  /**
-                   * Đăng nhập thành công
-                   */
-                  let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
+                    /**
+                     * Đăng nhập thành công
+                     */
+                    let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
 
-                  this.props.navigation.dispatch(NavigationActions.pop({
-                    n:1
-                  }))
+                    this.props.navigation.dispatch(NavigationActions.pop({
+                      n:1
+                    }))
 
-                  let routeName = routeToRedirect || 'Map'
-                  this.props.navigation.dispatch(NavigationActions.push({
-                    routeName
-                  }))
+                    let routeName = routeToRedirect || 'Map'
+                    this.props.navigation.dispatch(NavigationActions.push({
+                      routeName
+                    }))
 
-                  /**
-                   * Save idtoken
-                   */
-                  AsyncStorage.setItem('idToken', res.body.access_token)
-                })
-                .catch(err => {
-                  debugger
-                  let er = err
-                  Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
-                })
+                    /**
+                     * Save idtoken
+                     */
+                    AsyncStorage.setItem('idToken', res.body.access_token)
+                  })
+                  .catch(err => {
+                    let er = err
+                    Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
+                  })
+              }
             })}
             marginTop = {15}
             padding = {15}

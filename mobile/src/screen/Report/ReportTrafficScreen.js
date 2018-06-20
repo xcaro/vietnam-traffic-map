@@ -137,7 +137,7 @@ class ReportTrafficScreen extends Component {
 
 
               axious.post(
-                'http://deltavn.net/api/reports',
+                'https://deltavn.net/api/reports',
                 pushMe
               )
                 .then((res) => {

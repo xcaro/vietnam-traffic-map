@@ -1,6 +1,7 @@
 <template>
-  <div>
-      <div class="alert alert-danger font-weight-bold mt-5" v-if = "loginError">
+  <div class="">
+      <div class="alert alert-danger mt-3 col-12" v-if = "loginError">
+        <span class="icon-warning d-inline mr-2"></span>
         Sai tên đăng nhập hoặc mật khẩu
       </div>
       <div class="form-group">
@@ -18,8 +19,8 @@
       <div class="form-group">
         <label for="exampleInputPassword1">Mật khẩu</label>
         <input
-        type="text"
-        :class="['form-control', this.errors.first('username') ? 'is-invalid' : '']"
+        type="password"
+        :class="['form-control', this.errors.first('password') ? 'is-invalid' : '']"
         placeholder="Mật khẩu"
         v-model = 'passWord'
         data-vv-as="Mật khẩu"
@@ -48,22 +49,24 @@ export default {
 
   methods: {
     login () {
-      if (this.errors) {
-        request.post('http://deltavn.net/api/login')
-          .send({
-            username: this.userName,
-            password: this.passWord
-          }).then((res) => {
-            this.$store.dispatch('set', {
-              propertyName: 'idToken',
-              payload: res.body.access_token
-            })
+      this.$validator.validate().then(result => {
+        if (result) {
+          request.post('http://deltavn.net/api/login')
+            .send({
+              username: this.userName,
+              password: this.passWord
+            }).then((res) => {
+              this.$store.dispatch('set', {
+                propertyName: 'idToken',
+                payload: res.body.access_token
+              })
 
-            this.$store.dispatch('toggle', 'isShowModal')
-          }).catch(() => {
-            this.loginError = true
-          })
-      }
+              this.$store.dispatch('toggle', 'isShowModal')
+            }).catch(() => {
+              this.loginError = true
+            })
+        }
+      })
     }
   }
 }

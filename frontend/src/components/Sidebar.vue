@@ -9,7 +9,7 @@
     </div>
     <div class="list-group">
         <router-link
-          class="list-group-item list-group-item-action"
+          class="list-group-item list-group-item-action font-weight-bold"
           exact-active-class="active"
           v-for="route in filterRoutesReact"
           @click.native="openModalIfNot"
@@ -23,7 +23,7 @@
   </transition>
   <transition name = 'slide-fade' v-else>
       <button class="btn btn-primary" id = "sidebar-toggle" @click = "$store.dispatch('toggle', 'isShowSideBar')">
-        <span class="icon-right-arrow">
+        <span class="icon-right-arrow font-weight-bold">
         </span>
       </button>
   </transition>
@@ -123,7 +123,7 @@ export default {
 #sidebar-toggle {
   border-radius: 0;
   position: absolute;
-  top: 20px;
+  top: 26px;
 }
 
 #sidebar {

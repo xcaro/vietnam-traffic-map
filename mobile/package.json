@@ -15,6 +15,7 @@
     "lodash.isequal": "^4.5.0",
     "polyline-encoded": "0.0.8",
     "react": "16.3.1",
+    "react-google-recaptcha": "^0.12.0",
     "react-native": "0.55.2",
     "react-native-android-voice": "^0.6.0",
     "react-native-drawer": "^2.5.0",
@@ -38,7 +39,8 @@
     "redux": "^4.0.0",
     "remote-redux-devtools": "^0.5.0",
     "rethinkdb": "^2.3.3",
-    "superagent": "^3.8.3"
+    "superagent": "^3.8.3",
+    "validate.js": "^0.12.0"
   },
   "devDependencies": {
     "babel-jest": "22.4.3",

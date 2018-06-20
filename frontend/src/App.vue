@@ -73,7 +73,7 @@ export default {
 #modalContainer {
   position: relative;
   transition: all 0.3s ease-in-out;
-  width: 65%;
+  width: 35%;
 }
 
 #modalContainer > button {
@@ -99,5 +99,9 @@ body {
 
   font-size: 1.2em;
   display: block;
+}
+
+.alert-danger {
+color: #c50517
 }
 </style>
