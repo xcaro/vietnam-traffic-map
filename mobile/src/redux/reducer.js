@@ -4,12 +4,20 @@ import {
   SET_SELECTEDSEARCHLOCATIONITEM,
   REMOVE_SELECTEDSEARCHLOCATIONITEM,
   SET_IDTOKEN,
-  SET_USER
+  SET_USER,
+  SHOW_LOADING,
+  HIDE_LOADING
 } from './action'
 import objectHelper from '../helper/object'
 
 export default function (state, action) {
   switch (action.type) {
+    case SHOW_LOADING:
+      return {...state, isShowLoading: true}
+
+    case HIDE_LOADING:
+      return {...state, isShowLoading: false}
+
     case SET_IDTOKEN :
       return objectHelper.CloneAndSetPropOfObject(state, {
         idToken: action.idToken

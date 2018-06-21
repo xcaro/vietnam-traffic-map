@@ -22,7 +22,6 @@ import FormData, {getHeaders} from 'form-data'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import primaryStyles from '../../style/index'
 import ImagePicker from 'react-native-image-picker'
-import reportTrafficType from '../../helper/enum'
 import RoundButton from '../../component/RoundButton'
 import action from '../../redux/action'
 import appHelper from '../../helper/app'
@@ -33,7 +32,7 @@ class ReportTrafficScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     const {state} = navigation
     return {
-      title: `Báo cáo ${state.params.reportTrafficType.name}`,
+      title: `Báo cáo ${state.params.reportType.name}`,
     }
   }
 
@@ -104,15 +103,13 @@ class ReportTrafficScreen extends Component {
 
         <ShadenTouchableHightLight
           onPress = {() => {
-            debugger
             appHelper.getCurrentLocation(this.props).then((curLocation) => {
             /**
              * Form require data
              */
-            debugger
               let origin_lat = curLocation.coords.latitude
               let origin_lng = curLocation.coords.longitude
-              let reportTrafficType = this.props.navigation.getParam('reportTrafficType')
+              let reportType = this.props.navigation.getParam('reportType')
               /**
                * Push this to server
                * Remember to server
@@ -121,7 +118,7 @@ class ReportTrafficScreen extends Component {
 
               pushMe.append('latitude', origin_lat)
               pushMe.append('longitude', origin_lng)
-              pushMe.append('type', reportTrafficType.id)
+              pushMe.append('type', reportType.id)
               pushMe.append('comment', this.state.comment)
 
               // Gửi hình sau
@@ -137,16 +134,19 @@ class ReportTrafficScreen extends Component {
 
 
               axious.post(
-                'https://deltavn.net/api/reports',
+                'http://deltavn.net/api/report',
                 pushMe
               )
                 .then((res) => {
-                  debugger
-                  Alert.alert('Thông báo' ,`Báo cáo ${reportTrafficType.name} thành công`)
+                  Alert.alert('Thông báo' ,`Báo cáo ${reportType.name} thành công`)
                   this.props.navigation.dispatch(NavigationActions.pop({
                     n: 2
                   }))
                   this.props.navigation.navigate('Home')
+                }).
+                catch(err => {
+                  var a = err
+                  debugger
                 })
             })
           }}

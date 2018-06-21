@@ -1,5 +1,6 @@
 import SplashScreen from 'react-native-splash-screen'
 import CurrentLocationMarker from '../../component/CurrentLocationMarker'
+import Spinner from 'react-native-loading-spinner-overlay'
 import React ,{
   Component
 } from 'react'
@@ -28,6 +29,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import errorHelper from '../../helper/error'
 import appHelper from '../../helper/app'
 import store from '../../redux/store'
+import request from 'superagent'
 
 import MapView, {
   Marker,
@@ -289,11 +291,14 @@ class HomeScreen extends Component {
               marginRight = {15}
               padding = {10}
               onPress = {() => {
-                appHelper.navigateCheckSignIn(
-                  this.props.navigation,
-                  this.props.idToken,
-                  'ReportTrafficConfig'
-                )
+                this.props.showLoading()
+                this.props.hideLoading()
+                request.get('http://deltavn.net/api/report-type').then((res) => {
+                  this.props.hideLoading()
+                  this.props.navigation.navigate('ReportTrafficConfig',{
+                    reportTypes: res.body.data
+                  })
+                })
               }}>
               <MaterialIcon
                 name = "announcement"
@@ -396,9 +401,9 @@ class HomeScreen extends Component {
 export default connect(
   /** State requirer to read by container component */
   ({
-    curLocation, selectedSearchLocationItem, idToken
+    curLocation, selectedSearchLocationItem, idToken, isShowLoading
   })=>(
-    {curLocation, selectedSearchLocationItem, idToken}
+    {curLocation, selectedSearchLocationItem, idToken, isShowLoading}
   ),
 
   action

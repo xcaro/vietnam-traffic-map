@@ -10,11 +10,12 @@
     <div class="list-group">
         <router-link
           class="list-group-item list-group-item-action font-weight-bold"
-          exact-active-class="active"
+          :exact-active-class="isShowModal? 'active' : ''"
           v-for="route in filterRoutesReact"
           @click.native="openModalIfNot"
           :to = 'route.url'
-          :key = "route.url">
+          :key = "route.url"
+          replace>
           <span :class="[route.icon, 'd-inline pr-3']"></span>
           {{route.name}}
         </router-link>
@@ -123,7 +124,8 @@ export default {
 #sidebar-toggle {
   border-radius: 0;
   position: absolute;
-  top: 26px;
+  top: 24px;
+  font-size: 1.4em
 }
 
 #sidebar {

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 import { Validator, install as VeeValidate } from 'vee-validate/dist/vee-validate.minimal.esm.js'
 import { required, numeric, email } from 'vee-validate/dist/rules.esm.js'
@@ -14,6 +15,13 @@ Validator.extend('email', email)
 Validator.extend('numeric', numeric)
 Validator.extend('required', required)
 Validator.localize('vi', vi)
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0',
+    libraries: 'places'
+  }
+})
 
 Vue.use(VeeValidate, {
   locale: 'vi',

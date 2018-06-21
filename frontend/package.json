@@ -23,6 +23,7 @@
     "vue-google-autocomplete": "^1.1.0",
     "vue-recaptcha": "^1.1.1",
     "vue-router": "^3.0.1",
+    "vue2-google-maps": "^0.9.7",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

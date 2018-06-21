@@ -1,9 +1,5 @@
 <template>
   <div class="">
-      <div class="alert alert-danger mt-3 col-12" v-if = "registerError">
-        <span class="icon-warning d-inline mr-2"></span>
-        Chưa xác nhận recaptcha
-      </div>
       <div class="form-group">
         <label>Họ tên</label>
         <input
@@ -101,7 +97,6 @@ export default {
       email: '',
       address: '',
       phone: '',
-      verify: '',
       registerError: false
     }
   },
@@ -114,19 +109,13 @@ export default {
     register () {
       this.$validator.validate().then(result => {
         if (result) {
-          if (!this.verify) {
-            this.registerError = true
-            return
-          }
-
           let obj = {
             name: this.name,
             username: this.userName,
             password: this.passWord,
             email: this.email,
             address: this.address,
-            phone: this.phone,
-            verify: this.verify
+            phone: this.phone
           }
 
           console.log(JSON.stringify(obj))

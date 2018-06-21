@@ -1,14 +1,20 @@
 <template>
 <transition name = 'slide-fade'>
   <div id = "SearchLocation" class="input-group m-3 p-2" v-show = '!$store.state.isShowSideBar'>
-    <vue-google-autocomplete
+    <!-- <vue-google-autocomplete
       ref="textinput"
       id="textinput"
       classname="form-control"
       placeholder="Bắt đầu gõ để tìm kiếm địa điểm"
       v-on:placechanged="onFulfilling"
     >
-    </vue-google-autocomplete>
+    </vue-google-autocomplete> -->
+    <gmap-autocomplete
+        ref="textinput"
+        placeholder="Bắt đầu gõ để tìm kiếm địa điểm"
+        class="form-control"
+        @place_changed="onFulfilling">
+    </gmap-autocomplete>
     <div class="input-group-append">
       <button class="btn btn-link" type="button" @click = 'onClearing' v-if = 'isNotEmpty'>
         <span class="icon-trash">
@@ -40,7 +46,7 @@ export default {
 
     onClearing () {
       this.isNotEmpty = false
-      this.$refs.textinput.clear()
+      this.$refs.textinput.$el.value = ''
       this.onCleared()
     }
   },

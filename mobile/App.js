@@ -140,6 +140,13 @@ export default class App extends Component {
   constructor () {
     super()
     this.drawer = React.createRef()
+    this.state = {
+      isShowLoading: false
+    }
+
+    store.subscribe(() => {
+      this.state.isShowLoading = store.getState().isShowLoading
+    })
   }
 
   componentDidMount () {

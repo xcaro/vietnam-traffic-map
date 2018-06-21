@@ -1,7 +1,7 @@
-const WebSocket = require('ws')
+
+const websocket = require('ws')
 const r = require('rethinkdb')
-
-
+let port = process.env.PORT || 8000
 
 async function start () {
   try {
@@ -9,12 +9,19 @@ async function start () {
     /**
      * Create socket server
      */
-    const wss = new WebSocket.Server({ port: 8000 })
+    const wss = new websocket.Server({
+      port
+    }, () => {
+      console.log('websocket listen on port ' + port)
+    })
     wss.on('connection', async (client) => {
       /**
        * Connect database
        */
-      const conn = await r.connect()
+      const conn = await r.connect({
+        host: 'deltavn.net',
+        port: 8000
+      })
       conn.use('app')
 
 
@@ -22,7 +29,7 @@ async function start () {
      * Subscribe rethink data base on message request
      * Send all data base on update
      */
-      r.table('activeTrafficReports')
+      r.table('activeReports')
         .changes({
           'includeTypes': true,
           'includeInitial': true,

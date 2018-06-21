@@ -10,7 +10,8 @@ const store = createStore(
     curLocation: null,
     user: null,
     selectedSearchLocationItem: null,
-    idToken: null
+    idToken: null,
+    isShowLoading: false
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 

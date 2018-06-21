@@ -2,71 +2,165 @@
   <div>
     <div id = 'directionPanel'>
     </div>
-    <div id = 'map'>
-    </div>
+    <gmap-map
+      :center="center"
+      :zoom="12"
+      ref="map"
+      id = "map"
+      :options = "{
+        mapTypeControl: false
+      }">
+        <gmap-marker
+          :position="searchLocationMarker"
+          v-if = "searchLocationMarker"
+          title="địa điểm tìm kiếm">
+        </gmap-marker>
+        <gmap-marker
+          @click="trafficReport.isOpenInfoWindow = true"
+          :clickable="true"
+          :position="{
+            lat: Number(trafficReport.latitude),
+            lng: Number(trafficReport.longitude)
+          }"
+          :key = "trafficReport.id"
+          v-for = "trafficReport in trafficReports"
+          title="địa điểm tìm kiếm">
+        </gmap-marker>
+        <gmap-info-window
+          :key = "trafficReport.id"
+          :position = "{
+            lat: Number(trafficReport.latitude),
+            lng: Number(trafficReport.longitude)
+          }"
+          :opened="trafficReport.isOpenInfoWindow"
+          @closeclick="trafficReport.isOpenInfoWindow = false"
+          :options = "{
+            pixelOffset: {
+              width: 0,
+              height: -50
+            }
+          }"
+          v-for = "trafficReport in trafficReports">
+            <div class = "infowindow">
+              <p>
+                Mô tả: {{trafficReport.comment || 'Không có'}}  <br/>
+                Thời gian: {{trafficReport.created_at}}  <br/>
+                Trạng thái :  {{trafficReport.confirm ? 'Đã duyệt' : 'Chưa duyệt'}}
+              </p>
+                <image
+                  v-if="trafficReport.image"
+                  class="m-2 mt-3 mr-0"
+                  :src = "trafficReport.image"/>
+                <div class = "m-1 mt-2 d-flex justify-content-center" v-if = "idToken">
+                  <button
+                    v-if="trafficReport.confirm"
+                    class="btn btn-primary mr-2"
+                    @click="unconfirmReport(trafficReport.id)">
+                    <span class="icon-thumb-down d-inline">
+                    </span>
+                    Hủy xác nhận
+                  </button>
+                  <button
+                    v-else
+                    class="btn btn-primary mr-2"
+                    @click="confirmReport(trafficReport.id)">
+                    <span class="icon-thumbs-up d-inline">
+                    </span>
+                    Xác nhận
+                  </button>
+                  <button class = "btn btn-danger ml-1" @click="deleteReport(trafficReport.id)">
+                    <span class="icon-trash d-inline">
+                    </span>
+                    Đã kết thúc
+                  </button>
+                </div>
+            </div>
+        </gmap-info-window>
+    </gmap-map>
   </div>
 </template>
 
 <script>
+import request from 'superagent'
 import {
-  trafficMakerIcons
-} from '../helper/marker.js'
-
-let map = null
-let locationSearchMarker = null
-let trafficReports = []
-const directionsService = new window.google.maps.DirectionsService()
-const directionsDisplay = new window.google.maps.DirectionsRenderer()
+  loaded
+} from 'vue2-google-maps'
+import {
+  mapState
+} from 'vuex'
 
 export default {
   data () {
     return {
-
+      center: {lat: 10.762622, lng: 106.806692},
+      searchLocationMarker: null,
+      trafficReports: [],
+      isMapLoaded: false
     }
   },
 
-  methods: {
-    onSearchLocationFulfilled (data) {
-      locationSearchMarker = new window.google.maps.Marker({
-        position: {
-          lat: data.latitude,
-          lng: data.longitude
-        },
-        map: map,
-        title: 'Địa điểm tìm kiếm'
-      })
+  computed: mapState([
+    'idToken'
+  ]),
 
-      map.setCenter({
-        lat: data.latitude,
-        lng: data.longitude
+  methods: {
+    confirmReport (id) {
+      request.put(`https://deltavn.net/api/report/${id}/confirm`).set({
+        Authorization: 'bearer ' + this.idToken
       })
+    },
+
+    unconfirmReport (id) {
+      console.log(this.idToken)
+      request.put(`https://deltavn.net/api/report/${id}/unconfirm`).set({
+        Authorization: 'bearer ' + this.idToken
+      })
+    },
+
+    deleteReport (id) {
+      if (confirm('Bạn có muốn kết thúc báo cáo này không')) {
+        request.delete(`https://deltavn.net/api/report/${id}`).set({
+          Authorization: 'bearer ' + this.idToken
+        })
+      }
+    },
+
+    onSearchLocationFulfilled (data) {
+      this.searchLocationMarker = {
+        lat: data.geometry.location.lat(),
+        lng: data.geometry.location.lng()
+      }
+
+      this.center = {
+        lat: data.geometry.location.lat(),
+        lng: data.geometry.location.lng()
+      }
     },
 
     onSearchLocationCleared () {
-      this.clearMarkers([locationSearchMarker])
-      locationSearchMarker = null
+      this.searchLocationMarker = null
     },
 
     onSearchRouteFulfilled (originLocation, destinationLocation) {
-      directionsService.route({
+      this.directionsService.route({
         origin: {
-          lat: originLocation.latitude,
-          lng: originLocation.longitude
+          lat: originLocation.geometry.location.lat(),
+          lng: originLocation.geometry.location.lng()
         },
         destination: {
-          lat: destinationLocation.latitude,
-          lng: destinationLocation.longitude
+          lat: destinationLocation.geometry.location.lat(),
+          lng: destinationLocation.geometry.location.lng()
         },
         travelMode: 'DRIVING'
       }, (res, status) => {
         if (status === 'OK') {
-          directionsDisplay.setDirections(res)
+          this.directionsDisplay.setDirections(res)
         }
       })
     },
 
     onSearchRouteCleared () {
-      directionsDisplay.set('directions', null)
+      this.directionsDisplay.set('directions', null)
     },
 
     clearMarkers (markers) {
@@ -87,56 +181,8 @@ export default {
     },
 
     addTrafficReport (trafficReport) {
-      let iconIndex = 2 * trafficReport.type
-      if (trafficReport.confirmed) {
-        iconIndex += 1
-      }
-      const iconPath = trafficMakerIcons[iconIndex]
-      trafficReport.marker = new window.google.maps.Marker({
-        position: {
-          lat: trafficReport.location.lat,
-          lng: trafficReport.location.lng
-        },
-        map: map,
-        icon: iconPath
-      })
-
-      trafficReport.infoWindow = new window.google.maps.InfoWindow({
-        content:
-`<div class = "infowindow">
-  <div>Mô tả: ` + (trafficReport.comment || 'Không có') + `</div>
-  <div>Thời gian: ` + trafficReport.time + `</div>
-  <div>Trạng thái :` + (trafficReport.confirmed ? 'Đã duyệt' : 'Chưa duyệt') + `</div>` +
-    (trafficReport.image ? '<image class = "m-2 mt-3 mr-0" src = "' + trafficReport.image + '">' : '') +
-    `<div class = "m-1 mt-2 d-flex justify-content-center">
-      ` +
-      (
-        trafficReport.confirmed
-          ? `<button class = "btn btn-primary mr-2">
-          <span class="icon-thumb-down">
-          </span>
-          Hủy xác nhận
-        </button>`
-          : `<button class = "btn btn-primary mr-2">
-          <span class="icon-thumbs-up">
-          </span>
-          Xác nhận
-      </button>`
-      ) +
-      `<button class = "btn btn-danger ml-1">
-        <span class="icon-trash">
-        </span>
-        Đã kết thúc
-      </button>
-    </div>` +
-`</div>`
-      })
-
-      trafficReport.marker.addListener('click', () => {
-        trafficReport.infoWindow.open(map, trafficReport.marker)
-      })
-
-      trafficReports.push(trafficReport)
+      trafficReport.isOpenInfoWindow = false
+      this.trafficReports.push(trafficReport)
     },
 
     deleteTrafficReport (trafficReport) {
@@ -145,7 +191,7 @@ export default {
        * Remove from map
        * remove from arr
        */
-      let index = this.findIndexTrafficReport(trafficReport)
+      let index = this.findIndexTrafficReport(trafficReport.id)
       if (index === -1) {
         /**
          * Never happend
@@ -153,16 +199,16 @@ export default {
         return
       }
 
-      trafficReports[index].marker.setMap(null)
-      trafficReports.splice(index, 1)
+      this.trafficReports[index].marker.setMap(null)
+      this.trafficReports.splice(index, 1)
     },
 
-    findIndexTrafficReport (trafficReport) {
-      return trafficReports.findIndex((e) => e.id === trafficReport.id)
+    findIndexTrafficReport (id) {
+      return this.trafficReports.findIndex((e) => e.id === id)
     },
 
     editTrafficReport (trafficReport) {
-      let index = this.findIndexTrafficReport(trafficReport)
+      let index = this.findIndexTrafficReport(trafficReport.id)
       if (index === -1) {
         /**
          * Never happend
@@ -173,42 +219,24 @@ export default {
       /**
        * Assign everything from new marker to old marker using object assign
        */
-      trafficReports[index] = Object.assign(trafficReports[index], trafficReport)
+      this.trafficReports[index] = Object.assign(this.trafficReports[index], trafficReport)
     }
   },
 
   mounted () {
-    map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: 10.762622, lng: 106.806692},
-      zoom: 12,
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-        position: window.google.maps.ControlPosition.TOP_RIGHT
-      }
+    loaded.then(() => {
+      this.isMapLoaded = true
+      this.directionsService = new window.google.maps.DirectionsService()
+      this.directionsDisplay = new window.google.maps.DirectionsRenderer()
+      this.directionsDisplay.setMap(this.$refs.map.$mapObject)
+      this.directionsDisplay.setPanel(document.getElementById('directionPanel'))
     })
-
-    directionsDisplay.setMap(map)
-    directionsDisplay.setPanel(document.getElementById('directionPanel'))
-
     /**
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://172.20.10.5:8000')
+    this.websocket = new WebSocket('ws://vietnam-traffic-map-ws.herokuapp.com')
     this.websocket.onopen = () => {
-      map.addListener('idle', () => {
-        const bounds = map.getBounds()
-        const data = this.parseBoundsIntoLocation(bounds)
-        this.websocket.send(JSON.stringify(data))
-
-        /**
-         * Reset all traffic report
-         * Load new traffic marker
-         * Doesn't need anymore : just load all traffic marker
-         * Improve later
-         */
-      })
-
       this.websocket.onmessage = ({data}) => {
         let parseData = JSON.parse(data)
         switch (parseData.type) {
@@ -236,7 +264,12 @@ export default {
 <style>
 .infowindow {
   font-size: 18px;
-  letter-spacing: 1px
+  letter-spacing: 1px;
+  max-width: 400px
+}
+
+.infowindow p {
+  line-height: 1.5em
 }
 
 .infowindow img {
@@ -257,7 +290,7 @@ export default {
     width: 500px;
     display: inline-block;
     position: absolute;
-    left: 17px;
+    left: 77px;
     top: 199px;
     background: white;
     overflow: auto;

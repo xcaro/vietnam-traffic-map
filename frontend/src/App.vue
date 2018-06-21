@@ -41,6 +41,15 @@ export default {
     Sidebar,
     Home
   },
+  created () {
+    let idToken = localStorage.getItem('idToken')
+    if (idToken) {
+      store.dispatch('set', {
+        propertyName: 'idToken',
+        payload: idToken
+      })
+    }
+  },
   store
 }
 </script>

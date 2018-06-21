@@ -9,26 +9,38 @@ import React ,{
     StyleSheet,
     TouchableWithoutFeedback
   } from 'react-native'
+  import Spinner from 'react-native-loading-spinner-overlay'
 
   import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
   import {reportTrafficTypes} from '../../helper/enum'
   import RoundButton from '../../component/RoundButton'
   import primaryStyle from '../../style/index'
+  import request from 'superagent'
 
   export default class ReportTrafficConfigScreen extends Component {
     static navigationOptions = {
       title: 'Báo cáo tình trạng giao thông',
     }
 
+    constructor (props) {
+      super(props)
+      this.state = {
+        reportTypes: this.props.navigation.getParam('reportTypes', [])
+      }
+    }
+
+    componentDidMount () {
+    }
+
     render() {
       return (
         <View style={style.topContainer}>
-        <View style={style.container}>
+          <View style={style.container}>
           {
-            reportTrafficTypes.map((reportTrafficType) => {
+            this.state.reportTypes.map((reportType) => {
               return (
                 <ShadenTouchableHightLight
-                  key = {reportTrafficType.name}
+                  key = {reportType.name}
                   margin = {10}
                   marginTop = {20}
                   padding={20}
@@ -37,13 +49,13 @@ import React ,{
                   alignItems = "center"
                   onPress={() => {
                     this.props.navigation.navigate('ReportTraffic', {
-                      reportTrafficType
+                      reportType
                     })
                   }}>
                   <View style={style.img}>
-                    <Image source={reportTrafficType.img} />
+                    <Image source={reportType.img} />
                   </View>
-                  <Text style={style.name}>{reportTrafficType.name}</Text>
+                  <Text style={style.name}>{reportType.name}</Text>
                 </ShadenTouchableHightLight>
               )
             })

@@ -1,8 +1,8 @@
-export class validateObject () {
+export class validateObject {
   constructor (name, rules, val) {
     this.val = val && ''
     this.error = ''
-    this.name = name,
+    this.name = name
   }
 
   startValidate () {

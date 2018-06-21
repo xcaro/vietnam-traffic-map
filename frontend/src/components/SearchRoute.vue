@@ -12,14 +12,12 @@
           <span class="icon-adjust"></span>
         </button>
       </div>
-      <vue-google-autocomplete
+      <gmap-autocomplete
         ref="origin"
-        id="origin"
-        classname="form-control"
         placeholder="Bắt đầu gõ để tìm kiếm địa điểm đi"
-        v-on:placechanged="onSearchOrigin"
-      >
-      </vue-google-autocomplete>
+        class="form-control"
+        @place_changed="onSearchOrigin"/>
+
       <div class="input-group-append">
         <button class="btn btn-link" type="button" @click = 'onClearOrigin' v-if = 'isOriginNotEmpty'>
           <span class="icon-trash"></span>
@@ -32,14 +30,12 @@
           <span class="icon-location"></span>
         </button>
       </div>
-      <vue-google-autocomplete
+      <gmap-autocomplete
         ref="destination"
-        id="destination"
-        classname="form-control"
         placeholder="Bắt đầu gõ để tìm kiếm địa điểm đến"
-        v-on:placechanged="onSearchDestination"
-      >
-      </vue-google-autocomplete>
+        class="form-control"
+        @place_changed="onSearchDestination"/>
+
       <div class="input-group-append">
         <button class="btn btn-link" type="button" @click = 'onClearDestination' v-if = 'isDestinationNotEmpty'>
           <span class="icon-trash"></span>
@@ -115,13 +111,13 @@ export default {
 
     onClearOrigin () {
       this.isOriginNotEmpty = false
-      this.$refs.origin.clear()
+      this.$refs.origin.$el.value = ''
       this.onCleared()
     },
 
     onClearDestination () {
       this.isDestinationNotEmpty = false
-      this.$refs.destination.clear()
+      this.$refs.destination.$el.value = ''
       this.onCleared()
     }
   },

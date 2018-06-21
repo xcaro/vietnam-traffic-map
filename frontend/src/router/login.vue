@@ -51,7 +51,7 @@ export default {
     login () {
       this.$validator.validate().then(result => {
         if (result) {
-          request.post('http://deltavn.net/api/login')
+          request.post('https://deltavn.net/api/login')
             .send({
               username: this.userName,
               password: this.passWord
@@ -60,6 +60,8 @@ export default {
                 propertyName: 'idToken',
                 payload: res.body.access_token
               })
+
+              localStorage.setItem('idToken', res.body.access_token)
 
               this.$store.dispatch('toggle', 'isShowModal')
             }).catch(() => {

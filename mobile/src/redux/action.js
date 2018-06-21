@@ -8,15 +8,24 @@ export const REMOVE_SELECTEDSEARCHLOCATIONITEM = 'REMOVE_SELECTEDSEARCHLOCATIONI
 export const SET_IDTOKEN = 'SET_IDTOKEN'
 export const SET_USER = 'SET_USER'
 
+export const SHOW_LOADING = 'SHOW_LOADING'
+export const HIDE_LOADING = 'HIDE_LOADING'
+
+function generateActionCreateor (type, ...argNames) {
+  let action = {type}
+
+  return (...arg) => {
+    argNames.forEach((argName, index) => {
+      action[argName] = arg[index]
+    })
+    return action
+  }
+}
+
 // Action creator
 export default {
-  initReportTrafficData: (data) => {
-
-  },
-
-  updateReportTrafficData: (change) => {
-
-  },
+  showLoading: generateActionCreateor(SHOW_LOADING),
+  hideLoading: generateActionCreateor(HIDE_LOADING),
 
   setUser: (user) => {
     return {
