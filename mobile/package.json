@@ -11,6 +11,7 @@
     "@mapbox/geo-viewport": "^0.3.0",
     "@mapbox/polyline": "^1.0.0",
     "axios": "^0.18.0",
+    "b64-to-blob": "^1.2.19",
     "debounce": "^1.1.0",
     "lodash.isequal": "^4.5.0",
     "polyline-encoded": "0.0.8",

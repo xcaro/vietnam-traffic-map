@@ -4,7 +4,7 @@ import {
   Text,
   TouchableNativeFeedback,
   Image,
-
+  Alert
 } from 'react-native'
 
 import React, {
@@ -19,6 +19,7 @@ import primaryStyles from '../../style/index'
 
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
 import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
+import request from 'superagent';
 
 class ReportTrafficInfo extends Component {
   static navigationOptions = {
@@ -27,24 +28,24 @@ class ReportTrafficInfo extends Component {
 
   render () {
     const trafficReport = this.props.navigation.getParam('trafficReport')
+    const reportType = appHelper.trafficTypeFromTypeID(this.props.reportTypes, trafficReport.type_id)
     return (
       <View style = {[styles.topContainer, styles.mt]}>
         <View>
-          <Text>Loại: {appHelper.trafficTypeToString(trafficReport.type)}</Text>
-          <Text>Thời gian: {trafficReport.time}</Text>
+          <Text>Loại: {reportType.name}</Text>
+          <Text>Thời gian: {trafficReport.created_at}</Text>
           <Text>Mô tả: {trafficReport.comment || 'Không có'}</Text>
-          <Text>Trạng thái: {trafficReport.confirmed ? 'Đã xác nhận' : 'Chưa xác nhận'}</Text>
+          <Text>Trạng thái: {trafficReport.confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}</Text>
 
-          {trafficReport.image && <Image
-            borderRadius = {3}
-            style={[styles.img, styles.mt]}
-            source={{uri: trafficReport.image}}
-          />}
-
-          <View style = {[styles.btnContainer, styles.mt]}>
-            {!trafficReport.confirmed ? <ShadenTouchableHightLight
+          {this.props.idToken && <View style = {[styles.btnContainer, styles.mt]}>
+            {!trafficReport.confirm ? <ShadenTouchableHightLight
               onPress = {() => {
-                alert('test')
+                request.put(`http://deltavn.net/api/report/${trafficReport.id}/confirm`).set({
+                  'Authorization': `Bearer ${this.props.idToken}`
+                }).then(() => {
+                  this.props.navigation.goBack()
+                })
+
               }}
               padding = {15}
               marginRight = {10}
@@ -52,23 +53,43 @@ class ReportTrafficInfo extends Component {
               flexDirection = "row">
               <FAIcon name = "thumbs-up" size = {20} color = "white" style = {primaryStyles.Icon} />
               <Text style = {primaryStyles.textWhite}>Xác nhận</Text>
-            </ShadenTouchableHightLight> : null}
-
-            {trafficReport.confirmed ? <ShadenTouchableHightLight
+            </ShadenTouchableHightLight> : <ShadenTouchableHightLight
               onPress = {() => {
-                alert('test')
+                request.put(`http://deltavn.net/api/report/${trafficReport.id}/unconfirm`).set({
+                  'Authorization': `Bearer ${this.props.idToken}`
+                }).then(() => {
+                  this.props.navigation.goBack()
+                }).catch(err => {
+                  var a = err
+                  debugger
+                })
+
               }}
               padding = {15}
               marginRight = {10}
               backgroundColor = "#3498db"
               flexDirection = "row">
               <FAIcon name = "thumbs-up" size = {20} color = "white" style = {primaryStyles.Icon} />
-              <Text style = {primaryStyles.textWhite}>Xác nhận</Text>
-            </ShadenTouchableHightLight> : null}
+              <Text style = {primaryStyles.textWhite}>Hủy xác nhận</Text>
+            </ShadenTouchableHightLight>}
 
             <ShadenTouchableHightLight
               onPress = {() => {
-                alert('test')
+                Alert.alert('Thông báo', 'Bạn có muốn hủy báo cáo này không', [
+                  {
+                    text: 'Có',
+                    onPress: () => {
+                      request.delete(`http://deltavn.net/api/report/${trafficReport.id}`).set({
+                        'Authorization': `Bearer ${this.props.idToken}`
+                      }).then(() => {
+                        this.props.navigation.goBack()
+                      })
+                    }
+                  },
+                  {
+                    text: 'Không'
+                  }
+                ])
               }}
               padding = {15}
               backgroundColor = "#3498db"
@@ -76,7 +97,7 @@ class ReportTrafficInfo extends Component {
               <FAIcon name = "trash" size = {20} color = "white" style = {primaryStyles.Icon} />
               <Text style = {primaryStyles.textWhite}>Đã kết thúc</Text>
             </ShadenTouchableHightLight>
-          </View>
+          </View>}
         </View>
       </View>
     )
@@ -107,9 +128,9 @@ const styles = StyleSheet.create({
 export default connect(
   /** State requirer to read by container component */
   ({
-    user
+    idToken, reportTypes
   })=>(
-    {user}
+    {idToken, reportTypes}
   ),
 
   null

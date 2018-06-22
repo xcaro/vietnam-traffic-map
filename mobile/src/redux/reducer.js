@@ -6,12 +6,16 @@ import {
   SET_IDTOKEN,
   SET_USER,
   SHOW_LOADING,
-  HIDE_LOADING
+  HIDE_LOADING,
+  SET_REPORT_TYPE
 } from './action'
 import objectHelper from '../helper/object'
 
 export default function (state, action) {
   switch (action.type) {
+    case SET_REPORT_TYPE:
+      return {...state, reportTypes: action.reportTypes}
+
     case SHOW_LOADING:
       return {...state, isShowLoading: true}
 

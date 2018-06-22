@@ -12,7 +12,8 @@ import {
   StyleSheet,
   Keyboard,
   Linking,
-  Button
+  Button,
+  Image
 } from 'react-native'
 import action from '../../redux/action'
 import { connect } from 'react-redux'
@@ -37,6 +38,7 @@ import MapView, {
   Callout
 } from 'react-native-maps'
 import { trafficMakerIcons } from '../../helper/marker'
+import styles from '../../style/index';
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -97,7 +99,7 @@ class HomeScreen extends Component {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://172.20.10.5:8000')
+    this.websocket = new WebSocket('ws://vietnam-traffic-map-ws.herokuapp.com')
     this.websocket.onopen = () => {
       // map.addListener('idle', () => {
       //   const bounds = map.getBounds()
@@ -121,7 +123,7 @@ class HomeScreen extends Component {
           case 'remove':
             self.setState(state => {
               return {...state,
-                trafficMarkers: state.filter(trafficMaker => {
+                trafficMarkers: state.trafficMarkers.filter(trafficMaker => {
                   trafficMaker.id !== parseData.old_val.id
                 })
               }
@@ -141,7 +143,7 @@ class HomeScreen extends Component {
             array[index] = parseData.new_val
             self.setState(state => {
               return {...state,
-                trafficMaker: array
+                trafficMarkers: array
               }
             })
             break
@@ -214,9 +216,12 @@ class HomeScreen extends Component {
             }}
           >
             {this.state.trafficMarkers.map(trafficMaker => {
-              let iconIndex = 2 * trafficMaker.type
-              if (trafficMaker.confirmed) {
-                iconIndex += 1
+              let trafficReportType = appHelper.trafficTypeFromTypeID(this.props.reportTypes, trafficMaker.type_id)
+              let image = null
+              if (trafficMaker.confirm) {
+                image = trafficReportType.confirmed_icon
+              } else {
+                image = trafficReportType.unconfirmed_icon
               }
 
               return (
@@ -226,12 +231,16 @@ class HomeScreen extends Component {
                       trafficReport: trafficMaker
                     })
                   }}
-                  image = {trafficMakerIcons[iconIndex]}
                   key = {trafficMaker.id}
                   coordinate = {{
-                    latitude: trafficMaker.location.lat,
-                    longitude: trafficMaker.location.lng
-                  }} />
+                    latitude: Number(trafficMaker.latitude),
+                    longitude: Number(trafficMaker.longitude)
+                  }} >
+
+                      <Image
+                        style={styles.markerImage}
+                        source={{uri: image, cache: 'reload'}} />
+                  </Marker>
               )
             })}
 
@@ -291,14 +300,7 @@ class HomeScreen extends Component {
               marginRight = {15}
               padding = {10}
               onPress = {() => {
-                this.props.showLoading()
-                this.props.hideLoading()
-                request.get('http://deltavn.net/api/report-type').then((res) => {
-                  this.props.hideLoading()
-                  this.props.navigation.navigate('ReportTrafficConfig',{
-                    reportTypes: res.body.data
-                  })
-                })
+                this.props.navigation.navigate('ReportTrafficConfig')
               }}>
               <MaterialIcon
                 name = "announcement"
@@ -401,9 +403,9 @@ class HomeScreen extends Component {
 export default connect(
   /** State requirer to read by container component */
   ({
-    curLocation, selectedSearchLocationItem, idToken, isShowLoading
+    curLocation, selectedSearchLocationItem, idToken, isShowLoading, reportTypes
   })=>(
-    {curLocation, selectedSearchLocationItem, idToken, isShowLoading}
+    {curLocation, selectedSearchLocationItem, idToken, isShowLoading, reportTypes}
   ),
 
   action

@@ -118,8 +118,6 @@ export default {
             phone: this.phone
           }
 
-          console.log(JSON.stringify(obj))
-
           request.post('http://deltavn.net/api/user')
             .send(obj).then((res) => {
               alert('Tạo tài khoản thành công')

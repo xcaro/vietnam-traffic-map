@@ -4,7 +4,8 @@ import {
   View,
   Text,
   ScrollView,
-  WebView
+  WebView,
+  Alert
 } from 'react-native'
 
 import React, {
@@ -20,6 +21,7 @@ import {
 } from '../../helper/validate'
 import { connect } from 'react-redux'
 import { TextField } from 'react-native-material-textfield'
+import request from 'superagent'
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
 import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -43,33 +45,59 @@ export default class SignUp extends Component {
     super(props)
 
     this.state = {
-      name: new validateObject('Tên'),
-      userName: new validateObject('Tên đăng nhập'),
-      passWord: new validateObject('Mật khẩu'),
-      email: new validateObject('Email'),
-      address: new validateObject('địa chỉ'),
-      phone: new validateObject('Số điện thoại'),
+      name: new validateObject('Tên', 'lorem'),
+      username: new validateObject('Tên đăng nhập', 'admin'),
+      password: new validateObject('Mật khẩu', 'loremispum'),
+      email: new validateObject('Email', 'phmngocnghia@gmail.com'),
+      address: new validateObject('địa chỉ', 'test'),
+      phone: new validateObject('Số điện thoại', '0904983594'),
     }
   }
 
-  register () {
+  register = () => {
     /**
      * Validate tất cả input
      */
+    this.setState({
+      name: this.state.name.startValidate().required(),
+      username: this.state.username.startValidate().required(),
+      password: this.state.password.startValidate().required().lengthBetween(6, 24),
+      email: this.state.email.startValidate().required().email(),
+      address: this.state.address.startValidate().required(),
+      phone: this.state.phone.startValidate().required().numeric().lengthMin(9),
+    })
+
     if (
-      name.startValidate().required().isValid() &&
-      userName.startValidate().required().isValid() &&
-      passWord.startValidate().required().isValid() &&
-      email.startValidate().required().isValid() &&
-      address.startValidate().required().isValid() &&
-      phone.startValidate().required().isValid()
+      this.state.name.isValid() &&
+      this.state.username.isValid() &&
+      this.state.password.isValid() &&
+      this.state.email.isValid() &&
+      this.state.address.isValid() &&
+      this.state.phone.isValid()
     ) {
-
+      request.post('http://deltavn.net/api/user').send({
+        name: this.state.name.val,
+        username: this.state.username.val,
+        password: this.state.password.val,
+        email: this.state.email.val,
+        address: this.state.address.val,
+        phone: this.state.phone.val
+      }).then(() => {
+        Alert.alert('Thông báo', 'Tạo tài khoản thành công', [
+          {
+            text: "OK",
+            onPress: () => {
+              this.props.navigation.navigate('SignIn')
+            }
+          }
+        ])
+      }).catch(res => {
+        for (key in res.response.body.messages) {
+          this.state[key].error = res.response.body.messages[key][0]
+        }
+        this.forceUpdate()
+      })
     }
-
-     /**
-      * Nếu không có lỗi tiến hành đăngn
-      */
   }
 
   render () {
@@ -83,6 +111,7 @@ export default class SignUp extends Component {
         </SearchLocationTextInput>
         <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle = {styles.contentContainer}>
           <TextField
+            error = {this.state.name.error}
             label='Họ tên'
             title = 'Không được bỏ trống'
             value={this.state.name.val}
@@ -90,21 +119,24 @@ export default class SignUp extends Component {
           />
 
           <TextField
+            error = {this.state.username.error}
             label='Tên đăng nhập'
             title = 'Không được bỏ trống'
-            value={this.state.userName.val}
-            onChangeText={ (userName) => this.state.userName.val = userName  }
+            value={this.state.username.val}
+            onChangeText={ (username) => this.state.username.val = username  }
           />
 
           <TextField
+            error = {this.state.password.error}
             label='Mật khẩu'
-            title = 'Không được bỏ trống'
+            title = 'Phải từ 6 - 24 kí tự'
             secureTextEntry = {true}
-            value={this.state.passWord.val}
-            onChangeText={ (passWord) => this.state.passWord.val = passWord }
+            value={this.state.password.val}
+            onChangeText={ (password) => this.state.password.val = password }
           />
 
           <TextField
+            error = {this.state.email.error}
             label='Email'
             title = 'Không được bỏ trống'
             value={this.state.email.val}
@@ -112,6 +144,7 @@ export default class SignUp extends Component {
           />
 
           <TextField
+            error = {this.state.address.error}
             label='Địa chỉ'
             title = 'Không được bỏ trống'
             value={this.state.address.val}
@@ -119,13 +152,15 @@ export default class SignUp extends Component {
           />
 
           <TextField
+            error = {this.state.phone.error}
             label='Số điện thoại'
             title = 'Không được bỏ trống'
             value={this.state.phone.val}
-            onChangeText={ (phone) => this.state.phone.val = phone  }) }
+            onChangeText={ (phone) => this.state.phone.val = phone }
           />
 
           <ShadenTouchableHightLight
+            onPress = {this.register}
             marginTop = {15}
             padding = {15}
             backgroundColor = {PRIMARY_COLOR}
@@ -140,7 +175,7 @@ export default class SignUp extends Component {
           </ShadenTouchableHightLight>
 
           <ShadenTouchableHightLight
-            click = {register}
+            onPress = {this.register}
             marginTop = {20}
             padding = {15}
             backgroundColor = '#d62d20'

@@ -16,17 +16,17 @@ import React ,{
   import RoundButton from '../../component/RoundButton'
   import primaryStyle from '../../style/index'
   import request from 'superagent'
+  import {
+    connect
+  } from 'react-redux'
 
-  export default class ReportTrafficConfigScreen extends Component {
+  class ReportTrafficConfigScreen extends Component {
     static navigationOptions = {
       title: 'Báo cáo tình trạng giao thông',
     }
 
     constructor (props) {
       super(props)
-      this.state = {
-        reportTypes: this.props.navigation.getParam('reportTypes', [])
-      }
     }
 
     componentDidMount () {
@@ -37,7 +37,7 @@ import React ,{
         <View style={style.topContainer}>
           <View style={style.container}>
           {
-            this.state.reportTypes.map((reportType) => {
+            this.props.reportTypes.map((reportType) => {
               return (
                 <ShadenTouchableHightLight
                   key = {reportType.name}
@@ -53,7 +53,9 @@ import React ,{
                     })
                   }}>
                   <View style={style.img}>
-                    <Image source={reportType.img} />
+                  <Image
+          style={{width: 66, height: 58}}
+          source={{uri: reportType.menu_icon}} />
                   </View>
                   <Text style={style.name}>{reportType.name}</Text>
                 </ShadenTouchableHightLight>
@@ -68,7 +70,9 @@ import React ,{
 
   const style = StyleSheet.create({
     img: {
-      justifyContent: 'center'
+      justifyContent: 'center',
+      width: 64,
+      height: 64
     },
 
     container: {
@@ -88,4 +92,15 @@ import React ,{
       fontWeight: 'bold'
     }
   })
+
+  export default connect(
+    /** State requirer to read by container component */
+    ({
+      reportTypes
+    })=>(
+      {reportTypes}
+    ),
+
+    null
+  )(ReportTrafficConfigScreen)
 

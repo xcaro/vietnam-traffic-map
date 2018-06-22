@@ -1,27 +1,48 @@
 export class validateObject {
-  constructor (name, rules, val) {
-    this.val = val && ''
+  constructor(name, val) {
+    this.val = val || ''
     this.error = ''
     this.name = name
   }
 
-  startValidate () {
+  startValidate() {
     this.error = ''
+    return this
   }
 
-  required () {
-   if (!this.error.length) {
-    if (this.val.length) {
-       this.error = `${this.name} không được bỏ trống`
-     }
-   }
-
-   return this
-  }
-
-  numeric () {
+  required() {
     if (!this.error.length) {
-      if (/^\d+$/.test(this.val)) {
+      if (this.val.length === 0) {
+        this.error = `${this.name} không được bỏ trống`
+      }
+    }
+
+    return this
+  }
+
+  lengthMin(num) {
+    if (!this.error.length) {
+      if (this.val.length < num) {
+        this.error = `${this.name} phải có độ dài tối thiểu ` + num
+      }
+    }
+
+    return this
+  }
+
+  lengthBetween(min, max) {
+    if (!this.error.length) {
+      if (this.val.length < min || this.val.length > max) {
+        this.error = `${this.name} phải có độ dài trong khoảng từ ` + min + ' cho tới ' + max
+      }
+    }
+
+    return this
+  }
+
+  numeric() {
+    if (!this.error.length) {
+      if (!/^\d+$/.test(this.val)) {
         this.error = `${this.name} phải là số`
       }
     }
@@ -29,11 +50,11 @@ export class validateObject {
     return this
   }
 
-  isValid () {
-    return this.error.length === 0 
+  isValid() {
+    return this.error.length === 0
   }
 
-  email () {
+  email() {
     if (!this.error.length) {
       if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.val)) {
         this.error = `${this.name} phải là email`

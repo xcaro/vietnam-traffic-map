@@ -7,6 +7,11 @@ export const SECONDARY_COLOR = 'rgb(52, 73, 94)'
 // const BORDER_COLOR = 'rgba(255,255,255,0.1)'
 
 const styles = StyleSheet.create({
+  markerImage: {
+    width: 42,
+    height: 42
+  },
+
   Icon: {
     paddingTop: 2,
     marginRight: 5

@@ -10,6 +10,7 @@ export const SET_USER = 'SET_USER'
 
 export const SHOW_LOADING = 'SHOW_LOADING'
 export const HIDE_LOADING = 'HIDE_LOADING'
+export const SET_REPORT_TYPE = 'SET_REPORT_TYPES'
 
 function generateActionCreateor (type, ...argNames) {
   let action = {type}
@@ -26,44 +27,11 @@ function generateActionCreateor (type, ...argNames) {
 export default {
   showLoading: generateActionCreateor(SHOW_LOADING),
   hideLoading: generateActionCreateor(HIDE_LOADING),
-
-  setUser: (user) => {
-    return {
-      type: SET_USER,
-      user
-    }
-  },
-
-  setIdToken: (idToken) => {
-    return {
-      type: SET_IDTOKEN,
-      idToken
-    }
-  },
-
-  setCurLocation: (location) => {
-    return {
-      type: SET_CURRENTLOCATION,
-      location
-    }
-  },
-
-  removeCurLocation: () => {
-    return {
-      type: REMOVE_CURRENTLOCATION
-    }
-  },
-
-  setSelectedSearchLocationItem: (SearchLocationItem) => {
-    return {
-      type: SET_SELECTEDSEARCHLOCATIONITEM,
-      SearchLocationItem
-    }
-  },
-
-  removeSelectedSearchLocationItem: () => {
-    return {
-      type: REMOVE_SELECTEDSEARCHLOCATIONITEM
-    }
-  }
+  setReportTypes: generateActionCreateor(SET_REPORT_TYPE, 'reportTypes'),
+  setUser: generateActionCreateor(SET_USER, 'user'),
+  setIdToken: generateActionCreateor(SET_IDTOKEN, 'idToken'),
+  setCurLocation: generateActionCreateor(SET_CURRENTLOCATION, 'location'),
+  removeCurLocation: generateActionCreateor(REMOVE_CURRENTLOCATION),
+  setSelectedSearchLocationItem: generateActionCreateor(SET_SELECTEDSEARCHLOCATIONITEM, 'SearchLocationItem'),
+  removeSelectedSearchLocationItem: generateActionCreateor(REMOVE_SELECTEDSEARCHLOCATIONITEM)
 }
