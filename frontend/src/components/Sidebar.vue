@@ -40,7 +40,7 @@ const routes = [
     icon: 'icon-add',
     url: '/clinic/create'
   }, {
-    name: 'Tìm kiếm phòng khám',
+    name: 'Đặt lịch khám',
     icon: 'icon-search',
     url: '/clinic/find'
   }, {

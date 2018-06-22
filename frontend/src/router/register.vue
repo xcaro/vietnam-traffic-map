@@ -120,7 +120,7 @@ export default {
 
           console.log(JSON.stringify(obj))
 
-          request.post('https://deltavn.net/api/user')
+          request.post('http://deltavn.net/api/user')
             .send(obj).then((res) => {
               alert('Tạo tài khoản thành công')
               this.$store.dispatch('toggle', 'isShowModal')

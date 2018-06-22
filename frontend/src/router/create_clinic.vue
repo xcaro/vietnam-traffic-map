@@ -81,7 +81,7 @@ export default {
 
         console.log(JSON.stringify(this.data))
         console.log(this.idToken)
-        request.post('https://deltavn.net/api/clinic').send(this.data).set({
+        request.post('http://deltavn.net/api/clinic').send(this.data).set({
           Authorization: 'bearer ' + this.idToken
         }).then(() => {
           alert('Tạo phòng khám thành công')
@@ -92,7 +92,7 @@ export default {
   },
 
   created () {
-    request.get('https://deltavn.net/api/clinic-type').then(res => {
+    request.get('http://deltavn.net/api/clinic-type').then(res => {
       this.type = res.body.data
     }).catch(() => {
       console.log('Không thể kết nối tới server')

@@ -16,6 +16,7 @@
           title="địa điểm tìm kiếm">
         </gmap-marker>
         <gmap-marker
+          
           @click="trafficReport.isOpenInfoWindow = true"
           :clickable="true"
           :position="{
@@ -95,6 +96,7 @@ export default {
       center: {lat: 10.762622, lng: 106.806692},
       searchLocationMarker: null,
       trafficReports: [],
+      trafficReportTypes: [],
       isMapLoaded: false
     }
   },
@@ -105,21 +107,22 @@ export default {
 
   methods: {
     confirmReport (id) {
-      request.put(`https://deltavn.net/api/report/${id}/confirm`).set({
+      request.put(`http://deltavn.net/api/report/${id}/confirm`).set({
         Authorization: 'bearer ' + this.idToken
+      }).then(() => {
       })
     },
 
     unconfirmReport (id) {
-      console.log(this.idToken)
-      request.put(`https://deltavn.net/api/report/${id}/unconfirm`).set({
+      request.put(`http://deltavn.net/api/report/${id}/unconfirm`).set({
         Authorization: 'bearer ' + this.idToken
+      }).then((res) => {
       })
     },
 
     deleteReport (id) {
       if (confirm('Bạn có muốn kết thúc báo cáo này không')) {
-        request.delete(`https://deltavn.net/api/report/${id}`).set({
+        request.delete(`http://deltavn.net/api/report/${id}`).set({
           Authorization: 'bearer ' + this.idToken
         })
       }
@@ -230,6 +233,10 @@ export default {
       this.directionsDisplay = new window.google.maps.DirectionsRenderer()
       this.directionsDisplay.setMap(this.$refs.map.$mapObject)
       this.directionsDisplay.setPanel(document.getElementById('directionPanel'))
+    })
+
+    request.get('http://deltavn.net/api/report-type').then((res) => {
+      this.trafficReportTypes = res.body.data
     })
     /**
      * Init web socket
