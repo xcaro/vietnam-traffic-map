@@ -7,7 +7,8 @@ import {
   Image,
   Text,
   StyleSheet,
-  Picker
+  Picker,
+  Slider
 } from 'react-native'
 
 import action from '../../redux/action'
@@ -61,42 +62,65 @@ class ChoseNearbyLocationScreen extends Component {
           value: 'Sacombank'
         }
       ],
-      selectedBankKeyWord: 'ACB'
+      selectedBankKeyWord: 'ACB',
+      radius: 1
     }
   }
 
   afterGetNearestLocation (response, markerImage) {
     if (response.data.results.length > 0) { // Have data
-      googleAPI.placeIdToDetail(response.data.results[0].place_id)
-        .then(({data}) => {
-          this.props.setSelectedSearchLocationItem({
-            place_id: response.data.results[0].place_id,
-            data,
-            markerImage
-          })
-          this.props.navigation.goBack()
-        })
+      // googleAPI.placeIdToDetail(response.data.results[0].place_id)
+      //   .then(({data}) => {
+
+      //     this.props.setSearchNear
+      //     this.props.navigation.goBack()
+      //   })
+      this.props.setSearchNear({
+        data: response.data.results,
+        markerImage
+      })
+      this.props.navigation.goBack()
     }
+  }
+
+  getNearestPlace (keyword, type, marker) {
+    appHelper.getCurrentLocation(this.props).then((curLocation) => {
+      googleAPI.getNearestPlace(type, [
+        curLocation.coords.latitude,
+        curLocation.coords.longitude],
+        keyword,
+        this.state.radius
+      ).then((response) => {
+        this.afterGetNearestLocation(response, marker)
+      })
+    })
   }
 
   render () {
     return (
       <View style={style.topContainer}>
         <View style={style.container}>
+          <View style = {{
+            padding: 20,
+          }}>
+            <Text style = {{
+              fontSize: 18
+            }}>Bán kính tìm kiếm: {this.state.radius} km</Text>
+            <Slider
+              marginTop={10}
+              onValueChange={(radius)=>{this.setState({radius})}}
+              value={this.state.radius}
+              minimumValue={1}
+              maximumValue={10}
+              step={1} />
+          </View>
           <ShadenTouchableHightLight
             padding={20}
             backgroundColor = "#29c183"
             flexDirection = "row"
             alignItems = "center"
             onPress={() => {
-              appHelper.getCurrentLocation(this.props).then((curLocation) => {
-                googleAPI.getNearestPlace('gas_station', [
-                  curLocation.coords.latitude,
-                  curLocation.coords.longitude
-                ]).then((response) => {
-                  this.afterGetNearestLocation(response, getMarker(markerTypeCONST.FUEL))
-                })
-              })
+              this.getNearestPlace('xăng', 'gas_station', getMarker(markerTypeCONST.FUEL))
             }}>
             <View style={style.img}>
               <Image source={require('../../assets/location_nearby/gas-station.png')} />
@@ -110,14 +134,7 @@ class ChoseNearbyLocationScreen extends Component {
             flexDirection = "row"
             alignItems = "center"
             onPress={(() => {
-              appHelper.getCurrentLocation(this.props).then((curLocation) => {
-                googleAPI.getNearestPlace('atm', [
-                  curLocation.coords.latitude,
-                  curLocation.coords.longitude
-                ], this.state.selectedBankKeyWord).then((response) => {
-                  this.afterGetNearestLocation(response, getMarker(markerTypeCONST.ATM))
-                })
-              })
+              this.getNearestPlace(this.state.selectedBankKeyWord ,'atm', getMarker(markerTypeCONST.ATM))
             }).bind(this)}>
             <View style={style.img}>
               <Image source={require('../../assets/location_nearby/atm.png')} />

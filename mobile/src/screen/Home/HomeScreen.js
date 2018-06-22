@@ -13,7 +13,8 @@ import {
   Keyboard,
   Linking,
   Button,
-  Image
+  Image,
+  ScrollView
 } from 'react-native'
 import action from '../../redux/action'
 import { connect } from 'react-redux'
@@ -21,6 +22,7 @@ import primaryStyle, {
   PRIMARY_COLOR
 } from '../../style/index'
 import Menu from '../../component/Menu'
+import googleAPI from '../../helper/google'
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
 import RoundButton from '../../component/RoundButton'
 import objectHelper from '../../helper/object'
@@ -99,7 +101,7 @@ class HomeScreen extends Component {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://vietnam-traffic-map-ws.herokuapp.com')
+    this.websocket = new WebSocket('ws://192.168.1.3:8000')
     this.websocket.onopen = () => {
       // map.addListener('idle', () => {
       //   const bounds = map.getBounds()
@@ -146,6 +148,7 @@ class HomeScreen extends Component {
                 trafficMarkers: array
               }
             })
+            this.forceUpdate()
             break
         }
       }
@@ -215,7 +218,7 @@ class HomeScreen extends Component {
               longitudeDelta: 0.5,
             }}
           >
-            {this.state.trafficMarkers.map(trafficMaker => {
+            {this.props.reportTypes && this.state.trafficMarkers.map(trafficMaker => {
               let trafficReportType = appHelper.trafficTypeFromTypeID(this.props.reportTypes, trafficMaker.type_id)
               let image = null
               if (trafficMaker.confirm) {
@@ -226,6 +229,7 @@ class HomeScreen extends Component {
 
               return (
                 <Marker
+                key = {image}
                   onPress = {() => {
                     this.props.navigation.navigate('ReportTrafficInfo', {
                       trafficReport: trafficMaker
@@ -238,8 +242,9 @@ class HomeScreen extends Component {
                   }} >
 
                       <Image
+                        key = {image}
                         style={styles.markerImage}
-                        source={{uri: image, cache: 'reload'}} />
+                        source={{uri: image}} />
                   </Marker>
               )
             })}
@@ -373,9 +378,48 @@ class HomeScreen extends Component {
                 size = {25}>
               </MaterialIcon>
             </RoundButton>
-
-
         </View>
+        {this.props.searchNearLocationResult &&
+            <ScrollView
+            style={{
+              width: '100%',
+              position: 'absolute',
+              bottom: 0,
+              height: 120
+            }}
+            contentContainerStyle={{
+              backgroundColor: PRIMARY_COLOR
+            }}>
+              <ShadenTouchableHightLight
+                onPress={()=>{
+                  this.props.removeSearchNear()
+                }}
+                margin={10}
+                padding = {10}>
+                  <Text>
+                      Đóng
+                  </Text>
+              </ShadenTouchableHightLight>
+              {this.props.searchNearLocationResult.data.map(result => (
+                <ShadenTouchableHightLight
+                onPress={()=>{
+                  googleAPI.placeIdToDetail(result.place_id).then(({data}) => {
+                    this.props.setSelectedSearchLocationItem({
+                      place_id: result.place_id,
+                      data,
+                      markerImage: this.props.searchNearLocationResult.markerImage
+                    })
+                  })
+                }}
+                margin={10}
+                padding = {10}
+                key = {result.id}>
+                  <Text>
+                  {result.name}
+                  </Text>
+                </ShadenTouchableHightLight>
+              ))}
+            </ScrollView>}
       </View>
     )
   }
@@ -402,12 +446,7 @@ class HomeScreen extends Component {
 
 export default connect(
   /** State requirer to read by container component */
-  ({
-    curLocation, selectedSearchLocationItem, idToken, isShowLoading, reportTypes
-  })=>(
-    {curLocation, selectedSearchLocationItem, idToken, isShowLoading, reportTypes}
-  ),
-
+  (data)=>data,
   action
 )(HomeScreen)
 

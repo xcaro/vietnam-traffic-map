@@ -11,7 +11,8 @@ const store = createStore(
     user: null,
     selectedSearchLocationItem: null,
     idToken: null,
-    isShowLoading: false
+    isShowLoading: false,
+    searchNearLocationResult: null
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 

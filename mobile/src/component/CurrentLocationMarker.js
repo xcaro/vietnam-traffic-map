@@ -21,6 +21,7 @@ export default class CurrentLocationMarker extends Component {
           coordinate={this.props.coordinate}
           pinColor = {PRIMARY_COLOR}
           title='Vị trí hiện tại của bạn'
+          image={require('../assets/marker/curLocation.png')}
         />
         {/* <Circle
                     center={this.props.coordinate}

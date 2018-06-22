@@ -16,7 +16,7 @@
           title="địa điểm tìm kiếm">
         </gmap-marker>
         <gmap-marker
-          
+          v-if="typeImgs"
           @click="trafficReport.isOpenInfoWindow = true"
           :clickable="true"
           :position="{
@@ -25,7 +25,7 @@
           }"
           :key = "trafficReport.id"
           v-for = "trafficReport in trafficReports"
-          title="địa điểm tìm kiếm">
+          :icon  = "getTypeImg(trafficReport.type_id, trafficReport.confirm)">
         </gmap-marker>
         <gmap-info-window
           :key = "trafficReport.id"
@@ -97,6 +97,7 @@ export default {
       searchLocationMarker: null,
       trafficReports: [],
       trafficReportTypes: [],
+      typeImgs: new Map(),
       isMapLoaded: false
     }
   },
@@ -106,6 +107,11 @@ export default {
   ]),
 
   methods: {
+    getTypeImg (typeId, confirm) {
+      let typeImg = this.typeImgs.get(Number(typeId))
+      return confirm ? typeImg.confirmed_icon : typeImg.unconfirmed_icon
+    },
+
     confirmReport (id) {
       request.put(`http://deltavn.net/api/report/${id}/confirm`).set({
         Authorization: 'bearer ' + this.idToken
@@ -237,12 +243,18 @@ export default {
 
     request.get('http://deltavn.net/api/report-type').then((res) => {
       this.trafficReportTypes = res.body.data
+      for (let trafficReportType of this.trafficReportTypes) {
+        this.typeImgs.set(trafficReportType.id, {
+          confirmed_icon: trafficReportType.confirmed_icon,
+          unconfirmed_icon: trafficReportType.unconfirmed_icon
+        })
+      }
     })
     /**
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://vietnam-traffic-map-ws.herokuapp.com')
+    this.websocket = new WebSocket('ws://localhost')
     this.websocket.onopen = () => {
       this.websocket.onmessage = ({data}) => {
         let parseData = JSON.parse(data)

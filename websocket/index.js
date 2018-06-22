@@ -15,6 +15,7 @@ async function start () {
       console.log('websocket listen on port ' + port)
     })
     wss.on('connection', async (client) => {
+      console.log("client connected")
       /**
        * Connect database
        */
@@ -53,6 +54,7 @@ async function start () {
               conn.close()
               return false // This will stop cursor from run
               // If it still run, it will yield error cursor has been closed
+              console.log("client disconnected")
             }
           })
         })

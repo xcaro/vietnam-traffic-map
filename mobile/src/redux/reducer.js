@@ -7,12 +7,19 @@ import {
   SET_USER,
   SHOW_LOADING,
   HIDE_LOADING,
-  SET_REPORT_TYPE
+  SET_REPORT_TYPE,
+  SET_SEARCH_NEAR,
+  REMOVE_SEARCH_NEAR
 } from './action'
 import objectHelper from '../helper/object'
 
 export default function (state, action) {
   switch (action.type) {
+    case SET_SEARCH_NEAR:
+      return {...state, searchNearLocationResult: action. result}
+
+    case REMOVE_SEARCH_NEAR:
+      return {...state, searchNearLocationResult: null}
     case SET_REPORT_TYPE:
       return {...state, reportTypes: action.reportTypes}
 

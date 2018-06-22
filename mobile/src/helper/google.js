@@ -97,11 +97,11 @@ export default {
     })
   },
 
-  getNearestPlace(type, curLocation, keyword ) {
+  getNearestPlace(type, curLocation, keyword, radius ) {
     return axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
       params: {
         type,
-        rankby: 'distance',
+        radius: radius * 1000,
         key: APIkey,
         language: 'vi',
         location: curLocation[0] + ',' + curLocation[1],

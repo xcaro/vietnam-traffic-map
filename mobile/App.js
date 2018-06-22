@@ -9,7 +9,8 @@ import {
 import {
   Text,
   ScrollView,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from 'react-native'
 import firebase from 'react-native-firebase'
 
@@ -144,6 +145,11 @@ export default class App extends Component {
     this.drawer = React.createRef()
     request.get('http://deltavn.net/api/report-type').then((res) => {
       store.dispatch(action.setReportTypes(res.body.data))
+      for (reportType of res.body.data) {
+        Image.prefetch(reportType.confirmed_icon)
+        Image.prefetch(reportType.unconfirmed_icon)
+        Image.prefetch(reportType.menu_icon)
+      }
     })
   }
 

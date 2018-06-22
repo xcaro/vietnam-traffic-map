@@ -13,6 +13,7 @@ import React, {
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import action from '../../redux/action'
+import request from 'superagent'
 
 
 class SignOut extends Component {
@@ -29,8 +30,11 @@ class SignOut extends Component {
 
   constructor (props) {
     super(props)
-
-    /**
+    AsyncStorage.removeItem('idToken')
+    request.post('http://deltavn.net/api/logout').set({
+      'Authorization': `Bearer ${this.props.idToken}`
+    }).then(() => {
+          /**
            * Clear user
            * Clear token
            */
@@ -42,7 +46,7 @@ class SignOut extends Component {
            * Clear all history
            */
           this.props.navigation.navigate('Map')
-          AsyncStorage.removeItem('idToken')
+    })
   }
 
   render () {
@@ -55,6 +59,6 @@ class SignOut extends Component {
 
 export default connect(
   /** State requirer to read by container component */
-  null,
+  ({idToken}) => ({idToken}),
   action
 )(SignOut)

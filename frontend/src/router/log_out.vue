@@ -10,8 +10,11 @@ export default {
       'propertyName': 'idToken',
       'payload': null
     })
-
-    this.$store.dispatch('toggle', 'isShowModal')
+    request.post('http://deltavn.net/api/logout').set({
+      'Authorization': `Bearer ${this.$store.state.idToken}`
+    }).then(() => {
+      this.$store.dispatch('toggle', 'isShowModal')
+    })
   }
 }
 </script>
