@@ -1,5 +1,6 @@
 export default {
   isShowSideBar: false,
   isShowModal: false,
-  idToken: null
+  idToken: null,
+  user: null
 }

@@ -254,7 +254,7 @@ export default {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://localhost')
+    this.websocket = new WebSocket('ws://localhost:8000')
     this.websocket.onopen = () => {
       this.websocket.onmessage = ({data}) => {
         let parseData = JSON.parse(data)

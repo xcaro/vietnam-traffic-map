@@ -8,6 +8,12 @@
       </button>
     </div>
     <div class="list-group">
+        <a
+          class="list-group-item list-group-item-action font-weight-bold"
+          href="http://deltavn.net/admin">
+          <span class="icon-user-tie d-inline pr-3"></span>
+          Trang admin
+        </a>
         <router-link
           class="list-group-item list-group-item-action font-weight-bold"
           :exact-active-class="isShowModal? 'active' : ''"
@@ -33,41 +39,6 @@
 
 <script>
 import { mapState } from 'vuex'
-
-const routes = [
-  {
-    name: 'Khởi tạo phòng khám',
-    icon: 'icon-add',
-    url: '/clinic/create'
-  }, {
-    name: 'Đặt lịch khám',
-    icon: 'icon-search',
-    url: '/clinic/find'
-  }, {
-    name: 'Đăng nhập',
-    icon: 'icon-sign-in',
-    url: '/login'
-  }, {
-    name: 'Đăng ký',
-    icon: 'icon-sign-up',
-    url: '/register'
-  }, {
-    name: 'Đăng xuất',
-    icon: 'icon-sign-out',
-    url: '/logout'
-  }
-]
-
-const hiddenGuestRoute = [
-  '/logout',
-  '/clinic/create'
-]
-
-const hiddenLoggedInRoute = [
-  '/login',
-  '/register'
-]
-
 export default {
   methods: {
     setFilterRoutesReact (filterRoutes) {
@@ -83,24 +54,60 @@ export default {
   },
 
   mounted () {
+    this.routes = [
+      {
+        name: 'Thông tin tài khoản',
+        icon: 'icon-user',
+        url: '/user'
+      },
+      {
+        name: 'Khởi tạo phòng khám',
+        icon: 'icon-add',
+        url: '/clinic/create'
+      }, {
+        name: 'Đặt lịch khám',
+        icon: 'icon-clipboard-edit',
+        url: '/clinic/book'
+      }, {
+        name: 'Đăng nhập',
+        icon: 'icon-sign-in',
+        url: '/login'
+      }, {
+        name: 'Đăng ký',
+        icon: 'icon-sign-up',
+        url: '/register'
+      }, {
+        name: 'Đăng xuất',
+        icon: 'icon-sign-out',
+        url: '/logout'
+      }
+    ]
+
+    // this.hiddenGuestRoute = [
+    //   '/logout',
+    //   '/clinic/create',
+    //   '/clinic/find',
+    //   '/user'
+    // ]
+
+    this.hiddenLoggedInRoute = [
+      '/login',
+      '/register'
+    ]
     // Init
     if (localStorage.idToken) {
-      this.setFilterRoutesReact(routes.filter(route => !hiddenLoggedInRoute.includes(route.url)))
-      this.$store.dispatch('set', {
-        'propertyName': 'idToken',
-        'payload': localStorage.idToken
-      })
+      this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
     } else {
-      this.setFilterRoutesReact(routes.filter(route => !hiddenGuestRoute.includes(route.url)))
+      this.setFilterRoutesReact(this.routes.filter(route => this.hiddenLoggedInRoute.includes(route.url)))
     }
 
     // Subscribe store
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'SET' && mutation.payload.propertyName === 'idToken') {
         if (mutation.payload.payload) { // logged in
-          this.setFilterRoutesReact(routes.filter(route => !hiddenLoggedInRoute.includes(route.url)))
+          this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
         } else { // logged out
-          this.setFilterRoutesReact(routes.filter(route => !hiddenGuestRoute.includes(route.url)))
+          this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenGuestRoute.includes(route.url)))
         }
       }
     })
@@ -115,7 +122,8 @@ export default {
   computed: mapState([
     'isShowSideBar',
     'isShowModal',
-    'idToken'
+    'idToken',
+    'user'
   ])
 }
 </script>

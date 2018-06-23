@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import createClinic from '../router/create_clinic.vue'
-import editClinic from '../router/edit_clinic.vue'
+import bookClinic from '../router/book_clinic.vue'
 import login from '../router/login.vue'
 import register from '../router/register.vue'
 import logOut from '../router/log_out.vue'
+import changePassword from '../router/change_password.vue'
+import user from '../router/user.vue'
 
 Vue.use(Router)
 
@@ -19,8 +21,8 @@ export default new Router({
       component: createClinic
     },
     {
-      path: '/clinic/find',
-      component: editClinic
+      path: '/clinic/book',
+      component: bookClinic
     },
     {
       path: '/login',
@@ -33,6 +35,14 @@ export default new Router({
     {
       path: '/logout',
       component: logOut
+    },
+    {
+      path: '/user',
+      component: user
+    },
+    {
+      path: '/change_password',
+      component: changePassword
     }
   ]
 })

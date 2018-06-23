@@ -30,6 +30,7 @@ import Sidebar from './components/Sidebar'
 import { mapState } from 'vuex'
 import store from './store/index.js'
 import Home from './components/Home'
+import index from './store/index.js'
 
 export default {
   name: 'App',
@@ -44,6 +45,11 @@ export default {
   created () {
     let idToken = localStorage.getItem('idToken')
     if (idToken) {
+      let user = localStorage.getItem('user')
+      store.dispatch('set', {
+        propertyName: 'user',
+        payload: user
+      })
       store.dispatch('set', {
         propertyName: 'idToken',
         payload: idToken
@@ -82,7 +88,8 @@ export default {
 #modalContainer {
   position: relative;
   transition: all 0.3s ease-in-out;
-  width: 35%;
+  min-width: 30%;
+  max-width: 65%;
 }
 
 #modalContainer > button {

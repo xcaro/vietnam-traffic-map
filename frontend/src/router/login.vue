@@ -62,11 +62,17 @@ export default {
               })
 
               localStorage.setItem('idToken', res.body.access_token)
-
-              this.$store.dispatch('toggle', 'isShowModal')
-            }).catch((err) => {
-              var a = err
-              debugger
+              request.post('http://deltavn.net/api/me').set({
+                'Authorization': `Bearer ${res.body.access_token}`
+              }).then((res) => {
+                this.$store.dispatch('set', {
+                  propertyName: 'user',
+                  payload: res.body.data
+                })
+                localStorage.setItem('user', res.body.data)
+                this.$store.dispatch('toggle', 'isShowModal')
+              }).catch((err) => { throw err })
+            }).catch(() => {
               this.loginError = true
             })
         }
