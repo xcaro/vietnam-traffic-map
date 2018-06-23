@@ -1,0 +1,162 @@
+[33mcommit 5534a046fe2678efa425eba69e6f4bf3aa62bb91[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 23 16:44:43 2018 +0700
+
+    so many update
+
+[33mcommit c2a58f5386afeedb03c9ab51ae81699216adce48[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 23 02:00:04 2018 +0700
+
+    alot of update
+
+[33mcommit 5eb1526a3ccd68084ed1697c02ba4394487ae91d[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Fri Jun 22 16:56:46 2018 +0700
+
+    Update alot with love
+
+[33mcommit ce893c5a63b8ceb4790739440b4352eff6336be1[m
+Author: Phạm Ngọc Nghĩa <phmngocnghia@outlook.com>
+Date:   Fri Jun 22 09:42:13 2018 +0700
+
+    change primative gmap to vue gmap
+
+[33mcommit afabc301ce4e3a1d279b63df72388c366555f7b4[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Thu Jun 21 17:27:14 2018 +0700
+
+    alot of update
+
+[33mcommit 2a7f421cae5418b289beb7d0adb5ff0558d42842[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Wed Jun 20 11:27:08 2018 +0700
+
+    Fix
+
+[33mcommit 3305713549780a5992dd9cbffd77d096dd348770[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 16 21:56:53 2018 +0700
+
+    Alot of update
+
+[33mcommit 81befa1156e2817b3f5e9308810b834dac76e145[m
+Author: Phạm Ngọc Nghĩa <36730355+PhmNgocNghia@users.noreply.github.com>
+Date:   Fri Jun 15 20:33:42 2018 +0700
+
+    add authentication
+
+[33mcommit 3951ccf10a18da5170a5e37451644ac80a1dfd3a[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Fri Jun 15 14:45:28 2018 +0700
+
+    update
+
+[33mcommit 7104b49d9c40e630b440976714f6e8c842eaff4b[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Thu Jun 14 22:09:32 2018 +0700
+
+    Update mobile
+
+[33mcommit 1313df2fc02eac02bd747ebbed858269302a2e37[m
+Merge: 7e6787e 381687e
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Wed Jun 13 16:14:37 2018 +0700
+
+    Merge branch 'master' of https://github.com/PhmNgocNghia/vietnam-traffic-map
+
+[33mcommit 7e6787ef50dbbe556ba9dd351f6c1db0ad41b0d4[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Wed Jun 13 16:14:34 2018 +0700
+
+    update
+
+[33mcommit 381687e36e2df64afd8aa576fff5f9dbe4ada532[m
+Author: Phạm Ngọc Nghĩa <36730355+PhmNgocNghia@users.noreply.github.com>
+Date:   Wed Jun 13 16:11:53 2018 +0700
+
+    Update
+
+[33mcommit 64a1afd43e8e1b0f74156e851781715a9aae79bb[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Tue Jun 12 12:54:45 2018 +0700
+
+    Update sidebar
+
+[33mcommit 690c544769be4fa3970c650e6442be5e2f5a509f[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Mon Jun 11 16:01:03 2018 +0700
+
+    update icon
+
+[33mcommit ead3d428ff0e0fd89e1b00f2c52fbf0feea57b21[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 9 21:24:20 2018 +0700
+
+    add icon
+
+[33mcommit 84a941f7cbaa0ce12b61d875d801303e06b9c51e[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Fri Jun 8 21:14:18 2018 +0700
+
+    update websocket + connect frontend to websocket
+
+[33mcommit 7a19b2265ff7a9235f408021c7e5e05694ea919c[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Fri Jun 8 15:08:07 2018 +0700
+
+    add search route
+
+[33mcommit 1b98f24b916b308a29c005b40ee3aa67ab88de5c[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Fri Jun 8 12:43:28 2018 +0700
+
+    add frontend
+
+[33mcommit d55544b03f8581df400a7668803848e7d8971059[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Wed Jun 6 14:40:04 2018 +0700
+
+    update UI
+
+[33mcommit 561a3f4bc4183185c625d8670e43250f6922fb97[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Tue Jun 5 15:38:36 2018 +0700
+
+    update search route
+
+[33mcommit 445c9156b4e8b078792aeb23c429b9ae04003e5c[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 2 20:11:49 2018 +0700
+
+    Update eslint, marker, change color
+
+[33mcommit 56f91bf06bcb9f950a9d20a3b378378cbbb2d95d[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat Jun 2 09:33:30 2018 +0700
+
+    add: report traffic config screen
+
+[33mcommit 8ecc19283b78a2e9857c136e716b74ec6b424029[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Thu May 31 13:01:28 2018 +0700
+
+    update backend code : finish report traffic api
+
+[33mcommit 2ad02625982950bb09fd8bb922c0ca588daa5dca[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Mon May 28 21:45:49 2018 +0700
+
+    Backend : add server + unit test
+
+[33mcommit 935c3f60e4968de8bc34d4ea572b6c048fb55164[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Sat May 26 17:23:01 2018 +0700
+
+    Add backend server + create layout for report traffic feature
+
+[33mcommit 9c4944a62074223b025ea7b1f8a94872eea6dc18[m
+Author: Phm Ngoc Nghia <pmhngocnghia@outlook.com>
+Date:   Wed May 23 11:32:30 2018 -0700
+
+    Initial commit

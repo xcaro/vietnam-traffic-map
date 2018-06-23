@@ -102,6 +102,8 @@ export default {
   padding: 50px;
   background: white;
   box-shadow: 1px 1px 10px 2px #00000042;
+  overflow: auto;
+  max-height: 90vh;
 }
 
 body {

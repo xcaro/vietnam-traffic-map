@@ -48,45 +48,29 @@
       </div>
     </div>
     <div v-else>
-      <div class="form-row">
-        <div class="form-group col-6">
-          <label>Ngày làm việc</label>
-          <select v-model="dayOfWeeksRange.start" class="form-control">
-            <option
-            :value="dayOfWeek"
-            :key="dayOfWeek.toString()"
-            v-for="dayOfWeek in dayOfWeeks">
-              {{dayOfWeek.toString()}}
-            </option>
-          </select>
-        </div>
-        <div class="form-group col-6 ml-auto">
-          <label>đến</label>
-          <select v-model="dayOfWeeksRange.end" class="form-control">
-            <option
-            :value="dayOfWeek"
-            :key="dayOfWeek.toString()"
-            v-for="dayOfWeek in dayOfWeeks">
-              {{dayOfWeek.toString()}}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="d-flex mb-4">
-        <button class="btn btn-primary ml-auto" @click="addWorkDay">
+      <div class="d-flex my-4">
+        <button class="btn btn-primary ml-auto" @click="addAvatar">
           <span class="icon-add d-inline mr-2"></span>
-          Thêm ngày làm việc
+          Thêm người đại diện
         </button>
       </div>
 
       <div
-        :key="workTime.dayOfWeeksRange.start+workTime.dayOfWeeksRange.end"
-        v-for="workTime in data.workTimes">
-        {{workTime.dayOfWeeksRange.start.toString()}} tới {{workTime.dayOfWeeksRange.end.toString()}}
-        <button class="btn btn-primary ml-auto mt-3" @click="addWorkDay">
-          <span class="icon-add d-inline mr-2"></span>
-          Thêm thời gian làm việc
-        </button>
+        :key="avatar.name"
+        v-for="(avatar) in data.avatars">
+        <hr>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Họ tên :</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Họ tên">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Mô tả :</label>
+          <textarea class="form-control">
+          </textarea>
+        </div>
       </div>
 
       <hr>
@@ -108,29 +92,17 @@ import { VueEditor } from 'vue2-editor'
 import { mapState } from 'vuex'
 import request from 'superagent'
 
-export class DayOfWeek {
-  toString () {
-    switch (this.index) {
-      case 1: return 'chủ nhật'
-      default: return 'thứ ' + this.index
-    }
-  }
-
-  constructor (index) {
-    this.index = index
-  }
-}
-
 export default {
   computed: mapState([
     'idToken'
   ]),
 
   methods: {
-    addWorkDay () {
-      this.data.workTimes.push({
-        dayOfWeeksRange: Object.assign({}, this.dayOfWeeksRange),
-        timeRanges: []
+    addAvatar () {
+      this.data.avatars.push({
+        name: '',
+        description: '',
+        image: null
       })
     },
 
@@ -194,10 +166,6 @@ export default {
       dayOfWeeks: [],
       clinicTypes: [],
       locationError: false,
-      dayOfWeeksRange: {
-        start: null,
-        end: null
-      },
       data: {
         name: '',
         latitude: 0,
@@ -205,7 +173,7 @@ export default {
         address: '',
         type: 0,
         content: '',
-        workTimes: []
+        avatars: []
       }
     }
   },

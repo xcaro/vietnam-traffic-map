@@ -12,7 +12,7 @@
           class="list-group-item list-group-item-action font-weight-bold"
           href="http://deltavn.net/admin">
           <span class="icon-user-tie d-inline pr-3"></span>
-          Trang admin
+          Quản trị giao thông
         </a>
         <router-link
           class="list-group-item list-group-item-action font-weight-bold"
@@ -55,6 +55,11 @@ export default {
 
   mounted () {
     this.routes = [
+      {
+        name: 'Quản trị phòng khám',
+        icon: 'icon-user-tie',
+        url: '/user'
+      },
       {
         name: 'Thông tin tài khoản',
         icon: 'icon-user',

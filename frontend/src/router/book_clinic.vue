@@ -20,26 +20,6 @@
         <label>Tên phòng khám</label>
         <input class="form-control"/>
       </div>
-      <div class="form-group">
-        <label>Kết quả : </label> <br>
-        <b>Tên:</b> abc <br>
-        <b>Địa chỉ:</b> 123 <a href="lol">Dẫn đường</a><br>
-        <b>Mô tả:</b>:
-        <div></div>
-      </div>
-      <div class="form-group">
-        <label>Giờ:</label>
-      </div>
-      <div class="form-group">
-        <label>Ngày</label>
-
-      </div>
-      <div class="form-group">
-        <label>
-          Vui lòng điền đầy đủ thông tin vào form trên, chuyên viên đặt hẹn của chúng tôi sẽ liên hệ lại với Quý khách sớm nhất trong vòng 24h làm việc.
-          Việc đặt hẹn trực tuyến không áp dụng cho các khách hàng có nhu cầu cấp cứu hoặc đặt lịch hẹn trong vòng 48h kể từ thời điểm đặt hẹn.
-        </label>
-      </div>
     </div>
 </template>
 

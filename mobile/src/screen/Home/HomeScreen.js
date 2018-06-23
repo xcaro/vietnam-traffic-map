@@ -101,7 +101,7 @@ class HomeScreen extends Component {
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://192.168.1.3:8000')
+    this.websocket = new WebSocket('ws://localhost:8000')
     this.websocket.onopen = () => {
       // map.addListener('idle', () => {
       //   const bounds = map.getBounds()

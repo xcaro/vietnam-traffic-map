@@ -122,15 +122,13 @@ class ReportTrafficScreen extends Component {
               pushMe.append('comment', this.state.comment)
 
               // Gửi hình sau
-              // let i = 0
-              // for (image of this.state.images) {
-              //   pushMe.append('files', {
-              //     uri: image,
-              //     name: `selfie${i}.jpg`,
-              //     type: 'image/jpg'
-              //   })
-              //   i++
-              // }
+
+              pushMe.append('files', {
+                uri: this.state.images,
+                name: `selfie${i}.jpg`,
+                type: 'image/jpg'
+              })
+
 
 
               axious.post(
