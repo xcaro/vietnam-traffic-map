@@ -6,6 +6,7 @@
             <button class="btn" @click="$store.dispatch('toggle', 'isShowModal')">
               <span class="icon-close"></span>
             </button>
+
             <router-view
               id = "content" />
           </div>
@@ -30,7 +31,6 @@ import Sidebar from './components/Sidebar'
 import { mapState } from 'vuex'
 import store from './store/index.js'
 import Home from './components/Home'
-import index from './store/index.js'
 
 export default {
   name: 'App',
@@ -48,7 +48,7 @@ export default {
       let user = localStorage.getItem('user')
       store.dispatch('set', {
         propertyName: 'user',
-        payload: user
+        payload: JSON.parse(user)
       })
       store.dispatch('set', {
         propertyName: 'idToken',

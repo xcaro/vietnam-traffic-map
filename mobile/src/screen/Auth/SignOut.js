@@ -31,21 +31,21 @@ class SignOut extends Component {
   constructor (props) {
     super(props)
     AsyncStorage.removeItem('idToken')
+    /**
+     * Clear user
+     * Clear token
+     */
+    this.props.setIdToken(null)
+    this.props.setUser(null)
+
+    /**
+     * navigate home route
+     * Clear all history
+     */
+    this.props.navigation.navigate('Map')
     request.post('http://deltavn.net/api/logout').set({
       'Authorization': `Bearer ${this.props.idToken}`
     }).then(() => {
-          /**
-           * Clear user
-           * Clear token
-           */
-          this.props.setIdToken(null)
-          this.props.setUser(null)
-
-          /**
-           * navigate home route
-           * Clear all history
-           */
-          this.props.navigation.navigate('Map')
     })
   }
 

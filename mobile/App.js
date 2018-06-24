@@ -33,6 +33,9 @@ import FindClinicScreen from './src/screen/Clinic/Find'
 import SignOutScreen from './src/screen/Auth/SignOut'
 import SignInScreen from './src/screen/Auth/SignIn'
 import SignUpScreen from './src/screen/Auth/SignUp'
+import ChangeInfoScreen from './src/screen/Auth/ChangeInfo'
+import ChangePasswordScreen from './src/screen/Auth/ChangePassword'
+import UserInfoScreen from './src/screen/Auth/Info'
 
 import CustomContentComponent from './src/component/CustomContentComponent'
 import store from './src/redux/store'
@@ -40,7 +43,39 @@ import action from './src/redux/action'
 import { Provider } from 'react-redux'
 import superAgent from 'superagent'
 
+import FAIcon from 'react-native-vector-icons/FontAwesome'
 let userName = 'khách'
+
+const UserInfoStack = StackNavigator({
+  UserInfo: {
+    screen: UserInfoScreen
+  },
+  ChangeInfo:{
+    screen: ChangeInfoScreen
+  },
+  ChangePassword:{
+    screen: ChangePasswordScreen
+  }
+}, {
+  initialRouteName: 'UserInfo',
+  navigationOptions: {
+    title: 'Thông tin tài khoản',
+    drawerIcon: ({ tintColor }) => (
+      <FAIcon
+        name = "user"
+        size = {25}
+        color = {tintColor}
+      />
+    ),headerStyle: {
+      backgroundColor: '#0288D1'
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold'
+    }
+  }
+})
+
 const RootStack = StackNavigator(
   {
     Home: {
@@ -101,6 +136,7 @@ const RootStack = StackNavigator(
     }
   }
 )
+
 RootStack.navigationOptions = {
   label: 'Bản đồ'
 }
@@ -111,12 +147,8 @@ const Drawer = DrawerNavigator(
       screen: RootStack,
     },
 
-    CreateClinic: {
-      screen: CreateClinicScreen
-    },
-
-    FindClinic: {
-      screen: FindClinicScreen
+    UserInfo: {
+      screen: UserInfoStack
     },
 
     SignIn: {
@@ -165,3 +197,43 @@ export default class App extends Component {
     )
   }
 }
+
+let PushNotification = require('react-native-push-notification');
+PushNotification.configure({
+
+  // (optional) Called when Token is generated (iOS and Android)
+  onRegister: function(token) {
+      console.log( 'TOKEN:', token );
+  },
+
+  // (required) Called when a remote or local notification is opened or received
+  onNotification: function(notification) {
+      console.log( 'NOTIFICATION:', notification );
+
+      // process the notification
+
+      // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+  },
+
+  // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+  senderID: "YOUR GCM SENDER ID",
+
+  // IOS ONLY (optional): default: all - Permissions to register.
+  permissions: {
+      alert: true,
+      badge: true,
+      sound: true
+  },
+
+  // Should the initial notification be popped automatically
+  // default: true
+  popInitialNotification: true,
+
+  /**
+    * (optional) default: true
+    * - Specified if permissions (ios) and token (android and ios) will requested or not,
+    * - if not, you must call PushNotificationsHandler.requestPermissions() later
+    */
+  requestPermissions: true,
+});

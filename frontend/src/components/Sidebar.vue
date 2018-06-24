@@ -107,12 +107,13 @@ export default {
     }
 
     // Subscribe store
+    let self = this
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'SET' && mutation.payload.propertyName === 'idToken') {
         if (mutation.payload.payload) { // logged in
-          this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
+          self.setFilterRoutesReact(self.routes.filter(route => !self.hiddenLoggedInRoute.includes(route.url)))
         } else { // logged out
-          this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenGuestRoute.includes(route.url)))
+          self.setFilterRoutesReact(self.routes.filter(route => self.hiddenLoggedInRoute.includes(route.url)))
         }
       }
     })

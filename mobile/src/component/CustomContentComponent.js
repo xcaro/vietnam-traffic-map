@@ -21,11 +21,6 @@ const hiddenUserItem = [
   'SignUp'
 ]
 
-const hiddenGuestItem = [
-  'SignOut',
-  'CreateClinic'
-]
-
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import primaryStyles from '../style/index'
 class CustomContentComponent extends Component {
@@ -48,7 +43,7 @@ class CustomContentComponent extends Component {
       /**
        * Hide drawer item that should be hide if user is guest
        */
-      let filterItems = this.originalItems.filter(item => !hiddenGuestItem.includes(item.key))
+      let filterItems = this.originalItems.filter(item => hiddenUserItem.includes(item.key))
       this.state.items = filterItems
     } else {
       /**
@@ -92,7 +87,7 @@ class CustomContentComponent extends Component {
         /**
          * Hide drawer item that should be hide if user is guest
          */
-        let filterItems = this.originalItems.filter(item => !hiddenGuestItem.includes(item.key))
+        let filterItems = this.originalItems.filter(item => hiddenUserItem.includes(item.key))
         this.setState(state => {
           return {
             ...state,

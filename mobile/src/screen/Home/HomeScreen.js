@@ -29,6 +29,7 @@ import objectHelper from '../../helper/object'
 import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import notification from 'react-native-push-notification'
 import errorHelper from '../../helper/error'
 import appHelper from '../../helper/app'
 import store from '../../redux/store'
@@ -96,12 +97,30 @@ class HomeScreen extends Component {
     this.mapRef = React.createRef()
   }
 
-  componentWillMount () {
+  getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = this.deg2rad(lat2-lat1)  // this.deg2rad below
+    var dLon = this.deg2rad(lon2-lon1)
+    var a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon/2) * Math.sin(dLon/2)
+
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+    var d = R * c // Distance in km
+    return d
+  }
+
+  deg2rad(deg) {
+    return deg * (Math.PI/180)
+  }
+
+  async componentWillMount () {
     /**
      * Init web socket
      * Start fetch data from realtime
      */
-    this.websocket = new WebSocket('ws://localhost:8000')
+    this.websocket = new WebSocket('ws://192.168.1.5:8000')
     this.websocket.onopen = () => {
       // map.addListener('idle', () => {
       //   const bounds = map.getBounds()
@@ -110,7 +129,7 @@ class HomeScreen extends Component {
       // })
 
       let self = this
-      this.websocket.onmessage = ({data}) => {
+      this.websocket.onmessage = async ({data}) => {
         let parseData = JSON.parse(data)
         switch (parseData.type) {
           case 'add':
@@ -119,7 +138,32 @@ class HomeScreen extends Component {
               return {...state,
                 trafficMarkers: [...state.trafficMarkers, parseData.new_val]
               }
+            })
 
+            // Tính khoảng cách
+            let distance = ''
+            if (self.props.curLocation) {
+              distance = this.getDistanceFromLatLonInKm(
+                self.props.curLocation.coords.latitude,
+                self.props.curLocation.coords.longitude,
+                parseData.new_val.latitude,
+                parseData.new_val.longitude)
+              distance = distance.toFixed(2)
+            } else {
+              distance = 'Không biết'
+            }
+
+            // Lấy loại báo cáo
+            if (this.props.trafficTypes) {
+              let res = await request.get('http://deltavn.net/api/report-type')
+              store.dispatch(action.setReportTypes(res.body.data))
+            }
+
+            const reportType = appHelper.trafficTypeFromTypeID(self.props.reportTypes, parseData.new_val.type_id)
+
+            notification.localNotification({
+              "title": "Loại báo cáo: " + reportType.name,
+              "message": "Khoảng cách: " + distance + " km"
             })
             break
           case 'remove':
@@ -130,7 +174,6 @@ class HomeScreen extends Component {
                 })
               }
             })
-            self.deleteTrafficReport(parseData.old_val)
             break
           case 'change':
             let array = [...self.state.trafficMarkers];
@@ -289,18 +332,6 @@ class HomeScreen extends Component {
             </ShadenTouchableHightLight>
             <View style = {style.separator}></View>
             <ShadenTouchableHightLight
-              marginRight = {15}
-              padding = {10}
-              onPress = {() => {
-
-              }}>
-              <MaterialIcon
-                name = "traffic"
-                size = {25}>
-              </MaterialIcon>
-            </ShadenTouchableHightLight>
-            <View style = {style.separator}></View>
-            <ShadenTouchableHightLight
               marginBottom = {0}
               marginRight = {15}
               padding = {10}
@@ -385,7 +416,7 @@ class HomeScreen extends Component {
               width: '100%',
               position: 'absolute',
               bottom: 0,
-              height: 120
+              height: 200
             }}
             contentContainerStyle={{
               backgroundColor: PRIMARY_COLOR

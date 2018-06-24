@@ -3,7 +3,7 @@ import { PermissionsAndroid } from 'react-native'
 
 export default {
   trafficTypeFromTypeID (trafficTypes, type_id) {
-    return trafficTypes.find(trafficType => trafficType.id == type_id)
+    return trafficTypes.find(trafficType => trafficType.id == Number(type_id))
   },
 
   async getCurrentLocation (props, isShowGpsError = true) {

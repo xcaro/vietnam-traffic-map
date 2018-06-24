@@ -123,18 +123,22 @@ class ReportTrafficScreen extends Component {
 
               // Gửi hình sau
 
-              pushMe.append('files', {
+              pushMe.append('image', {
                 uri: this.state.images,
-                name: `selfie${i}.jpg`,
+                name: `selfie.jpg`,
                 type: 'image/jpg'
               })
 
 
 
               axious.post(
-                'http://deltavn.net/api/report',
-                pushMe
+                'http://deltavn.net/api/report'
               )
+                .attach('image', 'this.state.images')
+                .field('latitude', origin_lat)
+                .field('longitude', origin_lng)
+                .field('type', reportType.id)
+                .field('comment', this.state.comment)
                 .then((res) => {
                   Alert.alert('Thông báo' ,`Báo cáo ${reportType.name} thành công`)
                   this.props.navigation.dispatch(NavigationActions.pop({

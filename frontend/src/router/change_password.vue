@@ -3,7 +3,7 @@
       <div class="form-group">
         <label>Mật khẩu cũ</label>
         <input
-        type="text"
+        type="password"
         :class="['form-control', this.errors.first('old_pw') ? 'is-invalid' : '']"
         placeholder="Mật khẩu cũ"
         v-model = 'old_pw'
@@ -41,7 +41,7 @@
         Quay lại
       </button>
       <button type="submit" class="btn btn-primary" @click = "changePassword">
-        <span class="icon-sign-in d-inline mr-2"></span>
+        <span class="icon-key d-inline mr-2"></span>
         Đổi mật khẩu
       </button>
   </div>
@@ -49,8 +49,13 @@
 
 <script>
 import request from 'superagent'
+import {mapState} from 'vuex'
 
 export default {
+  computed: mapState([
+    'idToken'
+  ]),
+
   data () {
     return {
       old_pw: '',
@@ -63,13 +68,16 @@ export default {
     changePassword () {
       this.$validator.validate().then(result => {
         if (result) {
-          request.put('http://deltavn.net/api/user/password')
+          request.post('http://deltavn.net/api/user/change-password').set({
+            'Authorization': `Bearer ${this.idToken}`
+          })
             .send({
-              username: this.userName,
-              password: this.passWord
+              current_password: this.old_pw,
+              new_password: this.new_pw,
+              renew_password: this.retype_new_new
             }).then((res) => {
               alert('Đổi mật khẩu thành công')
-              this.$store.dispatch('toggle', 'isShowModal')
+              this.$router.replace('logout')
             }).catch(() => {
               this.loginError = true
             })

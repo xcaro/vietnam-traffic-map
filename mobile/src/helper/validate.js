@@ -20,6 +20,16 @@ export class validateObject {
     return this
   }
 
+  equal (validateObj) {
+    if (!this.error.length) {
+      if (this.val !== validateObj.val) {
+        this.error = `${this.name} không có giá trị bằng ${validateObj.name}`
+      }
+    }
+
+    return this
+  }
+
   lengthMin(num) {
     if (!this.error.length) {
       if (this.val.length < num) {

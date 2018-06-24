@@ -69,7 +69,7 @@ export default {
                   propertyName: 'user',
                   payload: res.body.data
                 })
-                localStorage.setItem('user', res.body.data)
+                localStorage.setItem('user', JSON.stringify(res.body.data))
                 this.$store.dispatch('toggle', 'isShowModal')
               }).catch((err) => { throw err })
             }).catch(() => {

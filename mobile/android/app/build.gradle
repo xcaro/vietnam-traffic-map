@@ -160,6 +160,7 @@ dependencies {
     implementation project(':react-native-google-places')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-firebase')
+    implementation project(':react-native-push-notification')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:23.0.1"

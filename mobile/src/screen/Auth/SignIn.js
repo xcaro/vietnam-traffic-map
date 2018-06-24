@@ -46,8 +46,8 @@ class SignIn extends Component {
     super(props)
 
     this.state = {
-      userName: '',
-      passWord: '',
+      userName: 'admin',
+      passWord: '123456',
       userNameError: '',
       passWordError: ''
     }
@@ -127,21 +127,28 @@ class SignIn extends Component {
                   .then(async res => {
                     this.props.setIdToken(res.body.access_token)
 
+                    superagent.post('http://deltavn.net/api/me').set({
+                      'Authorization': `Bearer ${res.body.access_token}`
+                    }).then((res) => {
+                      this.props.setUser(res.body.data)
+                      AsyncStorage.setItem('user', res.body.data)
+                      let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
+
+                      this.props.navigation.dispatch(NavigationActions.pop({
+                        n:1
+                      }))
+
+                      let routeName = routeToRedirect || 'Map'
+                      this.props.navigation.dispatch(NavigationActions.push({
+                        routeName
+                      }))
+                    })
 
 
                     /**
                      * Đăng nhập thành công
                      */
-                    let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
 
-                    this.props.navigation.dispatch(NavigationActions.pop({
-                      n:1
-                    }))
-
-                    let routeName = routeToRedirect || 'Map'
-                    this.props.navigation.dispatch(NavigationActions.push({
-                      routeName
-                    }))
 
                     /**
                      * Save idtoken

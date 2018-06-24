@@ -1,6 +1,6 @@
 <template>
   <div class="w-500">
-    <div v-if="step===0">
+    <div v-show="step===0">
       <div class="form-group">
         <label for="">Tên phòng khám</label>
         <input
@@ -17,6 +17,7 @@
       <div class="form-group">
         <label for="">Chọn vị trí phòng khám</label>
         <vue-google-autocomplete
+          :class="['form-control', locationError ? 'is-invalid' : '']"
           ref="textinput"
           id="textinput"
           classname="form-control"
@@ -42,12 +43,12 @@
         <vue-editor v-model="data.content"></vue-editor>
       </div>
       <div class="form-group d-flex">
-        <button class="btn btn-primary ml-auto mt-3" @click="step++">
+        <button class="btn btn-primary ml-auto mt-3" @click="nextStep">
           Bước tiếp theo
         </button>
       </div>
     </div>
-    <div v-else>
+    <div  v-if="step!==0">
       <div class="d-flex my-4">
         <button class="btn btn-primary ml-auto" @click="addAvatar">
           <span class="icon-add d-inline mr-2"></span>
@@ -57,19 +58,41 @@
 
       <div
         :key="avatar.name"
-        v-for="(avatar) in data.avatars">
+        v-for="(avatar, index) in data.avatars">
         <hr>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Học vị :</label>
+          <select v-model="avatar.role" class="form-control">
+            <option
+              :value="role"
+              :key="role"
+              v-for="role in roles">
+              {{role}}
+            </option>
+          </select>
+        </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Họ tên :</label>
           <input
+            :class="['form-control', getError('name' + index) ? 'is-invalid' : '']"
+            :name = "'name' + index"
+            v-validate="'required'"
+            data-vv-as="Họ tên"
             type="text"
             class="form-control"
             placeholder="Họ tên">
+          <div class="text-danger pt-2">{{ getError('name' + index) }}</div>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Mô tả :</label>
           <textarea class="form-control">
           </textarea>
+        </div>
+        <div class="d-flex">
+          <button class="btn btn-danger ml-auto" @click="deleteAvatar(index)">
+            <span class="icon-add d-inline mr-2"></span>
+            Xóa người đại diện
+          </button>
         </div>
       </div>
 
@@ -78,7 +101,7 @@
         <button class="btn btn-secondary ml-auto mr-3" @click="step--">
           Quay lại
         </button>
-        <button class="btn btn-primary" @click="step++">
+        <button class="btn btn-primary" @click="createClinic">
           Hoàn tất
         </button>
       </div>
@@ -98,26 +121,33 @@ export default {
   ]),
 
   methods: {
+    getError (name) {
+      return this.errors.first(name)
+    },
+
     addAvatar () {
       this.data.avatars.push({
         name: '',
         description: '',
+        role: 'Thạc sĩ',
         image: null
       })
     },
 
-    onFulFilling (result, place) {
-      this.latitude = result.latitude
-      this.longitue = result.longitue
-      this.address = place.formatted_address
+    deleteAvatar (index) {
+      this.data.avatars.splice(index, 1)
     },
 
-    createClinic () {
+    onFulFilling (result, place) {
+      this.data.latitude = result.latitude
+      this.data.longitue = result.longitue
+      this.data.address = place.formatted_address
+    },
+
+    nextStep () {
       this.$validator.validate().then(result => {
         let isError = false
-
-        /** Validate address */
-        if (this.address === '') {
+        if (this.data.address === '') {
           this.isError = true
           this.locationError = true
           return
@@ -125,42 +155,41 @@ export default {
           this.locationError = false
         }
 
-        /** validate name */
-        if (!result) {
-          return 0
-        }
-
         /** incase validate name successfully but validate address fail */
         if (isError) {
           return 0
         }
 
-        /** all validate Successfully */
-        request.post('http://deltavn.net/api/clinic').send(this.data).set({
-          Authorization: 'bearer ' + this.idToken
-        }).then(() => {
-          alert('Tạo phòng khám thành công')
-          this.$store.dispatch('toggle', 'isShowModal')
-        })
+        if (result) {
+          this.step++
+        }
+      })
+    },
+
+    createClinic () {
+      this.$validator.validate().then(result => {
+        if (result) {
+          console.log(this.data)
+        }
       })
     }
   },
 
   created () {
     request.get('http://deltavn.net/api/clinic-type').then((res) => {
+      this.data.type = 1
       this.clinicTypes = res.body.data
     })
-
-    for (let i = 1; i < 8; i++) {
-      this.dayOfWeeks.push(new DayOfWeek(i))
-    }
-
-    this.dayOfWeeksRange.start = this.dayOfWeeks[1]
-    this.dayOfWeeksRange.end = this.dayOfWeeks[5]
   },
 
   data () {
     return {
+      roles: [
+        'Tiến sĩ',
+        'Thạc sĩ',
+        'Phó giáo sư',
+        'Giáo sư'
+      ],
       step: 0,
       place: null,
       dayOfWeeks: [],

@@ -6,6 +6,7 @@ import login from '../router/login.vue'
 import register from '../router/register.vue'
 import logOut from '../router/log_out.vue'
 import changePassword from '../router/change_password.vue'
+import changeInfo from '../router/change_info.vue'
 import user from '../router/user.vue'
 
 Vue.use(Router)
@@ -43,6 +44,10 @@ export default new Router({
     {
       path: '/change_password',
       component: changePassword
-    }
+    },
+    {
+      path: '/change_info',
+      component: changeInfo
+    },
   ]
 })
