@@ -9,12 +9,42 @@ import {
   HIDE_LOADING,
   SET_REPORT_TYPE,
   SET_SEARCH_NEAR,
-  REMOVE_SEARCH_NEAR
+  REMOVE_SEARCH_NEAR,
+  SET_SETTINGS,
+  ADD_TRAFFIC_MARKER,
+  EDIT_TRAFFIC_MARKER,
+  DELETE_TRAFFIC_MARKER
 } from './action'
 import objectHelper from '../helper/object'
 
 export default function (state, action) {
   switch (action.type) {
+    case ADD_TRAFFIC_MARKER:
+      return {...state, trafficMarkers: [...state.trafficMarkers, action.marker]}
+
+    case EDIT_TRAFFIC_MARKER:
+      let arr = JSON.parse(JSON.stringify(state.trafficMarkers))
+      let index = arr.findIndex((e) => e.id === action.marker.id)
+      if (index === -1) {
+        /**
+         * Never happend
+         */
+        return
+      }
+
+      arr[index] = action.marker
+      return {...state, trafficMarkers: arr}
+
+
+    case DELETE_TRAFFIC_MARKER:
+      return {...state, trafficMarkers: state.trafficMarkers.filter(trafficMaker => {
+        trafficMaker.id !== action.marker.id
+      })
+     }
+
+    case SET_SETTINGS:
+      return {...state, settings: action.settings}
+
     case SET_SEARCH_NEAR:
       return {...state, searchNearLocationResult: action. result}
 

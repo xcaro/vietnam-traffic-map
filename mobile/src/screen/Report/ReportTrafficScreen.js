@@ -25,7 +25,7 @@ import ImagePicker from 'react-native-image-picker'
 import RoundButton from '../../component/RoundButton'
 import action from '../../redux/action'
 import appHelper from '../../helper/app'
-import axious from 'axios'
+import request from 'superagent'
 import { connect } from 'react-redux'
 
 class ReportTrafficScreen extends Component {
@@ -131,7 +131,7 @@ class ReportTrafficScreen extends Component {
 
 
 
-              axious.post(
+              request.post(
                 'http://deltavn.net/api/report'
               )
                 .attach('image', 'this.state.images')

@@ -22,6 +22,14 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(52,152,219,.8)'
   },
 
+  mt: {
+    marginTop: 20
+  },
+
+  mb: {
+    marginBottom: 20
+  },
+
   container: {
     flex: 1
   },

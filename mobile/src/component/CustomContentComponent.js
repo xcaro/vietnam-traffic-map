@@ -21,6 +21,9 @@ const hiddenUserItem = [
   'SignUp'
 ]
 
+const showGuestItem = hiddenUserItem.slice(0)
+showGuestItem.push('Settings', 'Map')
+
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import primaryStyles from '../style/index'
 class CustomContentComponent extends Component {
@@ -43,7 +46,7 @@ class CustomContentComponent extends Component {
       /**
        * Hide drawer item that should be hide if user is guest
        */
-      let filterItems = this.originalItems.filter(item => hiddenUserItem.includes(item.key))
+      let filterItems = this.originalItems.filter(item => showGuestItem.includes(item.key))
       this.state.items = filterItems
     } else {
       /**

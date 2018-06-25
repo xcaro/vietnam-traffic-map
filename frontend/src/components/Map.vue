@@ -16,19 +16,19 @@
           title="địa điểm tìm kiếm">
         </gmap-marker>
         <gmap-marker
-          v-if="typeImgs"
+          v-if="typeImgs.size > 0"
           @click="trafficReport.isOpenInfoWindow = true"
           :clickable="true"
           :position="{
             lat: Number(trafficReport.latitude),
             lng: Number(trafficReport.longitude)
           }"
-          :key = "trafficReport.id"
-          v-for = "trafficReport in trafficReports"
+          :key = "'report' + trafficReport.id"
+          v-for = "trafficReport in $store.state.trafficReports"
           :icon  = "getTypeImg(trafficReport.type_id, trafficReport.confirm)">
         </gmap-marker>
         <gmap-info-window
-          :key = "trafficReport.id"
+          :key = "'info' + trafficReport.id"
           :position = "{
             lat: Number(trafficReport.latitude),
             lng: Number(trafficReport.longitude)
@@ -41,7 +41,7 @@
               height: -50
             }
           }"
-          v-for = "trafficReport in trafficReports">
+          v-for = "trafficReport in $store.state.trafficReports">
             <div class = "infowindow">
               <p>
                 Mô tả: {{trafficReport.comment || 'Không có'}}  <br/>
@@ -52,7 +52,7 @@
                   v-if="trafficReport.image"
                   class="m-2 mt-3 mr-0"
                   :src = "trafficReport.image"/>
-                <div class = "m-1 mt-2 d-flex justify-content-center" v-if = "idToken">
+                <div class = "m-1 mt-2 d-flex justify-content-center" v-if = "user && user.role.title === 'Admin'">
                   <button
                     v-if="trafficReport.confirm"
                     class="btn btn-primary mr-2"
@@ -103,7 +103,8 @@ export default {
   },
 
   computed: mapState([
-    'idToken'
+    'idToken',
+    'user'
   ]),
 
   methods: {
@@ -187,49 +188,19 @@ export default {
         fromLng: southWest.lng,
         toLng: northEast.lng
       }
-    },
-
-    addTrafficReport (trafficReport) {
-      trafficReport.isOpenInfoWindow = false
-      this.trafficReports.push(trafficReport)
-    },
-
-    deleteTrafficReport (trafficReport) {
-      /**
-       * Find traffic report from arr
-       * Remove from map
-       * remove from arr
-       */
-      let index = this.findIndexTrafficReport(trafficReport.id)
-      if (index === -1) {
-        /**
-         * Never happend
-         */
-        return
-      }
-
-      this.trafficReports[index].marker.setMap(null)
-      this.trafficReports.splice(index, 1)
-    },
-
-    findIndexTrafficReport (id) {
-      return this.trafficReports.findIndex((e) => e.id === id)
-    },
-
-    editTrafficReport (trafficReport) {
-      let index = this.findIndexTrafficReport(trafficReport.id)
-      if (index === -1) {
-        /**
-         * Never happend
-         */
-        return
-      }
-
-      /**
-       * Assign everything from new marker to old marker using object assign
-       */
-      this.trafficReports[index] = Object.assign(this.trafficReports[index], trafficReport)
     }
+  },
+
+  created () {
+    request.get('http://deltavn.net/api/report-type').then((res) => {
+      this.trafficReportTypes = res.body.data
+      for (let trafficReportType of this.trafficReportTypes) {
+        this.typeImgs.set(trafficReportType.id, {
+          confirmed_icon: trafficReportType.confirmed_icon,
+          unconfirmed_icon: trafficReportType.unconfirmed_icon
+        })
+      }
+    })
   },
 
   mounted () {
@@ -240,42 +211,6 @@ export default {
       this.directionsDisplay.setMap(this.$refs.map.$mapObject)
       this.directionsDisplay.setPanel(document.getElementById('directionPanel'))
     })
-
-    request.get('http://deltavn.net/api/report-type').then((res) => {
-      this.trafficReportTypes = res.body.data
-      for (let trafficReportType of this.trafficReportTypes) {
-        this.typeImgs.set(trafficReportType.id, {
-          confirmed_icon: trafficReportType.confirmed_icon,
-          unconfirmed_icon: trafficReportType.unconfirmed_icon
-        })
-      }
-    })
-    /**
-     * Init web socket
-     * Start fetch data from realtime
-     */
-    this.websocket = new WebSocket('ws://localhost:8000')
-    this.websocket.onopen = () => {
-      this.websocket.onmessage = ({data}) => {
-        let parseData = JSON.parse(data)
-        switch (parseData.type) {
-          case 'add':
-          case 'initial':
-            this.addTrafficReport(parseData.new_val)
-            break
-          case 'remove':
-            this.deleteTrafficReport(parseData.old_val)
-            break
-          case 'change':
-            this.editTrafficReport(parseData.new_val)
-            break
-        }
-      }
-    }
-  },
-
-  destroyed () {
-    this.websocket.close()
   }
 }
 </script>

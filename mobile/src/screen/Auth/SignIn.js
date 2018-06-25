@@ -131,7 +131,7 @@ class SignIn extends Component {
                       'Authorization': `Bearer ${res.body.access_token}`
                     }).then((res) => {
                       this.props.setUser(res.body.data)
-                      AsyncStorage.setItem('user', res.body.data)
+                      AsyncStorage.setItem('user', JSON.stringify(res.body.data))
                       let routeToRedirect = this.props.navigation.getParam('routeToRedirect')
 
                       this.props.navigation.dispatch(NavigationActions.pop({

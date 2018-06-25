@@ -17,6 +17,7 @@ import firebase from 'react-native-firebase'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import HomeScreen from './src/screen/Home/HomeScreen'
+import SettingsScreen from './src/screen/Home/Settings'
 import SearchLocationScreen from './src/screen/Home/SearchLocationScreen'
 import ChoseNearbyLocationScreen from './src/screen/Home/ChoseNearbyLocationScreen'
 import ReportTrafficInfoScreen from './src/screen/Home/ReportTrafficInfo'
@@ -38,6 +39,7 @@ import ChangePasswordScreen from './src/screen/Auth/ChangePassword'
 import UserInfoScreen from './src/screen/Auth/Info'
 
 import CustomContentComponent from './src/component/CustomContentComponent'
+import appHelper from './src/helper/app'
 import store from './src/redux/store'
 import action from './src/redux/action'
 import { Provider } from 'react-redux'
@@ -151,6 +153,10 @@ const Drawer = DrawerNavigator(
       screen: UserInfoStack
     },
 
+    Settings: {
+      screen: SettingsScreen
+    },
+
     SignIn: {
       screen: SignInScreen
     },
@@ -185,8 +191,85 @@ export default class App extends Component {
     })
   }
 
+  componentWillMount () {
+    this.websocket = new WebSocket('ws://192.168.1.4:8000')
+    this.websocket.onopen = () => {
+      let self = this
+      this.websocket.onmessage = ({data}) => {
+        let parseData = JSON.parse(data)
+        switch (parseData.type) {
+          case 'add':
+          case 'initial':
+            store.dispatch(action.addTrafficMarker(parseData.new_val))
+            break
+          case 'remove':
+            store.dispatch(action.deleteTrafficMarker(parseData.old_val))
+            break
+          case 'change':
+            store.dispatch(action.editTrafficMarker(parseData.new_val))
+            break
+        }
+        if (parseData.type === 'add') { // Push notification
+          let storeState = store.getState()
+          /**
+           * Kiểm tra settings
+           * loại confirm
+           * loại báo cáo
+           * khoảng cách
+           */
+          if (storeState.settings.confirmed === 'Đã xác nhận' && !parseData.new_val.confirm) return
+          if (storeState.settings.confirmed === 'Chưa xác nhận' && parseData.new_val.confirm) return
+          if (storeState.settings.types.indexOf(Number(parseData.new_val.type_id)) === -1) return
+
+          // Tính khoảng cách
+          let distance = ''
+          if (storeState.curLocation) {
+            distance = getDistanceFromLatLonInKm(
+              storeState.curLocation.coords.latitude,
+              storeState.curLocation.coords.longitude,
+              parseData.new_val.latitude,
+              parseData.new_val.longitude)
+
+            if (distance > storeState.settings.radius) return
+            distance = distance.toFixed(2) + ' m'
+          } else {
+            distance = 'Không biết'
+          }
+
+          // Lấy loại báo cáo
+          if (this.props.trafficTypes) {
+            let res = request.get('http://deltavn.net/api/report-type').then((res) => {
+              store.dispatch(action.setReportTypes(res.body.data))
+            })
+            const reportType = appHelper.trafficTypeFromTypeID(storeState.reportTypes, parseData.new_val.type_id)
+            dispatchNotification(reportType, distance)
+          }
+
+          const reportType = appHelper.trafficTypeFromTypeID(storeState.reportTypes, parseData.new_val.type_id)
+          dispatchNotification(reportType, distance)
+        }
+      }
+    }
+  }
+
   componentDidMount () {
-    AsyncStorage.getItem('idToken').then(idToken => store.dispatch(action.setIdToken(idToken)))
+    AsyncStorage.getItem('idToken').then(idToken => {
+      if (idToken) {
+        superagent.post('http://deltavn.net/api/me').set({
+          'Authorization': `Bearer ${idToken}`
+        }).then((res) => {
+          store.dispatch(action.setUser(user)
+        })
+      }
+
+      store.dispatch(action.setIdToken(idToken)
+    }))
+    AsyncStorage.getItem('user').then(user => store.dispatch(action.setUser(user)))
+    AsyncStorage.getItem('Settings').then(Settings => {
+      if (Settings !== null) {
+        store.dispatch(action.setSettings(JSON.parse(Settings)))
+      }
+    })
   }
 
   render () {
@@ -237,3 +320,29 @@ PushNotification.configure({
     */
   requestPermissions: true,
 });
+
+function dispatchNotification (reportType, distance) {
+  let name = reportType.name
+  PushNotification.localNotification({
+    "title": "Loại báo cáo: " + name,
+    "message": "Khoảng cách: " + distance
+  })
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1)  // deg2rad below
+  var dLon = deg2rad(lon2-lon1)
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  var d = R * c // Distance in km
+  return d * 1000
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}

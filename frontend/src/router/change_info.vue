@@ -1,28 +1,40 @@
 <template>
   <div>
       <div class="form-group">
+        <label for="exampleInputPassword1">Họ tên mới</label>
+        <input
+        type="text"
+        :class="['form-control', this.errors.first('name') ? 'is-invalid' : '']"
+        placeholder="Họ tên mới"
+        v-model = 'name'
+        data-vv-as="Họ tên mới"
+        name = 'name'
+        v-validate="'required'">
+        <div class="text-danger pt-2">{{ this.errors.first('name') }}</div>
+      </div>
+      <div class="form-group">
         <label>Địa chỉ mới</label>
         <input
-        type="password"
-        :class="['form-control', this.errors.first('new_phonenumber') ? 'is-invalid' : '']"
+        type="text"
+        :class="['form-control', this.errors.first('address') ? 'is-invalid' : '']"
         placeholder="Địa chỉ mới"
-        v-model = 'new_phonenumber'
+        v-model = 'address'
         data-vv-as="Địa chỉ mới"
-        name = 'new_phonenumber'
+        name = 'address'
         v-validate="'required'">
-        <div class="text-danger pt-2">{{ this.errors.first('new_phonenumber') }}</div>
+        <div class="text-danger pt-2">{{ this.errors.first('address') }}</div>
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Số điện thoại mới</label>
         <input
-        type="password"
-        :class="['form-control', this.errors.first('new_address') ? 'is-invalid' : '']"
+        type="text"
+        :class="['form-control', this.errors.first('phone') ? 'is-invalid' : '']"
         placeholder="Số điện thoại mới"
-        v-model = 'new_address'
+        v-model = 'phone'
         data-vv-as="Số điện thoại mới"
-        name = 'new_address'
-        v-validate="'required|numeric'">
-        <div class="text-danger pt-2">{{ this.errors.first('new_address') }}</div>
+        name = 'phone'
+        v-validate="'required|numeric|min:9'">
+        <div class="text-danger pt-2">{{ this.errors.first('phone') }}</div>
       </div>
       <button type="submit" class="btn btn-secondary mr-2" @click = "$router.replace('/user')">
         <span class="icon-sign-in d-inline mr-2"></span>
@@ -41,30 +53,49 @@ import {mapState} from 'vuex'
 
 export default {
   computed: mapState([
-    'user'
+    'user',
+    'idToken'
   ]),
 
   data () {
     return {
-      new_phonenumber: this.user.phonenumber,
-      new_address: this.user.addres
+      phone: '',
+      address: '',
+      name: ''
     }
+  },
+
+  created () {
+    this.phone = this.user.phone
+    this.address = this.user.address
+    this.name = this.user.name
   },
 
   methods: {
     changeInfo () {
+      let self = this
+      debugger
       this.$validator.validate().then(result => {
         if (result) {
-          request.post('http://deltavn.net/api/user/change-password').set({
-            'Authorization': `Bearer ${this.idToken}`
+          request.post('http://deltavn.net/api/user/change-info').set({
+            'Authorization': `Bearer ${self.idToken}`
           })
             .send({
-              current_password: this.old_pw,
-              new_password: this.new_pw,
-              renew_password: this.retype_new_new
+              phone: this.phone,
+              address: this.address,
+              name: this.name,
+              email: this.email
             }).then((res) => {
               alert('Cập nhật thông tin thành công')
-              this.$router.replace('logout')
+              request.post('http://deltavn.net/api/me').set({
+                'Authorization': `Bearer ${this.idToken}`
+              }).then((res) => {
+                this.$store.dispatch('set', {
+                  propertyName: 'user',
+                  payload: res.body.data
+                })
+              })
+              this.$store.dispatch('toggle', 'isShowModal')
             }).catch(() => {
               this.loginError = true
             })

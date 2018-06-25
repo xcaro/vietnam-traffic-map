@@ -38,9 +38,9 @@ class ChangeInfo extends Component {
 
     this.state = {
       name: new validateObject('Tên', this.props.user.name),
-      address: new validateObject('địa chỉ', this.props.user.address),
-      phone: new validateObject('Số điện thoại', this.props.user.phone),
-      email: new validateObject('Email', this.props.user.email),
+      address: new validateObject('địa chỉ', 'abc'),//this.props.user.address),
+      phone: new validateObject('Số điện thoại', '0404034234'),//this.props.user.phone),
+      email: new validateObject('Email', 'asdf@aa.cc') //this.props.user.email),
     }
   }
 
@@ -61,11 +61,14 @@ class ChangeInfo extends Component {
       this.state.address.isValid() &&
       this.state.phone.isValid()
     ) {
-      request.post('http://deltavn.net/api/user').send({
+      request.post('http://deltavn.net/api/user/change-info').set({
+        'Authorization': `Bearer ${this.props.idToken}`
+      }).send({
         name: this.state.name.val,
         email: this.state.email.val,
         address: this.state.address.val,
-        phone: this.state.phone.val
+        phone: this.state.phone.val,
+        username: this.props.user.username
       }).then(() => {
         Alert.alert('Thông báo', 'Cập nhật thông tin tài khoản thành công', [
           {
@@ -76,10 +79,7 @@ class ChangeInfo extends Component {
           }
         ])
       }).catch(res => {
-        for (key in res.response.body.messages) {
-          this.state[key].error = res.response.body.messages[key][0]
-        }
-        this.forceUpdate()
+        Alert.alert('Đã xảy ra lỗi khi cập nhập thông tin', JSON.stringify(res))
       })
     }
   }

@@ -48,6 +48,6 @@ export default new Router({
     {
       path: '/change_info',
       component: changeInfo
-    },
+    }
   ]
 })

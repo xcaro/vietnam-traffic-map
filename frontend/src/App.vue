@@ -31,6 +31,7 @@ import Sidebar from './components/Sidebar'
 import { mapState } from 'vuex'
 import store from './store/index.js'
 import Home from './components/Home'
+import request from 'superagent'
 
 export default {
   name: 'App',
@@ -42,18 +43,47 @@ export default {
     Sidebar,
     Home
   },
+  destroyed () {
+    this.websocket.close()
+  },
   created () {
     let idToken = localStorage.getItem('idToken')
     if (idToken) {
-      let user = localStorage.getItem('user')
-      store.dispatch('set', {
-        propertyName: 'user',
-        payload: JSON.parse(user)
+      request.post('http://deltavn.net/api/me').set({
+        'Authorization': `Bearer ${idToken}`
+      }).then((res) => {
+        this.$store.dispatch('set', {
+          propertyName: 'user',
+          payload: res.body.data
+        })
       })
       store.dispatch('set', {
         propertyName: 'idToken',
         payload: idToken
       })
+    }
+
+    /**
+     * Init web socket
+     * Start fetch data from realtime
+     */
+    this.websocket = new WebSocket('ws://192.168.1.4:8000')
+    this.websocket.onopen = () => {
+      this.websocket.onmessage = ({data}) => {
+        let parseData = JSON.parse(data)
+        switch (parseData.type) {
+          case 'add':
+          case 'initial':
+            store.dispatch('addReport', parseData.new_val)
+            break
+          case 'remove':
+            store.dispatch('deleteReport', parseData.old_val)
+            break
+          case 'change':
+            store.dispatch('editReport', parseData.new_val)
+            break
+        }
+      }
     }
   },
   store

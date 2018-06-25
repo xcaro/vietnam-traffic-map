@@ -97,112 +97,6 @@ class HomeScreen extends Component {
     this.mapRef = React.createRef()
   }
 
-  getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = this.deg2rad(lat2-lat1)  // this.deg2rad below
-    var dLon = this.deg2rad(lon2-lon1)
-    var a =
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon/2) * Math.sin(dLon/2)
-
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-    var d = R * c // Distance in km
-    return d
-  }
-
-  deg2rad(deg) {
-    return deg * (Math.PI/180)
-  }
-
-  async componentWillMount () {
-    /**
-     * Init web socket
-     * Start fetch data from realtime
-     */
-    this.websocket = new WebSocket('ws://192.168.1.5:8000')
-    this.websocket.onopen = () => {
-      // map.addListener('idle', () => {
-      //   const bounds = map.getBounds()
-      //   const data = this.parseBoundsIntoLocation(bounds)
-      //   this.websocket.send(JSON.stringify(data))
-      // })
-
-      let self = this
-      this.websocket.onmessage = async ({data}) => {
-        let parseData = JSON.parse(data)
-        switch (parseData.type) {
-          case 'add':
-          case 'initial':
-            self.setState(state => {
-              return {...state,
-                trafficMarkers: [...state.trafficMarkers, parseData.new_val]
-              }
-            })
-
-            // Tính khoảng cách
-            let distance = ''
-            if (self.props.curLocation) {
-              distance = this.getDistanceFromLatLonInKm(
-                self.props.curLocation.coords.latitude,
-                self.props.curLocation.coords.longitude,
-                parseData.new_val.latitude,
-                parseData.new_val.longitude)
-              distance = distance.toFixed(2)
-            } else {
-              distance = 'Không biết'
-            }
-
-            // Lấy loại báo cáo
-            if (this.props.trafficTypes) {
-              let res = await request.get('http://deltavn.net/api/report-type')
-              store.dispatch(action.setReportTypes(res.body.data))
-            }
-
-            const reportType = appHelper.trafficTypeFromTypeID(self.props.reportTypes, parseData.new_val.type_id)
-
-            notification.localNotification({
-              "title": "Loại báo cáo: " + reportType.name,
-              "message": "Khoảng cách: " + distance + " km"
-            })
-            break
-          case 'remove':
-            self.setState(state => {
-              return {...state,
-                trafficMarkers: state.trafficMarkers.filter(trafficMaker => {
-                  trafficMaker.id !== parseData.old_val.id
-                })
-              }
-            })
-            break
-          case 'change':
-            let array = [...self.state.trafficMarkers];
-            let index = array.findIndex((e) => e.id === parseData.new_val.id)
-            if (index === -1) {
-              /**
-               * Never happend
-               */
-              return
-            }
-
-            array[index] = parseData.new_val
-            self.setState(state => {
-              return {...state,
-                trafficMarkers: array
-              }
-            })
-            this.forceUpdate()
-            break
-        }
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe()
-    // this.websocket.close()
-  }
-
   static navigationOptions = {
     header: null
   }
@@ -261,7 +155,7 @@ class HomeScreen extends Component {
               longitudeDelta: 0.5,
             }}
           >
-            {this.props.reportTypes && this.state.trafficMarkers.map(trafficMaker => {
+            {this.props.reportTypes && this.props.trafficMarkers.map(trafficMaker => {
               let trafficReportType = appHelper.trafficTypeFromTypeID(this.props.reportTypes, trafficMaker.type_id)
               let image = null
               if (trafficMaker.confirm) {
@@ -272,6 +166,7 @@ class HomeScreen extends Component {
 
               return (
                 <Marker
+                tracksViewChanges = {false}
                 key = {image}
                   onPress = {() => {
                     this.props.navigation.navigate('ReportTrafficInfo', {

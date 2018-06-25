@@ -12,7 +12,13 @@ const store = createStore(
     selectedSearchLocationItem: null,
     idToken: null,
     isShowLoading: false,
-    searchNearLocationResult: null
+    searchNearLocationResult: null,
+    trafficMarkers: [],
+    settings: {
+      radius: 1000,
+      types: [1],
+      confirmed: 'Cả hai'
+    }
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 

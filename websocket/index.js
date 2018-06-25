@@ -46,15 +46,19 @@ async function start () {
               throw err
             }
 
-            if (client.readyState === client.OPEN) {
-              client.send(JSON.stringify(row))
-            } else {
+            client.on('close', () => {
               client.terminate()
               cursor.close()
               conn.close()
               return false // This will stop cursor from run
               // If it still run, it will yield error cursor has been closed
               console.log("client disconnected")
+            })
+
+            if (client.readyState === client.OPEN) {
+              client.send(JSON.stringify(row))
+            } else {
+              client.emit('close')
             }
           })
         })

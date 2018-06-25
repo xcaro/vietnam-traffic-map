@@ -10,9 +10,17 @@ export const SET_USER = 'SET_USER'
 
 export const SHOW_LOADING = 'SHOW_LOADING'
 export const HIDE_LOADING = 'HIDE_LOADING'
+
 export const SET_REPORT_TYPE = 'SET_REPORT_TYPES'
+export const SET_SETTINGS = 'SET_SETTINGS'
+
+export const ADD_TRAFFIC_MARKER = 'ADD_TRAFFIC_MARKER'
+export const EDIT_TRAFFIC_MARKER = 'EDIT_TRAFFIC_MARKER'
+export const DELETE_TRAFFIC_MARKER = 'DELETE_TRAFFIC_MARKER'
+
 export const SET_SEARCH_NEAR = 'SET_SEARCH_NEAR'
 export const REMOVE_SEARCH_NEAR = 'REMOVE_SEARCH_NEAR'
+
 
 function generateActionCreateor (type, ...argNames) {
   let action = {type}
@@ -37,5 +45,9 @@ export default {
   setSelectedSearchLocationItem: generateActionCreateor(SET_SELECTEDSEARCHLOCATIONITEM, 'SearchLocationItem'),
   removeSelectedSearchLocationItem: generateActionCreateor(REMOVE_SELECTEDSEARCHLOCATIONITEM),
   setSearchNear: generateActionCreateor(SET_SEARCH_NEAR, 'result'),
-  removeSearchNear: generateActionCreateor(REMOVE_SEARCH_NEAR, 'REMOVE_SEARCH_NEAR')
+  removeSearchNear: generateActionCreateor(REMOVE_SEARCH_NEAR, 'REMOVE_SEARCH_NEAR'),
+  setSettings: generateActionCreateor(SET_SETTINGS, 'settings'),
+  addTrafficMarker: generateActionCreateor(ADD_TRAFFIC_MARKER, 'marker'),
+  editTrafficMarker: generateActionCreateor(EDIT_TRAFFIC_MARKER, 'marker'),
+  deleteTrafficMarker: generateActionCreateor(DELETE_TRAFFIC_MARKER, 'marker'),
 }

@@ -9,7 +9,7 @@
       <b>Họ tên</b>: {{user.name}} <br>
       <b>Địa chỉ</b>: {{user.address}} <br>
       <b>Số điện thoại</b>: {{user.phone}} <br>
-      <b>Quyền</b>: {{user.role}}
+      <b>Quyền</b>: {{user.role.title}}
     </p><hr>
     <div class="form-group">
       <button @click="$router.replace('/change_password')" class="btn btn-primary mr-2">

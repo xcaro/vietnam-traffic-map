@@ -6,7 +6,7 @@ import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
 
 import { Validator, install as VeeValidate } from 'vee-validate/dist/vee-validate.minimal.esm.js'
-import { required, numeric, email } from 'vee-validate/dist/rules.esm.js'
+import { required, numeric, email, min, max } from 'vee-validate/dist/rules.esm.js'
 import vi from 'vee-validate/dist/locale/vi'
 
 Vue.config.productionTip = false
@@ -14,6 +14,8 @@ Vue.config.productionTip = false
 Validator.extend('email', email)
 Validator.extend('numeric', numeric)
 Validator.extend('required', required)
+Validator.extend('min', min)
+Validator.extend('max', max)
 Validator.localize('vi', vi)
 
 Vue.use(VueGoogleMaps, {
