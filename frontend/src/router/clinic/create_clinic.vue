@@ -46,7 +46,7 @@ export default {
         longitue: 0,
         address: '',
         type: 0,
-        content: '',
+        description: '',
         doctors: [],
         ward: '',
         district: ''

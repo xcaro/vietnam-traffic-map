@@ -7,6 +7,9 @@ import bookClinic from '../router/clinic/book_clinic.vue'
 import editClinic from '../router/clinic/edit_clinic.vue'
 import editDoctors from '../router/clinic/edit_doctors.vue'
 
+import createShift from '../router/clinic/create_shift.vue'
+import editShift from '../router/clinic/edit_shift.vue'
+
 import login from '../router/login.vue'
 import register from '../router/register.vue'
 import logOut from '../router/log_out.vue'
@@ -21,6 +24,14 @@ export default new Router({
     {
       path: '/clinic/',
       redirect: '/clinic/create'
+    },
+    {
+      path: '/clinic/shift/create',
+      component: createShift
+    },
+    {
+      path: '/clinic/shift/edit',
+      component: editShift
     },
     {
       path: '/clinic/edit-clinic',

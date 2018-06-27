@@ -80,7 +80,7 @@ export default {
     onSumbit () {
       this.$validator.validate().then(result => {
         if (result) {
-          this.sumbitCallBack()
+          this.submitCallBack()
         }
       })
     },
@@ -102,7 +102,7 @@ export default {
       this.data.doctors.splice(index, 1)
     }
   },
-  props: ['sumbitText', 'sumbitCallBack', 'initData', 'isShowBack', 'backCallBack']
+  props: ['sumbitText', 'submitCallBack', 'initData', 'isShowBack', 'backCallBack']
 }
 </script>
 

@@ -100,7 +100,7 @@ export default {
       '/register'
     ]
     // Init
-    if (localStorage.idToken) {
+    if (!localStorage.idToken) {
       this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
     } else {
       this.setFilterRoutesReact(this.routes.filter(route => this.hiddenLoggedInRoute.includes(route.url)))

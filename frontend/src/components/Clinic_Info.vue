@@ -16,7 +16,7 @@
       <div class="form-group">
         <label for="">Chọn vị trí phòng khám</label>
         <vue-google-autocomplete
-          types="address"
+          :country="[vi]"
           :class="['form-control', locationError ? 'is-invalid' : '']"
           ref="textinput"
           id="textinput"
@@ -40,7 +40,7 @@
       </div>
       <div class="form-group">
         <label>Mô tả</label>
-        <vue-editor v-model="data.content"></vue-editor>
+        <vue-editor v-model="data.description"></vue-editor>
       </div>
       <div class="form-group d-flex">
         <button class="btn btn-secondary ml-auto mr-2" @click="backCallBack" v-if="isShowBack">
@@ -69,7 +69,7 @@ export default {
         longitue: 0,
         address: '',
         type: 0,
-        content: '',
+        description: '',
         ward: '',
         district: ''
       }),
@@ -93,16 +93,17 @@ export default {
       this.data.latitude = result.latitude
       this.data.longitue = result.longitude
       this.data.address = place.formatted_address
+      debugger
       place.address_components.forEach(component => {
-        let administrativeAreaLevel1 = component.types.find((type) => type === 'administrative_area_level_1')
-        if (administrativeAreaLevel1) {
-          this.data.ward = administrativeAreaLevel1
+        let administrativeAreaLevel2 = component.types.find((type) => type === 'administrative_area_level_2')
+        if (administrativeAreaLevel2) {
+          this.data.ward = component.long_name
           return
         }
 
-        let administrativeAreaLevel2 = component.types.find((type) => type === 'administrative_area_level_2')
-        if (administrativeAreaLevel2) {
-          this.data.district = administrativeAreaLevel2
+        let administrativeAreaLevel3 = component.types.find((type) => type === 'administrative_area_level_3')
+        if (administrativeAreaLevel3) {
+          this.data.district = component.long_name
         }
       })
     },
