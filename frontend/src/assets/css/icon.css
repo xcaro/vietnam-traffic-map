@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?llr7l9');
-  src:  url('fonts/icomoon.eot?llr7l9#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?llr7l9') format('truetype'),
-    url('fonts/icomoon.woff?llr7l9') format('woff'),
-    url('fonts/icomoon.svg?llr7l9#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?mlu3tk');
+  src:  url('fonts/icomoon.eot?mlu3tk#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?mlu3tk') format('truetype'),
+    url('fonts/icomoon.woff?mlu3tk') format('woff'),
+    url('fonts/icomoon.svg?mlu3tk#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -81,8 +81,14 @@
 .icon-sign-up:before {
   content: "\e973";
 }
+.icon-user-tie:before {
+  content: "\e976";
+}
 .icon-search:before {
   content: "\e987";
+}
+.icon-key:before {
+  content: "\e98d";
 }
 .icon-sign-in:before {
   content: "\ea13";
@@ -90,9 +96,9 @@
 .icon-sign-out:before {
   content: "\ea14";
 }
-.icon-user-tie:before {
-  content: "\e976";
+.icon-undo:before {
+  content: "\e965";
 }
-.icon-key:before {
-  content: "\e98d";
+.icon-undo2:before {
+  content: "\e967";
 }

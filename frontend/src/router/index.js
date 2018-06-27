@@ -1,7 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import createClinic from '../router/create_clinic.vue'
-import bookClinic from '../router/book_clinic.vue'
+
+import admistrateClinic from '../router/clinic/administrate_clinic.vue'
+import createClinic from '../router/clinic/create_clinic.vue'
+import bookClinic from '../router/clinic/book_clinic.vue'
+import editClinic from '../router/clinic/edit_clinic.vue'
+import editDoctors from '../router/clinic/edit_doctors.vue'
+
 import login from '../router/login.vue'
 import register from '../router/register.vue'
 import logOut from '../router/log_out.vue'
@@ -16,6 +21,18 @@ export default new Router({
     {
       path: '/clinic/',
       redirect: '/clinic/create'
+    },
+    {
+      path: '/clinic/edit-clinic',
+      component: editClinic
+    },
+    {
+      path: '/clinic/edit-doctors',
+      component: editDoctors
+    },
+    {
+      path: '/clinic/administrate',
+      component: admistrateClinic
     },
     {
       path: '/clinic/create',

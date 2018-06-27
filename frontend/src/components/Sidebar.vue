@@ -58,7 +58,7 @@ export default {
       {
         name: 'Quản trị phòng khám',
         icon: 'icon-user-tie',
-        url: '/user'
+        url: '/clinic/administrate'
       },
       {
         name: 'Thông tin tài khoản',
