@@ -41,13 +41,7 @@
 
       <div class="mb-2 title">Cài đặt giao diện :</div>
         <div class="form-row">
-          <div class="col-md-6 mb-3">
-            <label for="validationCustom01">Thời gian trên dòng (giờ) :</label>
-            <select class="form-control" v-model="numHourPerRow">
-              <option v-for="i in 4" :key="i">{{i}}</option>
-            </select>
-          </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-md-12 mb-3">
             <label for="validationCustom02">Thời gian trên mỗi nấc (phút) </label>
             <select class="form-control" v-model="numTimePerShiftPickerInMinutes">
               <option v-for="i in [10,15,20,30]" :key="i">{{i}}</option>
@@ -70,8 +64,8 @@
               </span>
               <span
                 v-if="shiftPicker.text"
-                :class="['text-white font-weight-bold position-absolute noselect w-100', index===0 ? '': 'text-right']">
-                &nbsp;{{shiftPicker.text}}
+                :class="['text-white font-weight-bold position-absolute noselect w-100 pl-2']">
+                  {{shiftPicker.text}}
               </span>
               <span class="noselect">&nbsp;</span>
             </div>
@@ -205,7 +199,7 @@ export default {
       // đây là begin
       this.begin = index
       e.backgroundColor = this.colors[this.colorIndex]
-    }
+    },
   },
 
   computed: {
@@ -231,6 +225,22 @@ export default {
       }
     }
     this.shiftPickers[0].title = '0 h'
+
+    // Tạo event resize responsive
+    let self = this
+    window.onresize = () => {
+      let fullWidth = window.innerWidth
+      if (fullWidth > 1024) {
+        this.numHourPerRow = 4
+      } else if (fullWidth < 1024  && fullWidth > 768) {
+        this.numHourPerRow = 3
+      } else if (fullWidth < 768 && fullWidth > 480) {
+        this.numHourPerRow = 2
+      } else {
+        this.numHourPerRow = 1
+      }
+    }
+    window.onresize()
   },
 
   data () {
@@ -256,6 +266,18 @@ export default {
 </script>
 
 <style>
+@media (max-width: 640px) {
+  #datepicker-desktop {
+      display: none
+  }
+}
+
+@media (min-width: 640px) {
+  #datepicker-mobile {
+      background-color: lightblue;
+  }
+}
+
 .vdp-datepicker__calendar .cell.selected:hover {
   background: #478bfb;
 }

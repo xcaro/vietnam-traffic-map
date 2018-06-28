@@ -1,14 +1,6 @@
 <template>
 <transition name = 'slide-fade'>
   <div id = "SearchLocation" class="input-group m-3 p-2" v-show = '!$store.state.isShowSideBar'>
-    <!-- <vue-google-autocomplete
-      ref="textinput"
-      id="textinput"
-      classname="form-control"
-      placeholder="Bắt đầu gõ để tìm kiếm địa điểm"
-      v-on:placechanged="onFulfilling"
-    >
-    </vue-google-autocomplete> -->
     <gmap-autocomplete
         ref="textinput"
         placeholder="Bắt đầu gõ để tìm kiếm địa điểm"
@@ -69,5 +61,12 @@ export default {
     top: 0;
     left: 60px;
     z-index: -1
+  }
+
+  @media (max-width: 640px) {
+    #SearchRoute,
+    #SearchLocation {
+      width: 70% !important
+    }
   }
 </style>

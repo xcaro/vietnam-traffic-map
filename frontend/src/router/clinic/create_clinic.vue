@@ -39,15 +39,23 @@ export default {
       //   .query({key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0'})
       //   .query({placeid: this.data.place_id})
 
-      debugger
-      // Find ward and district
-      let service = new window.google.maps.places.PlacesService(document.getElementById('map'))
-      service.getDetails(request, async (placeDetails) => {
-        debugger
-        // Send data to server
-        let data = await request.post('http://deltavn.net/api/clinic').send(this.data).set({
-          'Authorization': `Bearer ${this.idToken}`
-        })
+      
+      request.get(
+        'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ&latlng=10.788828, 106.67484'
+      ).then((res) => {
+        let geocode = res.body.results.filter(result => {
+          return result.types.indexOf('street_address') !== -1
+        })[0]
+
+        // Find ward and district
+        this.ward = geocode.address_components.filter(address_component => {
+          return address_component.types.indexOf('administrative_area_level_3') !== -1
+        })[0].long_name
+
+        this.district = geocode.address_components.filter(address_component => {
+          return address_component.types.indexOf('administrative_area_level_2') !== -1
+        })[0].long_name
+
         this.$store.dispatch('toggle', 'isShowModal')
       })
     }

@@ -119,7 +119,7 @@ export default {
   position: relative;
   transition: all 0.3s ease-in-out;
   min-width: 30%;
-  max-width: 65%;
+  max-width: 100%;
 }
 
 #modalContainer > button {
