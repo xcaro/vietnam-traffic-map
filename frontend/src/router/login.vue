@@ -28,10 +28,12 @@
         v-validate="'required'">
         <div class="text-danger pt-2">{{ this.errors.first('password') }}</div>
       </div>
-      <button type="submit" class="btn btn-primary" @click = "login">
-        <span class="icon-sign-in d-inline mr-2"></span>
-        Đăng nhập
-      </button>
+      <div class="d-flex">
+        <button type="submit" class="btn btn-primary ml-auto" @click = "login">
+          <span class="icon-sign-in d-inline mr-2"></span>
+          Đăng nhập
+        </button>
+      </div>
   </div>
 </template>
 

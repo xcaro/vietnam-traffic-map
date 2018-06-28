@@ -152,4 +152,8 @@ body {
 .alert-danger {
 color: #c50517
 }
+
+body {
+  font-family: 'Muli', sans-serif !important;
+}
 </style>

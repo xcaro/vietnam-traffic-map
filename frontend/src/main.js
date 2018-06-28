@@ -18,12 +18,7 @@ Validator.extend('min', min)
 Validator.extend('max', max)
 Validator.localize('vi', vi)
 
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0',
-    libraries: 'places'
-  }
-})
+Vue.use(VueGoogleMaps, {load: false})
 
 Vue.use(VeeValidate, {
   locale: 'vi',
@@ -37,3 +32,25 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+// Load google map
+var ex = () => {
+  var s,
+    r,
+    t
+  r = false
+  s = document.createElement('script')
+  s.type = 'text/javascript'
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0&libraries=places&language=vi&region=vn'
+  s.onload = s.onreadystatechange = function () {
+    // console.log( this.readyState ); //uncomment this line to see which ready states are called.
+    if (!r && (!this.readyState || this.readyState === 'complete')) {
+      r = true
+      window.vueGoogleMapsInit(window.google)
+    }
+  }
+  t = document.getElementsByTagName('script')[0]
+  t.parentNode.insertBefore(s, t)
+}
+
+ex()

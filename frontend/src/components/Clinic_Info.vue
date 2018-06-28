@@ -16,7 +16,7 @@
       <div class="form-group">
         <label for="">Chọn vị trí phòng khám</label>
         <vue-google-autocomplete
-          :country="[vi]"
+          types='address'
           :class="['form-control', locationError ? 'is-invalid' : '']"
           ref="textinput"
           id="textinput"
@@ -24,7 +24,7 @@
           placeholder="Bắt đầu gõ để tìm kiếm địa điểm"
           v-on:placechanged="onFulFilling"
         />
-        <div class="text-danger pt-2" v-if = "locationError">Vị trí phòng khám không được bỏ trống</div>
+        <div class="text-danger pt-2" v-if = "locationError">Vị trí phòng khám phải là địa chỉ: có phường, quận</div>
       </div>
       <div class="form-group">
         <label>Loại phòng khám</label>
@@ -70,9 +70,9 @@ export default {
         address: '',
         type: 0,
         description: '',
-        ward: '',
-        district: ''
+        placeId: ''
       }),
+
       locationError: false,
       clinicTypes: []
     }
@@ -90,22 +90,18 @@ export default {
   },
   methods: {
     onFulFilling (result, place) {
+      // Kiểm tra xem types có phải street address hay không
+      if (place.types.indexOf('street_address') === -1) {
+        this.locationError = true
+        return
+      } else {
+        this.locationError = false
+      }
+
       this.data.latitude = result.latitude
       this.data.longitue = result.longitude
       this.data.address = place.formatted_address
-      debugger
-      place.address_components.forEach(component => {
-        let administrativeAreaLevel2 = component.types.find((type) => type === 'administrative_area_level_2')
-        if (administrativeAreaLevel2) {
-          this.data.ward = component.long_name
-          return
-        }
-
-        let administrativeAreaLevel3 = component.types.find((type) => type === 'administrative_area_level_3')
-        if (administrativeAreaLevel3) {
-          this.data.district = component.long_name
-        }
-      })
+      this.data.placeId = place.place_id
     },
 
     onSumbit () {
