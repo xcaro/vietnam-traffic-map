@@ -33,31 +33,37 @@ export default {
     },
 
     createClinic (data) {
+      debugger
       this.data.doctors = data
       // Reserve coding into place id into ward district
       // let placeDetails = await request.get('https://maps.googleapis.com/maps/api/place/details/json')
       //   .query({key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0'})
       //   .query({placeid: this.data.place_id})
+      let self = this
+      request.get('https://maps.googleapis.com/maps/api/geocode/json')
+        .query({key: 'AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ'})
+        .query({latlng: `${this.data.latitude}, ${this.data.longitude}`})
+        .then((res) => {
+          let geocode = res.body.results.filter(result => {
+            return result.types.indexOf('street_address') !== -1
+          })[0]
 
-      
-      request.get(
-        'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ&latlng=10.788828, 106.67484'
-      ).then((res) => {
-        let geocode = res.body.results.filter(result => {
-          return result.types.indexOf('street_address') !== -1
-        })[0]
+          // Find ward and district
+          this.data.ward = geocode.address_components.filter(addresscomponent => {
+            return addresscomponent.types.indexOf('administrative_area_level_3') !== -1
+          })[0].long_name
 
-        // Find ward and district
-        this.ward = geocode.address_components.filter(address_component => {
-          return address_component.types.indexOf('administrative_area_level_3') !== -1
-        })[0].long_name
+          this.data.district = geocode.address_components.filter(addresscomponent => {
+            return addresscomponent.types.indexOf('administrative_area_level_2') !== -1
+          })[0].long_name
 
-        this.district = geocode.address_components.filter(address_component => {
-          return address_component.types.indexOf('administrative_area_level_2') !== -1
-        })[0].long_name
-
-        this.$store.dispatch('toggle', 'isShowModal')
-      })
+          delete this.data.placeId
+          request.post('http://deltavn.net/api/clinic').send(this.data).set({
+            'Authorization': `Bearer ${self.idToken}`
+          }).then(() => {
+            this.$store.dispatch('toggle', 'isShowModal')
+          })
+        })
     }
   },
 
@@ -67,7 +73,7 @@ export default {
       data: {
         name: '',
         latitude: 0,
-        longitue: 0,
+        longitude: 0,
         address: '',
         type: 0,
         description: '',

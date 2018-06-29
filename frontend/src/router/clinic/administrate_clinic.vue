@@ -26,7 +26,7 @@
       <hr>
     </div>
     <div class="mt-2">
-      <div class="mb-2 title">Ca khám bệnh :</div>
+      <div class="mb-2 title">Chọn ngày :</div>
       <div class="form-group">
         <datepicker
         :inline="true"
@@ -38,17 +38,36 @@
         :bootstrap-styling="true">
         </datepicker>
       </div>
-
+      <hr>
       <div class="mb-2 title">Cài đặt giao diện :</div>
-        <div class="form-row">
-          <div class="col-md-12 mb-3">
-            <label for="validationCustom02">Thời gian trên mỗi nấc (phút) </label>
-            <select class="form-control" v-model="numTimePerShiftPickerInMinutes">
-              <option v-for="i in [10,15,20,30]" :key="i">{{i}}</option>
+        <!-- <div class="form-row">
+            <label for="validationCustom02" class="col-3">Thời gian trên mỗi nấc (phút) </label>
+            <select class="form-control col-5" v-model="numTimePerShiftPickerInMinutesSettings">
+              <option v-for="i in [5, 10,20]" :key="i">{{i}}</option>
             </select>
+            <button class="btn-primary btn col-3 ml-auto" @click="saveNumTimePerShiftPickerInMinutesSettings">
+              <span class="icon-edit d-inline mr-1"></span>
+              Chỉnh sửa ca
+            </button>
+        </div> -->
+         <div class="form-row align-items-center">
+            <div class="col-auto">
+              <label for="inlineFormInput">Thời gian trên mỗi nấc (phút) :</label>
+            </div>
+            <div class="col">
+              <select class="form-control" v-model="numTimePerShiftPickerInMinutesSettings">
+                <option v-for="i in [5, 10,20]" :key="i">{{i}}</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary" @click="saveNumTimePerShiftPickerInMinutesSettings">
+                <span class="icon-edit d-inline mr-1"></span>
+                Chỉnh sửa
+              </button>
+            </div>
           </div>
-        </div>
-
+        <hr>
+        <div class="mb-2 mt-3 title">Ca khám bệnh :</div>
         <div class="d-flex p-0 time flex-wrap">
           <div
             :style="{backgroundColor: shiftPicker.backgroundColor, flexBasis}"
@@ -59,12 +78,12 @@
             @click="click(shiftPicker, index)">
               <span
                 v-if="shiftPicker.title"
-                :class="['hour-title position-absolute noselect w-100', index===0 ? '': 'text-right']">
+                :class="['hour-title position-absolute noselect w-200']">
                 {{shiftPicker.title}}
               </span>
               <span
                 v-if="shiftPicker.text"
-                :class="['text-white font-weight-bold position-absolute noselect w-100 pl-2']">
+                :class="['text-white font-weight-bold position-absolute noselect w-200 z-9999']">
                   {{shiftPicker.text}}
               </span>
               <span class="noselect">&nbsp;</span>
@@ -91,6 +110,14 @@ import {vi} from 'vuejs-datepicker/dist/locale'
 
 export default {
   methods: {
+    saveNumTimePerShiftPickerInMinutesSettings () {
+      if (this.shifts.length !== 0) {
+        alert('Đã có ca được tạo trong ngày hôm nay, không thê lưu được cài đặt')
+      } else {
+        this.numTimePerShiftPickerInMinutes = this.saveNumTimePerShiftPickerInMinutesSettings
+      }
+    },
+
     mouseover (index) {
       if (this.begin !== null && this.begin !== index) {
         let start = Math.min(this.begin, index)
@@ -159,22 +186,11 @@ export default {
           this.shiftPickers[i].backgroundColor = this.colors[this.colorIndex]
         }
 
-        this.colorIndex++
-        if (this.colorIndex === this.colors.length) {
-          this.colorIndex = 0
-        }
-
-        this.begin = null
-
         // Lưu lại ca đã chọn
         // Tìm vị trí, để sắp theo thứ tự
         for (let ii = 0; ii < this.shifts.length; ii++) {
           if (this.shifts[ii].start > end) {
-            this.shifts.splice(ii, 0, {
-              startElem: this.shiftPickers[start],
-              start,
-              end
-            })
+            this.shifts.splice(ii, 0, this.createNewShift(start, end, this.colors[this.colorIndex]))
 
             // Gán text : thứ tự ca
             for (let jj = ii; jj < this.shifts.length; jj++) {
@@ -186,13 +202,16 @@ export default {
         }
 
         // Phải chèn ở phỉa ngoài cùng
-        let shiftsNewLength = this.shifts.push({
-          startElem: this.shiftPickers[start],
-          start,
-          end
-        })
-
+        let shiftsNewLength = this.shifts.push(this.createNewShift(start, end, this.colors[this.colorIndex]))
         this.shiftPickers[start].text = `Ca ${shiftsNewLength}`
+
+        // Đổi màu
+        this.colorIndex++
+        if (this.colorIndex === this.colors.length) {
+          this.colorIndex = 0
+        }
+
+        this.begin = null
         return
       }
 
@@ -200,6 +219,37 @@ export default {
       this.begin = index
       e.backgroundColor = this.colors[this.colorIndex]
     },
+
+    createNewShift (startIndex, endIndex, backgroundColor) {
+      return {
+        startElem: this.shiftPickers[startIndex],
+        startIndex,
+        endIndex,
+        backgroundColor,
+        startTimeInMinute: startIndex === 0 ? 0 : (startIndex + 1) * this.numTimePerShiftPickerInMinutes,
+        endTimeInMinutes: endIndex === 0 ? 0 : (endIndex + 1) * this.numTimePerShiftPickerInMinutes
+      }
+    }
+  },
+
+  watch: {
+    numTimePerShiftPickerInMinutes (oldVal, newVal) {
+      // Tạo số lượng shift picker cần thiết
+      this.shiftPickers = []
+      let numShiftPickers = this.numTimePerDayInMinutes / this.numTimePerShiftPickerInMinutes
+      for (let i = 0; i < numShiftPickers; i++) {
+        this.shiftPickers.push({
+          isLocked: false,
+          backgroundColor: this.defaultColor
+        })
+
+        let thisShiftPickerTimeInHour = ((i + 1) * this.numTimePerShiftPickerInMinutes) / 60
+        if (Number.isInteger(thisShiftPickerTimeInHour)) {
+          this.shiftPickers[i].title = `${thisShiftPickerTimeInHour} h`
+        }
+      }
+      this.shiftPickers[0].title = '0 h'
+    }
   },
 
   computed: {
@@ -227,12 +277,11 @@ export default {
     this.shiftPickers[0].title = '0 h'
 
     // Tạo event resize responsive
-    let self = this
     window.onresize = () => {
       let fullWidth = window.innerWidth
       if (fullWidth > 1024) {
         this.numHourPerRow = 4
-      } else if (fullWidth < 1024  && fullWidth > 768) {
+      } else if (fullWidth < 1024 && fullWidth > 768) {
         this.numHourPerRow = 3
       } else if (fullWidth < 768 && fullWidth > 480) {
         this.numHourPerRow = 2
@@ -246,16 +295,17 @@ export default {
   data () {
     return {
       numHourPerRow: 4,
-      numTimePerDayInMinutes: 1440, // ngày có 6 tiếng 360 phút
-      numTimePerShiftPickerInMinutes: 15,
+      numTimePerDayInMinutes: 1440, // ngày có 12 tiếng 1440 phút
+      numTimePerShiftPickerInMinutes: 10,
+      numTimePerShiftPickerInMinutesSettings: 10,
       defaultColor: 'white',
       vi: vi,
       begin: null,
       end: null,
       colorIndex: 0,
       colors: ['#EF5350', '#EC407A', '#9C27B0', '#1A237E', '#536DFE', '#2196F3', '#00C853', '#EEFF41', '#F57F17', '#212121'],
-      shiftPickers: [],
-      shifts: []
+      shifts: [],
+      shiftPickers: []
     }
   },
 
@@ -345,4 +395,18 @@ export default {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+
+.w-200 {
+  width: 200%
+}
+
+.z-9999 {
+  z-index: 9999
+}
+
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+
 </style>

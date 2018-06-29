@@ -66,7 +66,7 @@ export default {
       data: Object.assign({}, {
         name: '',
         latitude: 0,
-        longitue: 0,
+        longitude: 0,
         address: '',
         type: 0,
         description: '',

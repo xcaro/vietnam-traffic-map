@@ -13,12 +13,12 @@
     <hr>
     <div class="form-group">
       <label for="exampleInputPassword1">Học vị :</label>
-      <select v-model="avatar.role" class="form-control">
+      <select v-model="avatar.titile" class="form-control">
         <option
-          :value="role"
-          :key="role"
-          v-for="role in roles">
-          {{role}}
+          :value="index"
+          :key="titile"
+          v-for="(titile, index) in titiles">
+          {{titile}}
         </option>
       </select>
     </div>
@@ -65,7 +65,7 @@
 export default {
   data () {
     return {
-      roles: [
+      titiles: [
         'Tiến sĩ',
         'Thạc sĩ',
         'Phó giáo sư',
@@ -80,7 +80,7 @@ export default {
     onSumbit () {
       this.$validator.validate().then(result => {
         if (result) {
-          this.submitCallBack()
+          this.submitCallBack(this.data.doctors)
         }
       })
     },
@@ -89,7 +89,7 @@ export default {
       this.data.doctors.push({
         name: '',
         description: '',
-        role: 'Thạc sĩ',
+        titile: 'Thạc sĩ',
         image: null
       })
     },

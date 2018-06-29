@@ -8,12 +8,6 @@
       </button>
     </div>
     <div class="list-group">
-        <a
-          class="list-group-item list-group-item-action font-weight-bold"
-          href="http://deltavn.net/admin">
-          <span class="icon-user-tie d-inline pr-3"></span>
-          Quản trị giao thông
-        </a>
         <router-link
           class="list-group-item list-group-item-action font-weight-bold"
           :exact-active-class="isShowModal? 'active' : ''"

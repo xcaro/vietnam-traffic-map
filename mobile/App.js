@@ -255,15 +255,15 @@ export default class App extends Component {
   componentDidMount () {
     AsyncStorage.getItem('idToken').then(idToken => {
       if (idToken) {
-        superagent.post('http://deltavn.net/api/me').set({
+        request.post('http://deltavn.net/api/me').set({
           'Authorization': `Bearer ${idToken}`
         }).then((res) => {
-          store.dispatch(action.setUser(user)
+          store.dispatch(action.setUser(res.body.data))
         })
       }
+      store.dispatch(action.setIdToken(idToken))
+    })
 
-      store.dispatch(action.setIdToken(idToken)
-    }))
     AsyncStorage.getItem('user').then(user => store.dispatch(action.setUser(user)))
     AsyncStorage.getItem('Settings').then(Settings => {
       if (Settings !== null) {

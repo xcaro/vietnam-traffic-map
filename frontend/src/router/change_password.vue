@@ -37,7 +37,7 @@
         <div class="text-danger pt-2">{{ this.errors.first('retype_new_new') }}</div>
       </div>
       <button type="submit" class="btn btn-secondary mr-2" @click = "$router.replace('/user')">
-        <span class="icon-sign-in d-inline mr-2"></span>
+        <span class="icon-undo2 d-inline mr-2"></span>
         Quay lại
       </button>
       <button type="submit" class="btn btn-primary" @click = "changePassword">

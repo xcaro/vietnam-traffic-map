@@ -150,10 +150,16 @@ body {
 }
 
 .alert-danger {
-color: #c50517
+  color: #c50517
 }
 
 body {
   font-family: 'Muli', sans-serif !important;
+}
+
+@media (max-width: 600px) {
+  .enable-side-bar {
+    margin-left: 700px
+  }
 }
 </style>

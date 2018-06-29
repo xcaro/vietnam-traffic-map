@@ -38,9 +38,9 @@ class ChangeInfo extends Component {
 
     this.state = {
       name: new validateObject('Tên', this.props.user.name),
-      address: new validateObject('địa chỉ', 'abc'),//this.props.user.address),
-      phone: new validateObject('Số điện thoại', '0404034234'),//this.props.user.phone),
-      email: new validateObject('Email', 'asdf@aa.cc') //this.props.user.email),
+      address: new validateObject('địa chỉ', this.props.user.address),
+      phone: new validateObject('Số điện thoại', this.props.user.phone),
+      email: new validateObject('Email', this.props.user.email),
     }
   }
 
@@ -50,31 +50,34 @@ class ChangeInfo extends Component {
      */
     this.setState({
       name: this.state.name.startValidate().required(),
-      email: this.state.email.startValidate().required().email(),
       address: this.state.address.startValidate().required(),
       phone: this.state.phone.startValidate().required().numeric().lengthMin(9),
     })
 
+    let self = this
     if (
-      this.state.name.isValid() &&
-      this.state.email.isValid() &&
-      this.state.address.isValid() &&
-      this.state.phone.isValid()
+      self.state.name.isValid() &&
+      self.state.address.isValid() &&
+      self.state.phone.isValid()
     ) {
       request.post('http://deltavn.net/api/user/change-info').set({
-        'Authorization': `Bearer ${this.props.idToken}`
+        'Authorization': `Bearer ${self.props.idToken}`
       }).send({
-        name: this.state.name.val,
-        email: this.state.email.val,
-        address: this.state.address.val,
-        phone: this.state.phone.val,
-        username: this.props.user.username
+        name: self.state.name.val,
+        address: self.state.address.val,
+        phone: self.state.phone.val,
+        username: self.props.user.username
       }).then(() => {
+        request.post('http://deltavn.net/api/me').set({
+          'Authorization': `Bearer ${self.props.idToken}`
+        }).then((res) => {
+          this.props.setUser(res.body.data)
+        })
         Alert.alert('Thông báo', 'Cập nhật thông tin tài khoản thành công', [
           {
             text: "OK",
             onPress: () => {
-              this.props.navigation.goBack()
+              self.props.navigation.goBack()
             }
           }
         ])
@@ -94,14 +97,6 @@ class ChangeInfo extends Component {
             title = 'Không được bỏ trống'
             value={this.state.name.val}
             onChangeText={ (name) => this.state.name.val = name }
-          />
-
-        <TextField
-            error = {this.state.email.error}
-            label='Email mới'
-            title = 'Không được bỏ trống'
-            value={this.state.email.val}
-            onChangeText={ (email) => this.state.email.val = email }
           />
 
         <TextField

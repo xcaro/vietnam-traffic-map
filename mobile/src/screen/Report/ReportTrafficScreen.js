@@ -103,7 +103,7 @@ class ReportTrafficScreen extends Component {
 
         <ShadenTouchableHightLight
           onPress = {() => {
-            appHelper.getCurrentLocation(this.props).then((curLocation) => {
+            appHelper.getCurrentLocation(this.props).then(async (curLocation) => {
             /**
              * Form require data
              */
@@ -129,12 +129,32 @@ class ReportTrafficScreen extends Component {
                 type: 'image/jpg'
               })
 
+              // lấy ra ward + district
+              let res = await request.get('https://maps.googleapis.com/maps/api/geocode/json')
+                .query({key: 'AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ'})
+                .query({latlng: `${origin_lat}, ${origin_lng}`})
+
+              let geocode = res.body.results.filter(result => {
+                return result.types.indexOf('street_address') !== -1
+              })[0]
+
+              // Find ward and district
+              let ward = geocode.address_components.filter(addresscomponent => {
+                return addresscomponent.types.indexOf('administrative_area_level_3') !== -1
+              })[0].long_name
+
+              let district = geocode.address_components.filter(addresscomponent => {
+                return addresscomponent.types.indexOf('administrative_area_level_2') !== -1
+              })[0].long_name
+
 
 
               request.post(
                 'http://deltavn.net/api/report'
               )
                 .attach('image', 'this.state.images')
+                .field({ward})
+                .field({district})
                 .field('latitude', origin_lat)
                 .field('longitude', origin_lng)
                 .field('type', reportType.id)
