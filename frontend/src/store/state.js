@@ -3,5 +3,6 @@ export default {
   isShowModal: false,
   idToken: null,
   user: null,
-  trafficReports: []
+  trafficReports: [],
+  isLoading: false
 }

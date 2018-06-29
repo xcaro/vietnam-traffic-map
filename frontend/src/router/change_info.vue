@@ -72,9 +72,19 @@ export default {
   },
 
   methods: {
+    created () {
+      request.post('http://deltavn.net/api/me').set({
+        'Authorization': `Bearer ${this.idToken}`
+      }).then((res) => {
+        this.$store.dispatch('set', {
+          propertyName: 'user',
+          payload: res.body.data
+        })
+      })
+    },
+
     changeInfo () {
       let self = this
-      debugger
       this.$validator.validate().then(result => {
         if (result) {
           request.post('http://deltavn.net/api/user/change-info').set({

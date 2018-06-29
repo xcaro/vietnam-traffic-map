@@ -9,7 +9,7 @@
 
   <div
       :key="avatar.name"
-      v-for="(avatar, index) in data.doctors">
+      v-for="(avatar, index) in doctors">
     <hr>
     <div class="form-group">
       <label for="exampleInputPassword1">Học vị :</label>
@@ -25,6 +25,7 @@
     <div class="form-group">
       <label for="exampleInputPassword1">Họ tên :</label>
       <input
+        v-model="avatar.name"
         :class="['form-control', getError('name' + index) ? 'is-invalid' : '']"
         :name = "'name' + index"
         v-validate="'required'"
@@ -36,7 +37,7 @@
     </div>
     <div class="form-group">
       <label for="exampleInputPassword1">Mô tả :</label>
-      <textarea class="form-control">
+      <textarea class="form-control" v-model="avatar.description">
       </textarea>
     </div>
     <div class="d-flex">
@@ -86,7 +87,7 @@ export default {
     },
 
     addAvatar () {
-      this.data.doctors.push({
+      this.doctors.push({
         name: '',
         description: '',
         titile: 'Thạc sĩ',
@@ -102,6 +103,19 @@ export default {
       this.data.doctors.splice(index, 1)
     }
   },
+
+  computed: {
+    doctors () {
+      return this.data.doctors.data ? this.data.doctors.data : this.data.doctors
+    }
+  },
+
+  watch: {
+    initData (newVal) {
+      this.data = newVal
+    }
+  },
+
   props: ['sumbitText', 'submitCallBack', 'initData', 'isShowBack', 'backCallBack']
 }
 </script>

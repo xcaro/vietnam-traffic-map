@@ -7,8 +7,11 @@
               <span class="icon-close"></span>
             </button>
 
-            <router-view
+            <router-view v-show="!isLoading"
               id = "content" />
+            <div v-show="isLoading" id="content">
+              <b>Đang tải dữ liệu</b>
+            </div>
           </div>
       </div>
     </transition>
@@ -37,7 +40,8 @@ export default {
   name: 'App',
   computed: mapState([
     'isShowSideBar',
-    'isShowModal'
+    'isShowModal',
+    'isLoading'
   ]),
   components: {
     Sidebar,
@@ -49,6 +53,7 @@ export default {
   created () {
     let idToken = localStorage.getItem('idToken')
     if (idToken) {
+      // Lấy thông tin cá nhân
       request.post('http://deltavn.net/api/me').set({
         'Authorization': `Bearer ${idToken}`
       }).then((res) => {

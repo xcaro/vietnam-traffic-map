@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import administrateShiftClinic from '../router/clinic/administrate_shift_clinic.vue'
 import admistrateClinic from '../router/clinic/administrate_clinic.vue'
 import createClinic from '../router/clinic/create_clinic.vue'
 import bookClinic from '../router/clinic/book_clinic.vue'
@@ -29,16 +30,20 @@ export default new Router({
       component: editShift
     },
     {
-      path: '/clinic/edit-clinic',
+      path: '/clinic/:id/edit-clinic',
       component: editClinic
     },
     {
-      path: '/clinic/edit-doctors',
+      path: '/clinic/:id/edit-doctors',
       component: editDoctors
     },
     {
       path: '/clinic/administrate',
       component: admistrateClinic
+    },
+    {
+      path: '/clinic/:id/shift',
+      component: administrateShiftClinic
     },
     {
       path: '/clinic/create',

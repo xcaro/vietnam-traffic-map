@@ -17,6 +17,7 @@
         <label for="">Chọn vị trí phòng khám</label>
         <vue-google-autocomplete
           types='address'
+          :value="initData.address"
           :class="['form-control', locationError ? 'is-invalid' : '']"
           ref="textinput"
           id="textinput"
@@ -83,6 +84,13 @@ export default {
       this.clinicTypes = res.body.data
     })
   },
+  
+  watch: {
+    initData (newVal) {
+      this.data = newVal
+    }
+  },
+
   props: ['sumbitText', 'sumbitCallBack', 'initData', 'isShowBack', 'backCallBack'],
   components: {
     VueGoogleAutocomplete,
