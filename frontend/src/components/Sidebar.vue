@@ -64,9 +64,9 @@ export default {
         icon: 'icon-add',
         url: '/clinic/create'
       }, {
-        name: 'Đặt lịch khám',
-        icon: 'icon-clipboard-edit',
-        url: '/clinic/book'
+        name: 'Tìm phòng khám',
+        icon: 'icon-search',
+        url: '/clinic/find'
       }, {
         name: 'Đăng nhập',
         icon: 'icon-sign-in',

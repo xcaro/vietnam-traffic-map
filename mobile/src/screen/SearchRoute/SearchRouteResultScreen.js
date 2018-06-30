@@ -84,10 +84,11 @@ class SearchRouteConfigScreen extends Component {
       // },
       // originLocation: 'lorem',
       // destinationLocation: 'ispum',
-      isLoading: true,
       direction: null,
       decodePolylines: []
     }
+
+    this.props.showLoading()
 
     googleHelper.getDirection(
       this.state.origin,
@@ -152,17 +153,14 @@ class SearchRouteConfigScreen extends Component {
       Alert('Đã xảy ra lỗi : ' + JSON.stringify(err.response.data))
       this.props.navigation.goBack()
     }).finally(() => {
-      this.setState({isLoading: false})
+      this.props.hideLoading()
     })
   }
 
   render () {
     return (
       <View style = {[primaryStyle.container, primaryStyle.bgPrimary]}>
-        <Spinner
-          visible={this.state.isLoading}
-          textContent={"Loading..."}
-          textStyle={{color: '#FFF'}} />
+        
 
         <View style = {[
           primaryStyle.flexDirectionRow,

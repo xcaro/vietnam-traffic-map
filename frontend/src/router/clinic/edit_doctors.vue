@@ -17,7 +17,6 @@ export default {
   computed: mapState(['idToken']),
   methods: {
     editDoctors (data) {
-      debugger
       let doctors = data.doctors.data.map(doctor => {
         if (!doctor.image) {
           doctor.image = null

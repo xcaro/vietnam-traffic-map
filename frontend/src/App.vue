@@ -96,6 +96,11 @@ export default {
 </script>
 
 <style>
+.title {
+  font-weight: bold;
+  font-size: 1.2em
+}
+
 .enable-side-bar {
   margin-left: 300px
 }

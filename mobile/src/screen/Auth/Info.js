@@ -51,7 +51,7 @@ class UserInfo extends Component {
           navigation = {this.props.navigation}
           isShowMenuButton = {true}
           editable = {false}
-          text = 'Thông tin tài khoản'>
+          text = 'Tài khoản'>
         </SearchLocationTextInput>
         {this.props.user &&
         <View style = {{
