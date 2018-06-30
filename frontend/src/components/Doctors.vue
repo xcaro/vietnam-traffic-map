@@ -81,7 +81,7 @@ export default {
     onSumbit () {
       this.$validator.validate().then(result => {
         if (result) {
-          this.submitCallBack(this.data.doctors)
+          this.submitCallBack(this.data)
         }
       })
     },
@@ -90,7 +90,7 @@ export default {
       this.doctors.push({
         name: '',
         description: '',
-        titile: 'Thạc sĩ',
+        titile: 0,
         image: null
       })
     },

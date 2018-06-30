@@ -16,6 +16,7 @@
       <div class="form-group">
         <label for="">Chọn vị trí phòng khám</label>
         <vue-google-autocomplete
+          country='vn'
           types='address'
           :value="initData.address"
           :class="['form-control', locationError ? 'is-invalid' : '']"
@@ -84,7 +85,7 @@ export default {
       this.clinicTypes = res.body.data
     })
   },
-  
+
   watch: {
     initData (newVal) {
       this.data = newVal
@@ -107,7 +108,7 @@ export default {
       }
 
       this.data.latitude = result.latitude
-      this.data.longitue = result.longitude
+      this.data.longitude = result.longitude
       this.data.address = place.formatted_address
       this.data.placeId = place.place_id
     },

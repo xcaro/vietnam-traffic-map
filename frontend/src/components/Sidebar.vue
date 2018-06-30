@@ -95,9 +95,9 @@ export default {
     ]
     // Init
     if (!localStorage.getItem('idToken')) {
-      this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
-    } else {
       this.setFilterRoutesReact(this.routes.filter(route => this.hiddenLoggedInRoute.includes(route.url)))
+    } else {
+      this.setFilterRoutesReact(this.routes.filter(route => !this.hiddenLoggedInRoute.includes(route.url)))
     }
 
     // Subscribe store

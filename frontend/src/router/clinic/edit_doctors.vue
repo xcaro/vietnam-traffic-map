@@ -10,24 +10,27 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import request from 'superagent'
 import Doctors from '../../components/Doctors'
 export default {
+  computed: mapState(['idToken']),
   methods: {
     editDoctors (data) {
-      let doctors = data.doctors.data.map(doctor=> {
+      debugger
+      let doctors = data.doctors.data.map(doctor => {
         if (!doctor.image) {
           doctor.image = null
         }
 
         return doctor
       })
-      
+
       data.doctors = doctors
       request.put('http://deltavn.net/api/clinic/' + this.$route.params.id).send(data).set({
         'Authorization': `Bearer ${this.idToken}`
       }).then(() => {
-        alert('Thay đổi thông tin phòng khám thành công') 
+        alert('Thay đổi thông tin phòng khám thành công')
         this.$store.dispatch('toggle', 'isShowModal')
       })
     }
@@ -58,7 +61,7 @@ export default {
         payload: false
       })
     })
-  },
+  }
 }
 </script>
 

@@ -2,11 +2,13 @@
   <div class="w-500">
     <div v-show="step===0">
       <clinicInfo
+        :initData="data"
         sumbitText="Tiếp theo"
         :sumbitCallBack="nextStep" />
     </div>
     <div v-if="step!==0">
       <doctors
+        :initData="data"
         sumbitText="Tạo phòng khám"
         :isShowBack="true"
         :backCallBack="()=>{step--}"
@@ -33,17 +35,18 @@ export default {
     },
 
     createClinic (data) {
-      debugger
-      this.data.doctors = data
+      this.data = data
       // Reserve coding into place id into ward district
       // let placeDetails = await request.get('https://maps.googleapis.com/maps/api/place/details/json')
       //   .query({key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0'})
       //   .query({placeid: this.data.place_id})
       let self = this
+      debugger
       request.get('https://maps.googleapis.com/maps/api/geocode/json')
         .query({key: 'AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ'})
         .query({latlng: `${this.data.latitude}, ${this.data.longitude}`})
         .then((res) => {
+          debugger
           let geocode = res.body.results.filter(result => {
             return result.types.indexOf('street_address') !== -1
           })[0]
@@ -61,6 +64,7 @@ export default {
           request.post('http://deltavn.net/api/clinic').send(this.data).set({
             'Authorization': `Bearer ${self.idToken}`
           }).then(() => {
+            alert('Tạo phòng khám thánh công, Nhân viên của chúng tôi sẽ liên hệ xác nhận phòng khám của bạn trong 24h')
             this.$store.dispatch('toggle', 'isShowModal')
           })
         })

@@ -165,6 +165,8 @@ export default {
       }, (res, status) => {
         if (status === 'OK') {
           this.directionsDisplay.setDirections(res)
+        } else {
+          this.directionsDisplay.setDirections(null)
         }
       })
     },

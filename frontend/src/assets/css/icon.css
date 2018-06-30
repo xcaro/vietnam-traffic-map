@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?mlu3tk');
-  src:  url('fonts/icomoon.eot?mlu3tk#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?mlu3tk') format('truetype'),
-    url('fonts/icomoon.woff?mlu3tk') format('woff'),
-    url('fonts/icomoon.svg?mlu3tk#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?nz1sxr');
+  src:  url('fonts/icomoon.eot?nz1sxr#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?nz1sxr') format('truetype'),
+    url('fonts/icomoon.woff?nz1sxr') format('woff'),
+    url('fonts/icomoon.svg?nz1sxr#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-info:before {
+  content: "\e910";
+}
 .icon-clipboard-edit:before {
   content: "\e900";
 }
@@ -75,6 +78,12 @@
 .icon-map:before {
   content: "\e94b";
 }
+.icon-undo:before {
+  content: "\e965";
+}
+.icon-undo2:before {
+  content: "\e967";
+}
 .icon-user:before {
   content: "\e971";
 }
@@ -95,10 +104,4 @@
 }
 .icon-sign-out:before {
   content: "\ea14";
-}
-.icon-undo:before {
-  content: "\e965";
-}
-.icon-undo2:before {
-  content: "\e967";
 }

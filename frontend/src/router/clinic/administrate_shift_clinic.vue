@@ -1,6 +1,6 @@
 <template>
   <div class="w-500">
-    <div class="mt-3">
+    <!-- <div class="mt-3">
       <div class="mb-2 title">Thông tin phòng khám :</div>
       <div>
         <div class="display">Tên: LoremIspum</div>
@@ -24,11 +24,13 @@
     </div>
     <div class="mt-3 mb-1">
       <hr>
-    </div>
+    </div> -->
     <div class="mt-2">
       <div class="mb-2 title">Chọn ngày :</div>
       <div class="form-group">
         <datepicker
+        @selected="getShift"
+        v-model="timeFilter"
         :inline="true"
         :full-month-name="true"
         wrapper-class="w-100 mb-2"
@@ -38,40 +40,12 @@
         :bootstrap-styling="true">
         </datepicker>
       </div>
-      <hr>
-      <div class="mb-2 title">Cài đặt giao diện :</div>
-        <!-- <div class="form-row">
-            <label for="validationCustom02" class="col-3">Thời gian trên mỗi nấc (phút) </label>
-            <select class="form-control col-5" v-model="numTimePerShiftPickerInMinutesSettings">
-              <option v-for="i in [5, 10,20]" :key="i">{{i}}</option>
-            </select>
-            <button class="btn-primary btn col-3 ml-auto" @click="saveNumTimePerShiftPickerInMinutesSettings">
-              <span class="icon-edit d-inline mr-1"></span>
-              Chỉnh sửa ca
-            </button>
-        </div> -->
-         <div class="form-row align-items-center">
-            <div class="col-auto">
-              <label for="inlineFormInput">Thời gian trên mỗi nấc (phút) :</label>
-            </div>
-            <div class="col">
-              <select class="form-control" v-model="numTimePerShiftPickerInMinutesSettings">
-                <option v-for="i in [5, 10,20]" :key="i">{{i}}</option>
-              </select>
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-primary" @click="saveNumTimePerShiftPickerInMinutesSettings">
-                <span class="icon-edit d-inline mr-1"></span>
-                Chỉnh sửa
-              </button>
-            </div>
-          </div>
         <hr>
         <div class="mb-2 mt-3 title">Ca khám bệnh :</div>
         <div class="d-flex p-0 time flex-wrap">
           <div
             :style="{backgroundColor: shiftPicker.backgroundColor, flexBasis}"
-            :class="['position-relative mt-5', shiftPicker.isLocked ? 'no-border' : '']"
+            :class="['position-relative mt-5', shiftPicker.backgroundColor !== defaultColor ? 'no-border' : '']"
             v-for="(shiftPicker, index) in shiftPickers" :key="index"
             @mouseover="mouseover(index)"
             @mouseout="mouseup(index)"
@@ -83,15 +57,33 @@
               </span>
               <span
                 v-if="shiftPicker.text"
-                :class="['text-white font-weight-bold position-absolute noselect w-200 z-9999']">
+                class='text-white font-weight-bold position-absolute noselect w-200 z-9999 text-title'>
                   {{shiftPicker.text}}
               </span>
-              <span class="noselect">&nbsp;</span>
+
+              <popper trigger="click" :options="{placement: 'top'}" v-if="shiftPicker.parrent">
+                <div class="popper">
+                  Bắt&nbsp;đầu:&nbsp;{{shiftPicker.parrent.popperStartStr}} <br>
+                  Kết&nbsp;thúc:&nbsp;{{shiftPicker.parrent.popperEndStr}} <br>
+                  <button class="btn btn-primary btn-sm col my-2">
+                    <span class="icon-info d-inline mr-1"></span>
+                    Chi tiết</button>
+                  <button class="btn btn-danger btn-sm col" @click="deleteShift(shiftPicker.parrent)">
+                    <span class="icon-trash d-inline mr-1"></span>
+                    Xóa</button>
+                </div>
+
+                <div slot="reference">
+                  &nbsp;
+                </div>
+              </popper>
+              <span class="noselect" v-else>&nbsp;</span>
+
             </div>
         </div>
       <hr>
     </div>
-    <div class="mt-2">
+    <!-- <div class="mt-2">
       <button class="btn-danger btn mr-1">
         <span class="icon-trash d-inline mr-1"></span>
         Hủy ca
@@ -100,16 +92,44 @@
         <span class="icon-edit d-inline mr-1"></span>
         Chỉnh sửa ca
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import Datepicker from 'vuejs-datepicker'
+import request from 'superagent'
+import {mapState} from 'vuex'
 import {vi} from 'vuejs-datepicker/dist/locale'
+import Popper from 'vue-popperjs'
+import 'vue-popperjs/dist/css/vue-popper.css'
 
 export default {
   methods: {
+    deleteShift (shift) {
+      let confirm = window.confirm(`Bạn có muốn xóa ca từ ${shift.popperStartStr} đến ${shift.popperEndStr}`)
+      if (!confirm) {
+        return
+      }
+      request.delete(`http://deltavn.net/api/clinic/${this.$route.params.id}/shift/${shift.id}`)
+        .set({
+          'Authorization': `Bearer ${this.idToken}`
+        }).then(res => {
+          // Rerender shift picker
+          for (let i = shift.startIndex; i < shift.endIndex + 1; i++) {
+            this.shiftPickers[i].parrent = null
+            this.shiftPickers[i].backgroundColor = this.defaultColor
+          }
+
+          // Bỏ đối tượng shift
+          let index = this.shifts.findIndex(_shift => _shift.id === shift.id)
+          this.shifts.splice(index, 1)
+
+          alert('Xóa ca thành công')
+        })
+    },
+
     saveNumTimePerShiftPickerInMinutesSettings () {
       if (this.shifts.length !== 0) {
         alert('Đã có ca được tạo trong ngày hôm nay, không thê lưu được cài đặt')
@@ -125,7 +145,7 @@ export default {
 
         for (let i = start; i <= end; i++) {
           // Không đụng vào phần tử bị locked và begin
-          if (!this.shiftPickers[i].isLocked && i !== this.begin) {
+          if (!this.shiftPickers[i].parrent && i !== this.begin) {
             this.shiftPickers[i].backgroundColor = this.colors[this.colorIndex]
           }
         }
@@ -138,7 +158,7 @@ export default {
         let end = start === this.begin ? index : this.begin
 
         for (let i = start; i <= end; i++) {
-          if (!this.shiftPickers[i].isLocked && i !== this.begin) {
+          if (!this.shiftPickers[i].parrent && i !== this.begin) {
             this.shiftPickers[i].backgroundColor = this.defaultColor
           }
         }
@@ -147,7 +167,9 @@ export default {
 
     click (e, index) {
       // Kiểm tra xem đã chọn chưa
-      if (e.isLocked) {
+      if (e.parrent) {
+        // Hiện popper
+
         return
       }
 
@@ -159,38 +181,61 @@ export default {
           e.backgroundColor = this.defaultColor
           return
         }
+
         // Kiểm tra x
         let start = Math.min(this.begin, index)
         let end = start === this.begin ? index : this.begin
 
+        // Check for error here
+
+        // Hỏi xem người dùng có click nhầm hay không :
+        let startTimeInMinutes = start === 0 ? 0 : (start + 1) * this.numTimePerShiftPickerInMinutes
+        let endTimeInMinutes = end === 0 ? 0 : (end + 1) * this.numTimePerShiftPickerInMinutes
+
+        let startAt = this.convertMinsToHrsMins(startTimeInMinutes)
+        let endAt = this.convertMinsToHrsMins(endTimeInMinutes)
+        let date = `ngày ${this.timeFilter.getDate()} tháng ${this.timeFilter.getMonth()} năm ${this.timeFilter.getFullYear()}`
+        let confirm = window.confirm(`Bạn có muốn tạo ca vào ${date} từ ${startAt} đến ${endAt}`)
+        if (!confirm) return
+
         for (let i = start; i <= end; i++) {
-          if (this.shiftPickers[i].isLocked) {
+          if (this.shiftPickers[i].parrent) {
             // Set vị trí hiện tại trong trường hợp di chuyển lên
-            this.shiftPickers[end].isLocked = false
             this.shiftPickers[end].backgroundColor = this.defaultColor
 
             // Set từ start lên i
             for (let j = start; j < i; j++) { // đảo ngược từ đâu
-              this.shiftPickers[j].isLocked = false
               this.shiftPickers[j].backgroundColor = this.defaultColor
             }
 
             // Tắt sự kiện mouse up:
             this.mouseup(index)
             this.begin = null
-            alert('Lỗi')
+            alert('Lỗi: Đã có ca được tạo trong khoảng thời gian mà bạn chọn rồi')
             return
           }
 
-          this.shiftPickers[i].isLocked = true
           this.shiftPickers[i].backgroundColor = this.colors[this.colorIndex]
         }
 
         // Lưu lại ca đã chọn
         // Tìm vị trí, để sắp theo thứ tự
+        let newShift = {
+          startElem: this.shiftPickers[start],
+          startIndex: start,
+          endIndex: end,
+          popperStartStr: startAt,
+          popperEndStr: endAt
+        }
+        for (let iii = start; iii <= end; iii++) {
+          Vue.set(this.shiftPickers, iii, Object.assign(this.shiftPickers[iii], {
+            parrent: newShift
+          }))
+        }
+
         for (let ii = 0; ii < this.shifts.length; ii++) {
           if (this.shifts[ii].start > end) {
-            this.shifts.splice(ii, 0, this.createNewShift(start, end, this.colors[this.colorIndex]))
+            this.shifts.splice(ii, 0, newShift)
 
             // Gán text : thứ tự ca
             for (let jj = ii; jj < this.shifts.length; jj++) {
@@ -202,8 +247,26 @@ export default {
         }
 
         // Phải chèn ở phỉa ngoài cùng
-        let shiftsNewLength = this.shifts.push(this.createNewShift(start, end, this.colors[this.colorIndex]))
+        let shiftsNewLength = this.shifts.push(newShift)
         this.shiftPickers[start].text = `Ca ${shiftsNewLength}`
+
+        // format start at and end at
+        let startAtTimeObject = new Date(this.timeFilter.toDateString() + ' ' + startAt)
+        let endAtTimeObject = new Date(this.timeFilter.toDateString() + ' ' + endAt)
+        let startAtStr = this.yyyy_mm_dd_hh_mm_ss(startAtTimeObject)
+        let endAtStr = this.yyyy_mm_dd_hh_mm_ss(endAtTimeObject)
+
+        // Đẩy dữ liệu lên server thông qua api
+        request.post(`http://deltavn.net/api/clinic/${this.$route.params.id}/shift`)
+          .set({
+            'Authorization': `Bearer ${this.idToken}`
+          })
+          .send({
+            start_shift: startAtStr,
+            end_shift: endAtStr
+          }).then(res => {
+            alert('Tạo ca thành công')
+          })
 
         // Đổi màu
         this.colorIndex++
@@ -220,26 +283,105 @@ export default {
       e.backgroundColor = this.colors[this.colorIndex]
     },
 
-    createNewShift (startIndex, endIndex, backgroundColor) {
-      return {
-        startElem: this.shiftPickers[startIndex],
-        startIndex,
-        endIndex,
-        backgroundColor,
-        startTimeInMinute: startIndex === 0 ? 0 : (startIndex + 1) * this.numTimePerShiftPickerInMinutes,
-        endTimeInMinutes: endIndex === 0 ? 0 : (endIndex + 1) * this.numTimePerShiftPickerInMinutes
-      }
+    renderShiftPopper () {
+
+    },
+
+    renderShifts (shifts) {
+      // Chỉnh màu, vue event chỉnh riêng, tốn thếm parrent reference
+    },
+
+    getShift (dateTime) {
+      // Format lại thời gian
+      let startAt = this.yyyy_mm_dd_00_00_00(dateTime)
+
+      // Gửi dữ liệu lấy ca dựa trên thời gian
+      let self = this
+      this.$store.dispatch('set', {
+        propertyName: 'isLoading',
+        payload: true
+      })
+      request.get(`http://deltavn.net/api/clinic/${this.$route.params.id}/shift`)
+        .set({
+          'Authorization': `Bearer ${this.idToken}`
+        })
+        .query({start_at: startAt})
+        .then((res) => {
+          // Gán shift
+          /* eslint-disable camelcase */
+          self.shifts = res.body.data
+          self.shifts.forEach(shift => {
+            let start_shift = new Date(shift.start_shift)
+            let end_shift = new Date(shift.end_shift)
+            let startTimeInMinutes = start_shift.getHours() * 60 + start_shift.getMinutes()
+            let startIndex = (startTimeInMinutes / this.numTimePerShiftPickerInMinutes)
+            let endTimeInMinutes = end_shift.getHours() * 60 + end_shift.getMinutes()
+            let endIndex = (endTimeInMinutes / this.numTimePerShiftPickerInMinutes)
+
+            // Gán shift index
+            shift.startIndex = startIndex
+            shift.endIndex = endIndex
+
+            for (let i = startIndex; i <= endIndex; i++) {
+              self.shiftPickers[i].backgroundColor = self.colors[self.colorIndex]
+              self.shiftPickers[i].parrent = shift
+            }
+            self.colorIndex++
+            if (self.colorIndex >= self.colors.length) {
+              self.colorIndex = 0
+            }
+
+            // Format lại thời gian hiện thi trên popper
+            shift.popperStartStr = `${start_shift.getHours()}:${start_shift.getMinutes()}`
+            shift.popperEndStr = `${end_shift.getHours()}:${end_shift.getMinutes()}`
+          })
+          this.$store.dispatch('set', {
+            propertyName: 'isLoading',
+            payload: false
+          })
+        })
+    },
+
+    yyyy_mm_dd_00_00_00 (now) {
+      let year = '' + now.getFullYear()
+      let month = '' + (now.getMonth() + 1)
+      if (month.length === 1) { month = '0' + month }
+      let day = '' + now.getDate()
+      if (day.length === 1) { day = '0' + day }
+      return year + '-' + month + '-' + day + ' 00:00:00'
+    },
+
+    yyyy_mm_dd_hh_mm_ss (now) {
+      let year = '' + now.getFullYear()
+      let month = '' + (now.getMonth() + 1)
+      if (month.length === 1) { month = '0' + month }
+      let day = '' + now.getDate()
+      if (day.length === 1) { day = '0' + day }
+      let hour = '' + now.getHours()
+      if (hour.length === 1) { hour = '0' + hour }
+      let minute = '' + now.getMinutes()
+      if (minute.length === 1) { minute = '0' + minute }
+      let second = '' + now.getSeconds()
+      if (second.length === 1) { second = '0' + second }
+      return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+    },
+
+    convertMinsToHrsMins: function (minutes) {
+      var h = Math.floor(minutes / 60)
+      var m = minutes % 60
+      h = h < 10 ? '0' + h : h
+      m = m < 10 ? '0' + m : m
+      return h + ':' + m
     }
   },
 
   watch: {
-    numTimePerShiftPickerInMinutes (oldVal, newVal) {
+    numTimePerShiftPickerInMinutes (newVal) {
       // Tạo số lượng shift picker cần thiết
       this.shiftPickers = []
       let numShiftPickers = this.numTimePerDayInMinutes / this.numTimePerShiftPickerInMinutes
       for (let i = 0; i < numShiftPickers; i++) {
         this.shiftPickers.push({
-          isLocked: false,
           backgroundColor: this.defaultColor
         })
 
@@ -257,15 +399,16 @@ export default {
       // Calculate flex basis :
       let numShiftPickersPerRowInHour = (this.numHourPerRow * 60) / this.numTimePerShiftPickerInMinutes
       return 100 / numShiftPickersPerRowInHour + '%'
-    }
+    },
+    ...mapState(['idToken'])
   },
 
   created () {
+    // Render shifttime picker
     this.shiftPickers = []
     let numShiftPickers = this.numTimePerDayInMinutes / this.numTimePerShiftPickerInMinutes
     for (let i = 0; i < numShiftPickers; i++) {
       this.shiftPickers.push({
-        isLocked: false,
         backgroundColor: this.defaultColor
       })
 
@@ -290,27 +433,31 @@ export default {
       }
     }
     window.onresize()
+
+    // Lấy thông tin ca của ngày hôm nay
+    this.getShift(new Date())
   },
 
   data () {
     return {
       numHourPerRow: 4,
       numTimePerDayInMinutes: 1440, // ngày có 12 tiếng 1440 phút
-      numTimePerShiftPickerInMinutes: 10,
-      numTimePerShiftPickerInMinutesSettings: 10,
+      numTimePerShiftPickerInMinutes: 5,
       defaultColor: 'white',
       vi: vi,
       begin: null,
       end: null,
       colorIndex: 0,
-      colors: ['#EF5350', '#EC407A', '#9C27B0', '#1A237E', '#536DFE', '#2196F3', '#00C853', '#EEFF41', '#F57F17', '#212121'],
+      colors: ['#EF5350', '#EC407A', '#9C27B0', '#1A237E', '#536DFE', '#2196F3', '#00C853', '#f1c40f', '#F57F17'],
       shifts: [],
-      shiftPickers: []
+      shiftPickers: [],
+      timeFilter: new Date()
     }
   },
 
   components: {
-    Datepicker
+    Datepicker,
+    Popper
   }
 }
 </script>
@@ -319,6 +466,13 @@ export default {
 @media (max-width: 640px) {
   #datepicker-desktop {
       display: none
+  }
+}
+
+@media (max-width: 320px) {
+  .text-title {
+    letter-spacing: -2px;
+    font-size: 15px
   }
 }
 
@@ -371,8 +525,11 @@ export default {
   padding: 5px
 }
 
-.time > div:not([class*="no-border"]) {
+.time > div {
   cursor: pointer;
+}
+
+.time > div:not([class*="no-border"]) {
   border: 1px solid #999;
 }
 
@@ -402,5 +559,9 @@ export default {
 
 .z-9999 {
   z-index: 9999
+}
+
+.popper {
+  padding: 5px !important
 }
 </style>

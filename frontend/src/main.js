@@ -8,7 +8,6 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import { Validator, install as VeeValidate } from 'vee-validate/dist/vee-validate.minimal.esm.js'
 import { required, numeric, email, min, max } from 'vee-validate/dist/rules.esm.js'
 import vi from 'vee-validate/dist/locale/vi'
-
 Vue.config.productionTip = false
 
 Validator.extend('email', email)
@@ -41,7 +40,7 @@ var ex = () => {
   r = false
   s = document.createElement('script')
   s.type = 'text/javascript'
-  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0&libraries=places&language=vi&region=vn'
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0&libraries=places&language=vi&region=VN'
   s.onload = s.onreadystatechange = function () {
     // console.log( this.readyState ); //uncomment this line to see which ready states are called.
     if (!r && (!this.readyState || this.readyState === 'complete')) {
