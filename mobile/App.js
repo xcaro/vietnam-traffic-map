@@ -10,7 +10,8 @@ import {
   Text,
   ScrollView,
   AsyncStorage,
-  Image
+  Image,
+  View
 } from 'react-native'
 import firebase from 'react-native-firebase'
 
@@ -28,6 +29,7 @@ import ReportTrafficConfigScreen from './src/screen/Report/ReportTrafficConfigSc
 import SearchRouteConfigScreen from './src/screen/SearchRoute/SearchRouteConfigScreen'
 import SearchRouteResultScreen from './src/screen/SearchRoute/SearchRouteResultScreen'
 
+import AdministrateClinicScreen from './src/screen/Clinic/Administrate'
 import CreateClinicScreen from './src/screen/Clinic/Create'
 import FindClinicScreen from './src/screen/Clinic/Find'
 
@@ -114,6 +116,10 @@ const RootStack = StackNavigator(
 
     ReportTrafficInfo: {
       screen: ReportTrafficInfoScreen
+    },
+
+    AdministrateClinic: {
+      screen: AdministrateClinicScreen
     }
   },
 
@@ -188,6 +194,13 @@ export default class App extends Component {
         Image.prefetch(reportType.unconfirmed_icon)
         Image.prefetch(reportType.menu_icon)
       }
+    })
+    this.state = {
+      isShowLoading: false
+    }
+
+    store.subscribe(() => {
+      this.isShowLoading = store.getState().isShowLoading
     })
   }
 
@@ -275,7 +288,13 @@ export default class App extends Component {
   render () {
     return (
       <Provider store = {store}>
-        <Drawer ref = {this.drawer} />
+        <View>
+          <Spinner
+            visible={this.state.isShowLoading}
+            textContent={"Loading..."}
+            textStyle={{color: '#FFF'}} />
+          <Drawer ref = {this.drawer} />
+        </View>
       </Provider>
     )
   }

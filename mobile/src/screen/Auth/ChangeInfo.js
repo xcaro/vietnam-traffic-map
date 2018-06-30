@@ -37,11 +37,25 @@ class ChangeInfo extends Component {
     super(props)
 
     this.state = {
-      name: new validateObject('Tên', this.props.user.name),
-      address: new validateObject('địa chỉ', this.props.user.address),
-      phone: new validateObject('Số điện thoại', this.props.user.phone),
-      email: new validateObject('Email', this.props.user.email),
+      data : {
+        name: new validateObject('Tên', this.props.user.name),
+        address: new validateObject('địa chỉ', this.props.user.address),
+        phone: new validateObject('Số điện thoại', this.props.user.phone),
+        email: new validateObject('Email', this.props.user.email),
+      }
     }
+
+    this.props.showLoading()
+    request.post('http://deltavn.net/api/me').set({
+      'Authorization': `Bearer ${this.props.idToken}`
+    }).then((res) => {
+      
+      this.props.hideLoading()
+    })
+  }
+  
+  componentDidMount () {
+    // Loading lấy data
   }
 
   updateInfo = () => {
@@ -63,9 +77,9 @@ class ChangeInfo extends Component {
       request.post('http://deltavn.net/api/user/change-info').set({
         'Authorization': `Bearer ${self.props.idToken}`
       }).send({
-        name: self.state.name.val,
-        address: self.state.address.val,
-        phone: self.state.phone.val,
+        name: self.state.data.name.val,
+        address: self.state.data.address.val,
+        phone: self.state.data.phone.val,
         username: self.props.user.username
       }).then(() => {
         request.post('http://deltavn.net/api/me').set({

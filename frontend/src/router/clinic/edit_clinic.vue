@@ -40,7 +40,6 @@ export default {
 
   methods: {
     editClinic (data) {
-      debugger
       let doctors = data.doctors.data.map(doctor => {
         if (!doctor.image) {
           doctor.image = null

@@ -41,12 +41,10 @@ export default {
       //   .query({key: 'AIzaSyAViN9qPZApiSiTzZT4J3vZ030hGjn00X0'})
       //   .query({placeid: this.data.place_id})
       let self = this
-      debugger
       request.get('https://maps.googleapis.com/maps/api/geocode/json')
         .query({key: 'AIzaSyA6jVBqVLTXFpNsxmEKx8HTFEIwmiq0usQ'})
         .query({latlng: `${this.data.latitude}, ${this.data.longitude}`})
         .then((res) => {
-          debugger
           let geocode = res.body.results.filter(result => {
             return result.types.indexOf('street_address') !== -1
           })[0]

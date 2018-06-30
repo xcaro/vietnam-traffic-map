@@ -73,12 +73,20 @@ export default {
 
   methods: {
     created () {
+      this.$store.dispatch('set', {
+        propertyName: 'isLoading',
+        payload: true
+      })
       request.post('http://deltavn.net/api/me').set({
         'Authorization': `Bearer ${this.idToken}`
       }).then((res) => {
         this.$store.dispatch('set', {
           propertyName: 'user',
           payload: res.body.data
+        })
+        this.$store.dispatch('set', {
+          propertyName: 'isLoading',
+          payload: true
         })
       })
     },

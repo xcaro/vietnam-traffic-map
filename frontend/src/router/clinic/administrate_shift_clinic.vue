@@ -58,7 +58,23 @@
               <span
                 v-if="shiftPicker.text"
                 class='text-white font-weight-bold position-absolute noselect w-200 z-9999 text-title'>
-                  {{shiftPicker.text}}
+                  <popper trigger="click" :options="{placement: 'top'}" v-if="shiftPicker.parrent">
+                    <div class="popper">
+                      Bắt&nbsp;đầu:&nbsp;{{shiftPicker.parrent.popperStartStr}} <br>
+                      Kết&nbsp;thúc:&nbsp;{{shiftPicker.parrent.popperEndStr}} <br>
+                      <button class="btn btn-primary btn-sm col my-2">
+                        <span class="icon-info d-inline mr-1"></span>
+                        Chi tiết</button>
+                      <button class="btn btn-danger btn-sm col" @click="deleteShift(shiftPicker.parrent)">
+                        <span class="icon-trash d-inline mr-1"></span>
+                        Xóa</button>
+                    </div>
+
+                    <div slot="reference">
+                      {{shiftPicker.text}}
+                    </div>
+                  </popper>
+                  <span v-else>{{shiftPicker.text}}</span>
               </span>
 
               <popper trigger="click" :options="{placement: 'top'}" v-if="shiftPicker.parrent">
@@ -81,7 +97,6 @@
 
             </div>
         </div>
-      <hr>
     </div>
     <!-- <div class="mt-2">
       <button class="btn-danger btn mr-1">
@@ -104,6 +119,7 @@ import {mapState} from 'vuex'
 import {vi} from 'vuejs-datepicker/dist/locale'
 import Popper from 'vue-popperjs'
 import 'vue-popperjs/dist/css/vue-popper.css'
+import leftPad from 'left-pad'
 
 export default {
   methods: {
@@ -120,7 +136,10 @@ export default {
           for (let i = shift.startIndex; i < shift.endIndex + 1; i++) {
             this.shiftPickers[i].parrent = null
             this.shiftPickers[i].backgroundColor = this.defaultColor
+            this.shiftPickers[i].text = ''
           }
+
+          // Sếp lại thứ tự text
 
           // Bỏ đối tượng shift
           let index = this.shifts.findIndex(_shift => _shift.id === shift.id)
@@ -189,7 +208,7 @@ export default {
         // Check for error here
 
         // Hỏi xem người dùng có click nhầm hay không :
-        let startTimeInMinutes = start === 0 ? 0 : (start + 1) * this.numTimePerShiftPickerInMinutes
+        let startTimeInMinutes = start === 0 ? 0 : start * this.numTimePerShiftPickerInMinutes
         let endTimeInMinutes = end === 0 ? 0 : (end + 1) * this.numTimePerShiftPickerInMinutes
 
         let startAt = this.convertMinsToHrsMins(startTimeInMinutes)
@@ -233,22 +252,27 @@ export default {
           }))
         }
 
+        let isInsertInside = false
         for (let ii = 0; ii < this.shifts.length; ii++) {
-          if (this.shifts[ii].start > end) {
+          if (this.shifts[ii].startIndex > end) {
             this.shifts.splice(ii, 0, newShift)
 
             // Gán text : thứ tự ca
             for (let jj = ii; jj < this.shifts.length; jj++) {
-              this.shifts[jj].startElem.text = `Ca ${jj + 1}`
+              Vue.set(this.shifts[jj].startElem, 'text', `Ca ${jj + 1}`)
             }
 
-            return
+            isInsertInside = true
           }
+
+          if (isInsertInside) break
         }
 
         // Phải chèn ở phỉa ngoài cùng
-        let shiftsNewLength = this.shifts.push(newShift)
-        this.shiftPickers[start].text = `Ca ${shiftsNewLength}`
+        if (!isInsertInside) {
+          let shiftsNewLength = this.shifts.push(newShift)
+          this.shiftPickers[start].text = `Ca ${shiftsNewLength}`
+        }
 
         // format start at and end at
         let startAtTimeObject = new Date(this.timeFilter.toDateString() + ' ' + startAt)
@@ -310,7 +334,7 @@ export default {
           // Gán shift
           /* eslint-disable camelcase */
           self.shifts = res.body.data
-          self.shifts.forEach(shift => {
+          self.shifts.forEach((shift, index) => {
             let start_shift = new Date(shift.start_shift)
             let end_shift = new Date(shift.end_shift)
             let startTimeInMinutes = start_shift.getHours() * 60 + start_shift.getMinutes()
@@ -318,11 +342,12 @@ export default {
             let endTimeInMinutes = end_shift.getHours() * 60 + end_shift.getMinutes()
             let endIndex = (endTimeInMinutes / this.numTimePerShiftPickerInMinutes)
 
+
             // Gán shift index
             shift.startIndex = startIndex
             shift.endIndex = endIndex
 
-            for (let i = startIndex; i <= endIndex; i++) {
+            for (let i = startIndex; i < endIndex; i++) {
               self.shiftPickers[i].backgroundColor = self.colors[self.colorIndex]
               self.shiftPickers[i].parrent = shift
             }
@@ -332,8 +357,10 @@ export default {
             }
 
             // Format lại thời gian hiện thi trên popper
-            shift.popperStartStr = `${start_shift.getHours()}:${start_shift.getMinutes()}`
-            shift.popperEndStr = `${end_shift.getHours()}:${end_shift.getMinutes()}`
+            shift.popperStartStr = `${leftPad(start_shift.getHours(), 2, 0)}:${leftPad(start_shift.getMinutes(), 2, 0)}`
+            shift.popperEndStr = `${leftPad(end_shift.getHours(), 2, 0)}:${leftPad(end_shift.getMinutes(), 2, 0)}`
+            shift.startElem = this.shiftPickers[startIndex]
+            shift.startElem.text = `Ca ${index+1}`
           })
           this.$store.dispatch('set', {
             propertyName: 'isLoading',
@@ -497,11 +524,6 @@ export default {
 
 .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover {
   border: 1px solid #2b6ee0;
-}
-
-.title {
-  font-weight: bold;
-  font-size: 1.2em
 }
 
 .display {
