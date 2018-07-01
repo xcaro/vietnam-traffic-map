@@ -126,7 +126,7 @@ class SignIn extends Component {
                   })
                   .then(async res => {
                     this.props.setIdToken(res.body.access_token)
-
+                    this.props.showLoading()
                     superagent.post('http://deltavn.net/api/me').set({
                       'Authorization': `Bearer ${res.body.access_token}`
                     }).then((res) => {
@@ -156,8 +156,10 @@ class SignIn extends Component {
                     AsyncStorage.setItem('idToken', res.body.access_token)
                   })
                   .catch(err => {
-                    let er = err
-                    Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
+                      Alert.alert('Lỗi','Sai tên đăng nhập hoặc mật khẩu')
+
+                  }).finally(() => {
+                    this.props.hideLoading()
                   })
               }
             })}
@@ -206,10 +208,8 @@ const styles = StyleSheet.create({
 
 export default connect(
   /** State requirer to read by container component */
-  ({
-    curLocation, selectedSearchLocationItem, idToken
-  })=>(
-    {curLocation, selectedSearchLocationItem, idToken}
+  (data)=>(
+    data
   ),
 
   action

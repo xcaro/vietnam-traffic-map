@@ -104,7 +104,13 @@ const styles = StyleSheet.create({
 
   shadow: {
     elevation: 2
-  }
+  },
+
+  seperator: {
+    backgroundColor: 'rgba(0, 0, 0, .1)',
+    height: 1,
+    marginTop: 15
+  },
 })
 
 export default styles

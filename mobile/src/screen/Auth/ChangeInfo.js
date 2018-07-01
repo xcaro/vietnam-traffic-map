@@ -37,23 +37,27 @@ class ChangeInfo extends Component {
     super(props)
 
     this.state = {
-      data : {
-        name: new validateObject('Tên', this.props.user.name),
-        address: new validateObject('địa chỉ', this.props.user.address),
-        phone: new validateObject('Số điện thoại', this.props.user.phone),
-        email: new validateObject('Email', this.props.user.email),
-      }
+      data : null
     }
 
     this.props.showLoading()
     request.post('http://deltavn.net/api/me').set({
       'Authorization': `Bearer ${this.props.idToken}`
     }).then((res) => {
-      
+      this.state.data = res.body.data
+      this.setState({
+        data : {
+          name: new validateObject('Tên', this.props.user.name),
+          address: new validateObject('địa chỉ', this.props.user.address),
+          phone: new validateObject('Số điện thoại', this.props.user.phone),
+          email: new validateObject('Email', this.props.user.email),
+        }
+      })
+    }).finally(() => {
       this.props.hideLoading()
     })
   }
-  
+
   componentDidMount () {
     // Loading lấy data
   }
@@ -63,17 +67,18 @@ class ChangeInfo extends Component {
      * Validate tất cả input
      */
     this.setState({
-      name: this.state.name.startValidate().required(),
-      address: this.state.address.startValidate().required(),
-      phone: this.state.phone.startValidate().required().numeric().lengthMin(9),
+      name: this.state.data.name.startValidate().required(),
+      address: this.state.data.address.startValidate().required(),
+      phone: this.state.data.phone.startValidate().required().numeric().lengthMin(9),
     })
 
     let self = this
     if (
-      self.state.name.isValid() &&
-      self.state.address.isValid() &&
-      self.state.phone.isValid()
+      self.state.data.name.isValid() &&
+      self.state.data.address.isValid() &&
+      self.state.data.phone.isValid()
     ) {
+      this.props.showLoading()
       request.post('http://deltavn.net/api/user/change-info').set({
         'Authorization': `Bearer ${self.props.idToken}`
       }).send({
@@ -97,6 +102,8 @@ class ChangeInfo extends Component {
         ])
       }).catch(res => {
         Alert.alert('Đã xảy ra lỗi khi cập nhập thông tin', JSON.stringify(res))
+      }).finally(() => {
+        this.props.hideLoading()
       })
     }
   }
@@ -104,29 +111,29 @@ class ChangeInfo extends Component {
   render () {
     return (
       <View>
-        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle = {styles.contentContainer}>
+        {this.state.data && <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle = {styles.contentContainer}>
         <TextField
-            error = {this.state.name.error}
+            error = {this.state.data.name.error}
             label='Tên mới'
             title = 'Không được bỏ trống'
-            value={this.state.name.val}
-            onChangeText={ (name) => this.state.name.val = name }
+            value={this.state.data.name.val}
+            onChangeText={ (name) => this.state.data.name.val = name }
           />
 
         <TextField
-          error = {this.state.address.error}
+          error = {this.state.data.address.error}
           label='Địa chỉ mới'
           title = 'Không được bỏ trống'
-          value={this.state.address.val}
-          onChangeText={ (address) => this.state.address.val = address }
+          value={this.state.data.address.val}
+          onChangeText={ (address) => this.state.data.address.val = address }
         />
 
         <TextField
-            error = {this.state.phone.error}
+            error = {this.state.data.phone.error}
             label='Số điện thoại mới'
             title = 'Không được bỏ trống'
-            value={this.state.phone.val}
-            onChangeText={ (phone) => this.state.phone.val = phone }
+            value={this.state.data.phone.val}
+            onChangeText={ (phone) => this.state.data.phone.val = phone }
           />
 
           <ShadenTouchableHightLight
@@ -143,7 +150,7 @@ class ChangeInfo extends Component {
               />
               <Text style = {primaryStyles.textWhite}>Cập nhật thông tin</Text>
           </ShadenTouchableHightLight>
-        </ScrollView>
+        </ScrollView>}
       </View>
     )
   }

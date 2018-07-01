@@ -23,6 +23,7 @@ import primaryStyle, {
 } from '../../style/index'
 import Menu from '../../component/Menu'
 import googleAPI from '../../helper/google'
+import ImageMarker from '../../component/ImageMarker'
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
 import RoundButton from '../../component/RoundButton'
 import objectHelper from '../../helper/object'
@@ -53,12 +54,21 @@ class HomeScreen extends Component {
       isShowReportTraffic: true
     }
 
+    request.get('http://deltavn.net/api/report-type').then((res) => {
+      this.props.setReportTypes(res.body.data)
+      this.setState({
+        isInitialLoading: false,
+        isOffline: true,
+      })
+    })
+
     appHelper.getCurrentLocation(this.props, false)
 
     /**
      * Start the tracking location
      */
     this.selectedSearchLocationItem = null
+    let self = this
     this.unsubscribe = store.subscribe(() => {
 
       /**
@@ -79,17 +89,15 @@ class HomeScreen extends Component {
          * Animated to search location
          */
         if(newselectedSearchLocationItem !== null)
-        this.mapRef.current.animateToRegion({
+        self.mapRef.current.animateToCoordinate({
           latitude: newselectedSearchLocationItem.data.result.geometry.location.lat,
-          longitude: newselectedSearchLocationItem.data.result.geometry.location.lng,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001
+          longitude: newselectedSearchLocationItem.data.result.geometry.location.lng
         }, 300)
 
         /**
          * Save the new data
          */
-        this.selectedSearchLocationItem = newselectedSearchLocationItem
+        self.selectedSearchLocationItem = newselectedSearchLocationItem
       }
 
     })
@@ -126,7 +134,6 @@ class HomeScreen extends Component {
           primaryStyle.container,
           style.container
         ]}>
-
           <MapView
             onRegionChangeComplete = {(region) => {
               /**
@@ -163,28 +170,22 @@ class HomeScreen extends Component {
               } else {
                 image = trafficReportType.unconfirmed_icon
               }
+              isOnLoad = false
+              let self = this
 
-              return (
-                <Marker
-                tracksViewChanges = {false}
-                key = {image}
+                return (
+                  <ImageMarker
+                  image = {image}
+                  key = {trafficMaker.id}
                   onPress = {() => {
-                    this.props.navigation.navigate('ReportTrafficInfo', {
+                    self.props.navigation.navigate('ReportTrafficInfo', {
                       trafficReport: trafficMaker
                     })
                   }}
-                  key = {trafficMaker.id}
-                  coordinate = {{
-                    latitude: Number(trafficMaker.latitude),
-                    longitude: Number(trafficMaker.longitude)
-                  }} >
-
-                      <Image
-                        key = {image}
-                        style={styles.markerImage}
-                        source={{uri: image}} />
-                  </Marker>
-              )
+                  latitude= {Number(trafficMaker.latitude)}
+                  longitude= {Number(trafficMaker.longitude)}
+                  />
+                )
             })}
 
             {this.props.selectedSearchLocationItem &&

@@ -14,6 +14,7 @@ import React, {
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import { connect } from 'react-redux'
+import action from '../../redux/action'
 import appHelper from '../../helper/app'
 import primaryStyles from '../../style/index'
 
@@ -40,10 +41,13 @@ class ReportTrafficInfo extends Component {
           {this.props.idToken && <View style = {[styles.btnContainer, styles.mt]}>
             {!trafficReport.confirm ? <ShadenTouchableHightLight
               onPress = {() => {
+                this.props.showLoading()
                 request.put(`http://deltavn.net/api/report/${trafficReport.id}/confirm`).set({
                   'Authorization': `Bearer ${this.props.idToken}`
                 }).then(() => {
                   this.props.navigation.goBack()
+                }).finally(() => {
+                  this.props.hideLoading()
                 })
 
               }}
@@ -55,13 +59,13 @@ class ReportTrafficInfo extends Component {
               <Text style = {primaryStyles.textWhite}>Xác nhận</Text>
             </ShadenTouchableHightLight> : <ShadenTouchableHightLight
               onPress = {() => {
+                this.props.showLoading()
                 request.put(`http://deltavn.net/api/report/${trafficReport.id}/unconfirm`).set({
                   'Authorization': `Bearer ${this.props.idToken}`
                 }).then(() => {
                   this.props.navigation.goBack()
-                }).catch(err => {
-                  var a = err
-                  debugger
+                }).finally(() => {
+                  this.props.hideLoading()
                 })
 
               }}
@@ -79,10 +83,13 @@ class ReportTrafficInfo extends Component {
                   {
                     text: 'Có',
                     onPress: () => {
+                      this.props.showLoading()
                       request.delete(`http://deltavn.net/api/report/${trafficReport.id}`).set({
                         'Authorization': `Bearer ${this.props.idToken}`
                       }).then(() => {
                         this.props.navigation.goBack()
+                      }).finally(() => {
+                        this.props.hideLoading()
                       })
                     }
                   },
@@ -133,5 +140,5 @@ export default connect(
     {idToken, reportTypes}
   ),
 
-  null
+  action
 )(ReportTrafficInfo)

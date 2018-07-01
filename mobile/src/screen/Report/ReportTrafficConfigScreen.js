@@ -10,6 +10,7 @@ import React ,{
     TouchableWithoutFeedback
   } from 'react-native'
   import Spinner from 'react-native-loading-spinner-overlay'
+  import action from '../../redux/action.js'
 
   import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
   import {reportTrafficTypes} from '../../helper/enum'
@@ -27,6 +28,11 @@ import React ,{
 
     constructor (props) {
       super(props)
+      this.props.showLoading()
+      request.get('http://deltavn.net/api/report-type').then((res) => {
+        this.props.setReportTypes(res.body.data)
+        this.props.hideLoading()
+      })
     }
 
     componentDidMount () {
@@ -101,6 +107,6 @@ import React ,{
       {reportTypes}
     ),
 
-    null
+    action
   )(ReportTrafficConfigScreen)
 

@@ -11,18 +11,21 @@ import {
   ScrollView,
   AsyncStorage,
   Image,
-  View
+  View,
+  NetInfo,
+  ConnectionType
 } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import primaryStyles from './src/style/index'
 
 import HomeScreen from './src/screen/Home/HomeScreen'
 import SettingsScreen from './src/screen/Home/Settings'
 import SearchLocationScreen from './src/screen/Home/SearchLocationScreen'
 import ChoseNearbyLocationScreen from './src/screen/Home/ChoseNearbyLocationScreen'
-import ReportTrafficInfoScreen from './src/screen/Home/ReportTrafficInfo'
 
+import ReportTrafficInfoScreen from './src/screen/Report/ReportTrafficInfo'
 import ReportTrafficScreen from './src/screen/Report/ReportTrafficScreen'
 import ReportTrafficConfigScreen from './src/screen/Report/ReportTrafficConfigScreen'
 
@@ -40,6 +43,7 @@ import ChangeInfoScreen from './src/screen/Auth/ChangeInfo'
 import ChangePasswordScreen from './src/screen/Auth/ChangePassword'
 import UserInfoScreen from './src/screen/Auth/Info'
 
+import Spinner from 'react-native-loading-spinner-overlay'
 import CustomContentComponent from './src/component/CustomContentComponent'
 import appHelper from './src/helper/app'
 import store from './src/redux/store'
@@ -63,7 +67,7 @@ const UserInfoStack = StackNavigator({
 }, {
   initialRouteName: 'UserInfo',
   navigationOptions: {
-    title: 'Thông tin tài khoản',
+    title: 'Tài khoản',
     drawerIcon: ({ tintColor }) => (
       <FAIcon
         name = "user"
@@ -116,10 +120,6 @@ const RootStack = StackNavigator(
 
     ReportTrafficInfo: {
       screen: ReportTrafficInfoScreen
-    },
-
-    AdministrateClinic: {
-      screen: AdministrateClinicScreen
     }
   },
 
@@ -159,6 +159,11 @@ const Drawer = DrawerNavigator(
       screen: UserInfoStack
     },
 
+    CreateClinic: {
+      screen: CreateClinicScreen
+    },
+
+
     Settings: {
       screen: SettingsScreen
     },
@@ -176,7 +181,7 @@ const Drawer = DrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Map',
+    initialRouteName: 'CreateClinic',
     contentComponent: CustomContentComponent
   }
 )
@@ -187,25 +192,27 @@ export default class App extends Component {
   constructor () {
     super()
     this.drawer = React.createRef()
+    let promises = []
     request.get('http://deltavn.net/api/report-type').then((res) => {
       store.dispatch(action.setReportTypes(res.body.data))
-      for (reportType of res.body.data) {
-        Image.prefetch(reportType.confirmed_icon)
-        Image.prefetch(reportType.unconfirmed_icon)
-        Image.prefetch(reportType.menu_icon)
-      }
     })
+
     this.state = {
-      isShowLoading: false
+      isShowLoading: false,
+      isInitialLoading: true
     }
 
     store.subscribe(() => {
-      this.isShowLoading = store.getState().isShowLoading
+      let isShowLoading = store.getState().isShowLoading
+      if (isShowLoading !== this.state.isShowLoading)
+      this.setState({
+        isShowLoading: store.getState().isShowLoading
+      })
     })
   }
 
   componentWillMount () {
-    this.websocket = new WebSocket('ws://192.168.1.4:8000')
+    this.websocket = new WebSocket('ws://192.168.1.2:8000')
     this.websocket.onopen = () => {
       let self = this
       this.websocket.onmessage = ({data}) => {
@@ -288,7 +295,7 @@ export default class App extends Component {
   render () {
     return (
       <Provider store = {store}>
-        <View>
+        <View style={primaryStyles.container}>
           <Spinner
             visible={this.state.isShowLoading}
             textContent={"Loading..."}
@@ -365,3 +372,15 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
+
+NetInfo.addEventListener(
+  'connectionChange',
+  (connectionInfo) => {
+    switch (connectionInfo.type) {
+      case 'none': console.log('Khong co ket noi internet')
+      break
+      default: console.log('co ket noi internet')
+      break
+    }
+  }
+);

@@ -20,15 +20,15 @@ import {
   validateObject
 } from '../../helper/validate'
 import { connect } from 'react-redux'
+import action from '../../redux/action'
 import { TextField } from 'react-native-material-textfield'
 import request from 'superagent'
 import SearchLocationTextInput from '../../component/SearchLocationTextInput'
 import ShadenTouchableHightLight from '../../component/ShadenTouchableHightLight'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import action from '../../redux/action'
 
 
-export default class SignUp extends Component {
+class SignUp extends Component {
   static navigationOptions = {
     title: 'Đăng ký',
     drawerIcon: ({ tintColor }) => (
@@ -67,6 +67,7 @@ export default class SignUp extends Component {
       phone: this.state.phone.startValidate().required().numeric().lengthMin(9),
     })
 
+    this.props.showLoading()
     if (
       this.state.name.isValid() &&
       this.state.username.isValid() &&
@@ -75,6 +76,7 @@ export default class SignUp extends Component {
       this.state.address.isValid() &&
       this.state.phone.isValid()
     ) {
+      this.props.showLoading()
       request.post('http://deltavn.net/api/user').send({
         name: this.state.name.val,
         username: this.state.username.val,
@@ -96,6 +98,8 @@ export default class SignUp extends Component {
           this.state[key].error = res.response.body.messages[key][0]
         }
         this.forceUpdate()
+      }).finally(() => {
+        this.props.hideLoading()
       })
     }
   }
@@ -219,3 +223,12 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
 })
+
+export default connect(
+  /** State requirer to read by container component */
+  (data)=>(
+    data
+  ),
+
+  action
+)(SignUp)

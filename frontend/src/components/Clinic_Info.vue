@@ -80,9 +80,17 @@ export default {
     }
   },
   created () {
+    this.$store.dispatch('set', {
+      propertyName: 'isLoading',
+      payload: true
+    })
     request.get('http://deltavn.net/api/clinic-type').then((res) => {
       this.data.type = 1
       this.clinicTypes = res.body.data
+      this.$store.dispatch('set', {
+        propertyName: 'isLoading',
+        payload: false
+      })
     })
   },
 

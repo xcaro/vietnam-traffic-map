@@ -42,6 +42,24 @@ class UserInfo extends Component {
 
   constructor (props) {
     super(props)
+    this.state = {
+      user: null
+    }
+
+  }
+
+  componentDidMount () {
+    this.props.showLoading()
+    request.post('http://deltavn.net/api/me').set({
+      'Authorization': `Bearer ${this.props.idToken}`
+    }).then((res) => {
+      this.setState({
+        user: res.body.data
+      })
+      this.state.data = res.body.data
+    }).finally(() => {
+      this.props.hideLoading()
+    })
   }
 
   render () {
@@ -53,7 +71,7 @@ class UserInfo extends Component {
           editable = {false}
           text = 'Tài khoản'>
         </SearchLocationTextInput>
-        {this.props.user &&
+        {this.state.user &&
         <View style = {{
           margin: 20
         }}>

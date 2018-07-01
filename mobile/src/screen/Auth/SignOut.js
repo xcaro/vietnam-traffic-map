@@ -42,6 +42,7 @@ class SignOut extends Component {
      * navigate home route
      * Clear all history
      */
+
     this.props.navigation.navigate('Map')
     request.post('http://deltavn.net/api/logout').set({
       'Authorization': `Bearer ${this.props.idToken}`

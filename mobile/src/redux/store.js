@@ -18,7 +18,8 @@ const store = createStore(
       radius: 1000,
       types: [1],
       confirmed: 'Cả hai'
-    }
+    },
+    isOffline: true
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 

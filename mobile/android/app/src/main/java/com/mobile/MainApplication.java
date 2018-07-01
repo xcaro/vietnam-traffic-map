@@ -25,6 +25,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 
 public class MainApplication extends Application implements ReactApplication {
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -52,7 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseAuthPackage(),
             new FBSDKPackage(mCallbackManager),
             new ImagePickerPackage(),
-            new ReactNativePushNotificationPackage()
+            new ReactNativePushNotificationPackage(),
+            new WebViewBridgePackage()
       );
     }
 

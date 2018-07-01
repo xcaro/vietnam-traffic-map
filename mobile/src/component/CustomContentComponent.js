@@ -90,7 +90,7 @@ class CustomContentComponent extends Component {
         /**
          * Hide drawer item that should be hide if user is guest
          */
-        let filterItems = this.originalItems.filter(item => hiddenUserItem.includes(item.key))
+        let filterItems = this.originalItems.filter(item => showGuestItem.includes(item.key))
         this.setState(state => {
           return {
             ...state,
@@ -101,7 +101,6 @@ class CustomContentComponent extends Component {
         /**
         * Filter drawer item base on user type
         */
-
         let filterItems = this.originalItems.filter(item => !hiddenUserItem.includes(item.key))
         this.setState(state => {
           return {

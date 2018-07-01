@@ -43,16 +43,18 @@ async function start () {
 
           cursor.each((err, row) => {
             if (err) {
+              console.log(err)
               throw err
             }
 
             client.on('close', () => {
               client.terminate()
               cursor.close()
+              console.log("client disconnected")
               conn.close()
               return false // This will stop cursor from run
               // If it still run, it will yield error cursor has been closed
-              console.log("client disconnected")
+
             })
 
             if (client.readyState === client.OPEN) {

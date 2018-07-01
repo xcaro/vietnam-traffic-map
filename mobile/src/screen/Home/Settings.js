@@ -105,7 +105,6 @@ class Settings extends Component {
             onPress = {() => {
               this.props.setSettings(this.state)
               AsyncStorage.setItem('settings', JSON.stringify(this.state)).then(() => {
-                debugger
                 Alert.alert('Thông báo', 'Lưu cài đặt thành công')
               })
             }}

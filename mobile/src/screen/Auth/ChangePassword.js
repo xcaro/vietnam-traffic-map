@@ -38,8 +38,8 @@ class ChangePassword extends Component {
 
     this.state = {
       current_password: new validateObject('Mật khẩu', '123456'),
-      new_password: new validateObject('Mật khẩu mới', '123467'),
-      renew_password: new validateObject('Nhập lại mật khẩu mới', '123467'),
+      new_password: new validateObject('Mật khẩu mới', '123456'),
+      renew_password: new validateObject('Nhập lại mật khẩu mới', '123456'),
     }
   }
 
@@ -58,6 +58,7 @@ class ChangePassword extends Component {
       this.state.renew_password.isValid() &&
       this.state.new_password.isValid()
     ) {
+      this.props.showLoading()
       request.post('http://deltavn.net//api/user/change-password').send({
         current_password: this.state.current_password.val,
         renew_password: this.state.renew_password.val,
@@ -86,6 +87,8 @@ class ChangePassword extends Component {
           this.state[key].error = res.response.body.messages[key][0]
         }
         this.forceUpdate()
+      }).finally(() => {
+        this.props.hideLoading()
       })
     }
   }

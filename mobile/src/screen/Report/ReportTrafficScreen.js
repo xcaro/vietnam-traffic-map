@@ -148,11 +148,10 @@ class ReportTrafficScreen extends Component {
               })[0].long_name
 
 
-
               request.post(
                 'http://deltavn.net/api/report'
               )
-                .attach('image', 'this.state.images')
+                .attach('image', this.state.image)
                 .field({ward})
                 .field({district})
                 .field('latitude', origin_lat)
@@ -165,10 +164,6 @@ class ReportTrafficScreen extends Component {
                     n: 2
                   }))
                   this.props.navigation.navigate('Home')
-                }).
-                catch(err => {
-                  var a = err
-                  debugger
                 })
             })
           }}
